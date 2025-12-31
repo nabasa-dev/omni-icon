@@ -23,6 +23,9 @@ final class DiscoveryManager
 
     private readonly LoggerInterface $logger;
 
+    /** @var array<string> */
+    private array $excludedPaths = [];
+
     public function __construct(
         private readonly Container $container
     ) {
@@ -55,28 +58,13 @@ final class DiscoveryManager
     private function initializeDiscoveryLocations(): void
     {
         $this->loadComposerLocations();
+        $this->loadExcludedPaths();
     }
 
     public function loadComposerLocations(): void
     {
-        $composerFile = OMNI_ICON::DIR . 'composer.json';
-        $composerContent = file_get_contents($composerFile);
-
-        if ($composerContent === false) {
-            $this->logger->error('Failed to read composer.json', [
-                'component' => 'DiscoveryManager',
-                'file' => $composerFile,
-            ]);
-            return;
-        }
-
-        $composerData = json_decode($composerContent, true);
-
-        if (!is_array($composerData)) {
-            $this->logger->error('Invalid composer.json format', [
-                'component' => 'DiscoveryManager',
-                'file' => $composerFile,
-            ]);
+        $composerData = $this->getComposerData();
+        if ($composerData === null) {
             return;
         }
 
@@ -104,6 +92,51 @@ final class DiscoveryManager
                 }
             }
         }
+    }
+
+    private function loadExcludedPaths(): void
+    {
+        $composerData = $this->getComposerData();
+        if ($composerData === null) {
+            return;
+        }
+
+        if (isset($composerData['extra']['discovery']['exclude']) && is_array($composerData['extra']['discovery']['exclude'])) {
+            foreach ($composerData['extra']['discovery']['exclude'] as $path) {
+                if (is_string($path)) {
+                    $this->excludedPaths[] = OMNI_ICON::DIR . $path;
+                }
+            }
+        }
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function getComposerData(): ?array
+    {
+        $composerFile = OMNI_ICON::DIR . 'composer.json';
+        $composerContent = file_get_contents($composerFile);
+
+        if ($composerContent === false) {
+            $this->logger->error('Failed to read composer.json', [
+                'component' => 'DiscoveryManager',
+                'file' => $composerFile,
+            ]);
+            return null;
+        }
+
+        $composerData = json_decode($composerContent, true);
+
+        if (!is_array($composerData)) {
+            $this->logger->error('Invalid composer.json format', [
+                'component' => 'DiscoveryManager',
+                'file' => $composerFile,
+            ]);
+            return null;
+        }
+
+        return $composerData;
     }
 
     private function initializeDiscoveries(): void
@@ -180,7 +213,7 @@ final class DiscoveryManager
             return;
         }
 
-        $directoryScanner = new DirectoryScanner($this->discoveries, $this->logger);
+        $directoryScanner = new DirectoryScanner($this->discoveries, $this->logger, $this->excludedPaths);
         $directoryScanner->scan($discoveryLocation, $path);
     }
 
@@ -194,8 +227,8 @@ final class DiscoveryManager
         $classes = [];
         foreach ($classmap as $className => $filePath) {
             if (str_starts_with($className, rtrim($discoveryLocation->namespace, '\\'))) {
-                // skip if .discovery-skip file exists in the same directory
-                if (file_exists(dirname($filePath) . '/.discovery-skip')) {
+                // skip if path is in excluded paths
+                if ($this->isPathExcluded($filePath)) {
                     continue;
                 }
 
@@ -273,5 +306,27 @@ final class DiscoveryManager
         foreach ($this->discoveries as $discovery) {
             $discovery->apply();
         }
+    }
+
+    private function isPathExcluded(string $path): bool
+    {
+        $realPath = realpath(dirname($path));
+        if ($realPath === false) {
+            return false;
+        }
+
+        foreach ($this->excludedPaths as $excludedPath) {
+            $realExcludedPath = realpath($excludedPath);
+            if ($realExcludedPath === false) {
+                continue;
+            }
+
+            // Check if the file's directory matches or is a subdirectory of an excluded path
+            if ($realPath === $realExcludedPath || str_starts_with($realPath . '/', $realExcludedPath . '/')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

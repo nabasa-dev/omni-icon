@@ -11,10 +11,12 @@ final class DirectoryScanner
 {
     /**
      * @param array<Discovery> $discoveries
+     * @param array<string> $excludedPaths
      */
     public function __construct(
         private readonly array $discoveries,
         private readonly LoggerInterface $logger,
+        private readonly array $excludedPaths = [],
     ) {
     }
 
@@ -37,8 +39,8 @@ final class DirectoryScanner
                 return;
             }
 
-            // Skip directories with .discovery-skip marker file
-            if (file_exists($input . '/.discovery-skip')) {
+            // Skip excluded paths
+            if ($this->isPathExcluded($input)) {
                 return;
             }
 
@@ -161,5 +163,22 @@ final class DirectoryScanner
         }
 
         return '' === $namespace ? $className : $namespace . '\\' . $className;
+    }
+
+    private function isPathExcluded(string $path): bool
+    {
+        foreach ($this->excludedPaths as $excludedPath) {
+            $realExcludedPath = realpath($excludedPath);
+            if ($realExcludedPath === false) {
+                continue;
+            }
+
+            // Check if the path matches or is a subdirectory of an excluded path
+            if ($path === $realExcludedPath || str_starts_with($path . '/', $realExcludedPath . '/')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

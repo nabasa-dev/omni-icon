@@ -284,7 +284,21 @@ Multi-layer caching for optimal performance:
 
 - **FULL mode**: Caches all discovery results
 - **PARTIAL mode**: Only caches Composer classmap
-- **Skip files**: Add `.discovery-skip` marker to skip directories
+- **Excluding paths**: Add paths to `composer.json` under `extra.discovery.exclude` to skip directories from discovery
+
+Example:
+```json
+{
+  "extra": {
+    "discovery": {
+      "exclude": [
+        "src/Integration/Bricks/Elements",
+        "src/Integration/Breakdance/Elements"
+      ]
+    }
+  }
+}
+```
 
 ## Directory Structure
 
