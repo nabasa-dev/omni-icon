@@ -40,14 +40,14 @@ final class DependencyResolver
                 if ($this->container->has($dependencyClassName)) {
                     $dependencies[] = $this->container->get($dependencyClassName);
                 } else {
-                    throw new RuntimeException(sprintf("Cannot resolve dependency '%s' (parameter '%s') in class %s. Service not found in container.", $dependencyClassName, $parameter->getName(), $className));
+                    throw new RuntimeException(sprintf("Cannot resolve dependency '%s' (parameter '%s') in class %s. Service not found in container.", esc_html($dependencyClassName), esc_html($parameter->getName()), esc_html($className)));
                 }
             } elseif ($parameter->isDefaultValueAvailable()) {
                 // Use default value if available
                 $dependencies[] = $parameter->getDefaultValue();
             } else {
                 // Cannot resolve primitive types or builtin types without defaults
-                throw new RuntimeException(sprintf("Cannot resolve parameter '%s' of type '%s' in class %s. Primitive types must have default values.", $parameter->getName(), $type?->getName() ?? 'unknown', $className));
+                throw new RuntimeException(sprintf("Cannot resolve parameter '%s' of type '%s' in class %s. Primitive types must have default values.", esc_html($parameter->getName()), esc_html($type?->getName() ?? 'unknown'), esc_html($className)));
             }
         }
         return $reflectionClass->newInstanceArgs($dependencies);

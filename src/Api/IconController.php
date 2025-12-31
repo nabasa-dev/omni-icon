@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace OmniIcon\Api;
 
+defined('ABSPATH') || exit;
 use OmniIcon\Core\Discovery\Attributes\Controller;
 use OmniIcon\Core\Discovery\Attributes\Route;
 use OmniIcon\Services\IconService;
@@ -58,10 +59,11 @@ final readonly class IconController
         }
         // Bypass WordPress REST API JSON encoding by outputting directly
         add_filter('rest_pre_serve_request', function ($served, $result, $request, $server) use ($svg) {
-            if ($result instanceof WP_REST_Response && $result->get_data() === '__SVG_OUTPUT__') {
+            if ($result instanceof WP_REST_Response && $result->get_Data() === '__SVG_OUTPUT__') {
                 header('Content-Type: image/svg+xml');
                 header('Cache-Control: public, max-age=31536000, immutable');
                 header('Vary: Accept-Encoding');
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG is sanitized by IconService
                 echo $svg;
                 return \true;
                 // Mark as served

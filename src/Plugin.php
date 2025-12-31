@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace OmniIcon;
 
+defined('ABSPATH') || exit;
 use Exception;
 use OMNI_ICON;
 use OmniIcon\Core\Container\Container;
@@ -52,7 +53,7 @@ final class Plugin
     }
     public function init(): void
     {
-        load_plugin_textdomain(OMNI_ICON::TEXT_DOMAIN, \false, dirname(plugin_basename(OMNI_ICON::FILE)) . '/languages');
+        // load_plugin_textdomain(OMNI_ICON::TEXT_DOMAIN, false, dirname(plugin_basename(OMNI_ICON::FILE)) . '/languages');
         do_action('a!omni-icon/core:init', $this);
     }
     public function plugins_loaded(): void

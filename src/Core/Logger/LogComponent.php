@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace OmniIcon\Core\Logger;
 
+defined('ABSPATH') || exit;
 /**
  * Enum for logger component names
  * 
@@ -18,10 +19,7 @@ enum LogComponent : string
     case BUNDLE_ICON_SERVICE = 'BundleIconService';
     case DISCOVERY = 'Discovery';
     case COMMAND_DISCOVERY = 'CommandDiscovery';
-    case MIGRATION = 'Migration';
-    case MIGRATION_DISCOVERY = 'MigrationDiscovery';
     case CONTAINER = 'Container';
-    case DATABASE = 'Database';
     case ASSETS = 'Assets';
     case VITE = 'Vite';
 }

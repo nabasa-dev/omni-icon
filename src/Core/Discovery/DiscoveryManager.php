@@ -4,7 +4,6 @@ declare (strict_types=1);
 namespace OmniIcon\Core\Discovery;
 
 use OmniIcon\Core\Container\Container;
-use OmniIcon\Core\Database\Migration\MigrationDiscovery;
 use OmniIcon\Core\Logger\DiscoveryLogger;
 use OmniIcon\Core\Logger\LoggerService;
 use OMNI_ICON;
@@ -18,6 +17,8 @@ final class DiscoveryManager
     private array $discoveryLocations = [];
     private ?\OmniIcon\Core\Discovery\DiscoveryCache $discoveryCache = null;
     private readonly LoggerInterface $logger;
+    /** @var array<string> */
+    private array $excludedPaths = [];
     public function __construct(private readonly Container $container)
     {
         $this->logger = new DiscoveryLogger();
@@ -45,18 +46,12 @@ final class DiscoveryManager
     private function initializeDiscoveryLocations(): void
     {
         $this->loadComposerLocations();
+        $this->loadExcludedPaths();
     }
     public function loadComposerLocations(): void
     {
-        $composerFile = OMNI_ICON::DIR . 'composer.json';
-        $composerContent = file_get_contents($composerFile);
-        if ($composerContent === \false) {
-            $this->logger->error('Failed to read composer.json', ['component' => 'DiscoveryManager', 'file' => $composerFile]);
-            return;
-        }
-        $composerData = json_decode($composerContent, \true);
-        if (!is_array($composerData)) {
-            $this->logger->error('Invalid composer.json format', ['component' => 'DiscoveryManager', 'file' => $composerFile]);
+        $composerData = $this->getComposerData();
+        if ($composerData === null) {
             return;
         }
         if (isset($composerData['autoload']) && is_array($composerData['autoload']) && isset($composerData['autoload']['psr-4']) && is_array($composerData['autoload']['psr-4'])) {
@@ -76,12 +71,44 @@ final class DiscoveryManager
             }
         }
     }
+    private function loadExcludedPaths(): void
+    {
+        $composerData = $this->getComposerData();
+        if ($composerData === null) {
+            return;
+        }
+        if (isset($composerData['extra']['discovery']['exclude']) && is_array($composerData['extra']['discovery']['exclude'])) {
+            foreach ($composerData['extra']['discovery']['exclude'] as $path) {
+                if (is_string($path)) {
+                    $this->excludedPaths[] = OMNI_ICON::DIR . $path;
+                }
+            }
+        }
+    }
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function getComposerData(): ?array
+    {
+        $composerFile = OMNI_ICON::DIR . 'composer.json';
+        $composerContent = file_get_contents($composerFile);
+        if ($composerContent === \false) {
+            $this->logger->error('Failed to read composer.json', ['component' => 'DiscoveryManager', 'file' => $composerFile]);
+            return null;
+        }
+        $composerData = json_decode($composerContent, \true);
+        if (!is_array($composerData)) {
+            $this->logger->error('Invalid composer.json format', ['component' => 'DiscoveryManager', 'file' => $composerFile]);
+            return null;
+        }
+        return $composerData;
+    }
     private function initializeDiscoveries(): void
     {
         $this->discoveryCache = new \OmniIcon\Core\Discovery\DiscoveryCache($this->determineCacheStrategy());
         // Create LoggerService for discoveries that require it (no dependencies required)
         $loggerService = new LoggerService();
-        $this->discoveries = [new \OmniIcon\Core\Discovery\ServiceDiscovery($this->container), new \OmniIcon\Core\Discovery\HookDiscovery($this->container), new \OmniIcon\Core\Discovery\CommandDiscovery($this->container, $loggerService), new MigrationDiscovery($this->container, $loggerService), new \OmniIcon\Core\Discovery\ControllerDiscovery($this->container)];
+        $this->discoveries = [new \OmniIcon\Core\Discovery\ServiceDiscovery($this->container), new \OmniIcon\Core\Discovery\HookDiscovery($this->container), new \OmniIcon\Core\Discovery\CommandDiscovery($this->container, $loggerService), new \OmniIcon\Core\Discovery\ControllerDiscovery($this->container)];
     }
     private function determineCacheStrategy(): \OmniIcon\Core\Discovery\DiscoveryCacheStrategy
     {
@@ -132,7 +159,7 @@ final class DiscoveryManager
         if (!is_dir($path)) {
             return;
         }
-        $directoryScanner = new \OmniIcon\Core\Discovery\DirectoryScanner($this->discoveries, $this->logger);
+        $directoryScanner = new \OmniIcon\Core\Discovery\DirectoryScanner($this->discoveries, $this->logger, $this->excludedPaths);
         $directoryScanner->scan($discoveryLocation, $path);
     }
     private function scanViaComposerClassmap(\OmniIcon\Core\Discovery\DiscoveryLocation $discoveryLocation): bool
@@ -144,8 +171,8 @@ final class DiscoveryManager
         $classes = [];
         foreach ($classmap as $className => $filePath) {
             if (str_starts_with($className, rtrim($discoveryLocation->namespace, '\\'))) {
-                // skip if .discovery-skip file exists in the same directory
-                if (file_exists(dirname($filePath) . '/.discovery-skip')) {
+                // skip if path is in excluded paths
+                if ($this->isPathExcluded($filePath)) {
                     continue;
                 }
                 $classes[$className] = $filePath;
@@ -207,5 +234,23 @@ final class DiscoveryManager
         foreach ($this->discoveries as $discovery) {
             $discovery->apply();
         }
+    }
+    private function isPathExcluded(string $path): bool
+    {
+        $realPath = realpath(dirname($path));
+        if ($realPath === \false) {
+            return \false;
+        }
+        foreach ($this->excludedPaths as $excludedPath) {
+            $realExcludedPath = realpath($excludedPath);
+            if ($realExcludedPath === \false) {
+                continue;
+            }
+            // Check if the file's directory matches or is a subdirectory of an excluded path
+            if ($realPath === $realExcludedPath || str_starts_with($realPath . '/', $realExcludedPath . '/')) {
+                return \true;
+            }
+        }
+        return \false;
     }
 }

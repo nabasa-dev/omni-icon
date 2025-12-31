@@ -413,7 +413,7 @@ class LocalIconService
         if (!file_exists($file_path)) {
             return ['success' => \false, 'message' => __('Icon not found', 'omni-icon')];
         }
-        if (!unlink($file_path)) {
+        if (!wp_delete_file($file_path)) {
             return ['success' => \false, 'message' => __('Failed to delete icon', 'omni-icon')];
         }
         // Invalidate cache after successful deletion
@@ -456,7 +456,8 @@ class LocalIconService
         if (str_contains($query, ':')) {
             [$prefix, $search_term] = explode(':', $query, 2) + ['', ''];
             if ('' === $prefix || '' === $search_term) {
-                throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', $query));
+                // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message, not output
+                throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', esc_html($query)));
             }
             // Search in specific icon set - uses cached icons
             $icons = $prefix === 'local' ? $this->get_icons_by_set(null) : $this->get_icons_by_set($prefix);
@@ -512,8 +513,13 @@ class LocalIconService
         if (file_exists($target_path)) {
             return ['success' => \false, 'message' => __('An icon with this name already exists in the target set', 'omni-icon')];
         }
-        // Move file
-        if (!rename($source_path, $target_path)) {
+        // Move file using WordPress filesystem API
+        global $wp_filesystem;
+        if (empty($wp_filesystem)) {
+            require_once \ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+        if (!$wp_filesystem->move($source_path, $target_path)) {
             return ['success' => \false, 'message' => __('Failed to move icon', 'omni-icon')];
         }
         // Clear cache after successful move
@@ -578,8 +584,13 @@ class LocalIconService
         if (file_exists($new_dir)) {
             return ['success' => \false, 'message' => __('A set with this name already exists', 'omni-icon')];
         }
-        // Rename directory
-        if (!rename($old_dir, $new_dir)) {
+        // Rename directory using WordPress filesystem API
+        global $wp_filesystem;
+        if (empty($wp_filesystem)) {
+            require_once \ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+        if (!$wp_filesystem->move($old_dir, $new_dir)) {
             return ['success' => \false, 'message' => __('Failed to rename icon set', 'omni-icon')];
         }
         // Clear cache after successful rename

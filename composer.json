@@ -23,6 +23,15 @@
             "constant.php"
         ]
     },
+    "extra": {
+        "discovery": {
+            "exclude": [
+                "src\/Integration\/Bricks\/Elements",
+                "src\/Integration\/Breakdance\/Elements",
+                "src\/Integration\/Elementor\/Widgets"
+            ]
+        }
+    },
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true
