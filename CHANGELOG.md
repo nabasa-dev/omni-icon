@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2025-12-31
+
 ### Added
 - Multiple and drag-and-drop icon upload support - upload multiple SVG files at once
 - Multi-select icons with keyboard shortcuts (Ctrl/Cmd+Click, Shift+Click) and mouse drag area selection for bulk operations
@@ -21,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🐣 Initial release.
 
-[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.1...HEAD
+[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.2...HEAD
+[1.0.2]: https://github.com/nabasa-dev/omni-icon/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/nabasa-dev/omni-icon/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/nabasa-dev/omni-icon/compare/main...1.0.0
