@@ -79,7 +79,7 @@ Use the `<omni-icon>` web component directly in your theme or content:
 * **MIME Type Validation**: Server-side validation of uploaded files
 
 = Love Omni Icon? =
-- Give a [5-star review](https://wordpress.org/support/plugin/omni-icon/reviews/?filter=5/#new-post)
+- Give a [5-star review](https://wordpress.org/support/plugin/omni-icon/reviews/)
 - Join our [Facebook Group](https://www.facebook.com/groups/1142662969627943)
 - Sponsor us on [GitHub](https://github.com/sponsors/suasgn) or [Ko-fi](https://ko-fi.com/Q5Q75XSF7)
 

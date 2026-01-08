@@ -1,0 +1,57 @@
+# Development and build files
+/.git
+/.github
+/.vscode
+/.agents
+/node_modules
+/vendor/bin
+/tests
+/deploy
+/yaak
+/resources
+/.editorconfig
+/.gitattributes
+/.gitignore
+/.php-version
+/.distignore
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/pnpm-lock.yaml
+/deno.lock
+/phpcs.xml
+/phpunit.xml
+/.phpcs.xml.dist
+/.phpunit.result.cache
+/README.md
+/DEVELOPMENT.md
+/CHANGELOG.md
+/CLAUDE.md
+
+# Vendor development files
+/vendor/bin
+/vendor/symfony/error-handler/Resources/bin
+/vendor/symfony/var-dumper/Resources/bin
+/vendor/symfony/error-handler/Resources/assets/images/favicon.png.base64
+/vendor/*/tests
+/vendor/*/*/tests
+/vendor/*/Tests
+/vendor/*/*/Tests
+/vendor/*/.git
+/vendor/*/*/.git
+/vendor/*/.github
+/vendor/*/*/.github
+
+# Build tools
+/webpack.config.js
+/vite.config.js
+/tsconfig.json
+/.babelrc
+/.eslintrc
+/.prettierrc
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
