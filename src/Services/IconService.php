@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OmniIcon\Services;
 
+use enshrined\svgSanitize\Sanitizer;
 use OmniIcon\Core\Discovery\Attributes\Service;
 use OmniIcon\Core\Logger\LogComponent;
 use OmniIcon\Core\Logger\LoggerService;
@@ -28,6 +29,7 @@ use Symfony\UX\Icons\Registry\ChainIconRegistry;
 class IconService
 {
     private readonly IconRegistryInterface $registry;
+    private readonly Sanitizer $sanitizer;
 
     public function __construct(
         private readonly LocalIconService $localIconService,
@@ -41,14 +43,20 @@ class IconService
             $bundleIconService->get_registry(), // Check plugin bundled icons second
             $iconifyService->get_registry(), // Fallback to on-demand Iconify icons
         ]);
+        
+        // Initialize SVG sanitizer for render-time sanitization
+        $this->sanitizer = new Sanitizer();
     }
 
     /**
-     * Get an icon from Iconify and return as HTML string.
+     * Get an icon and return as sanitized HTML string.
+     *
+     * SVG content is sanitized at render time using enshrined/svg-sanitize library
+     * for defense-in-depth security, ensuring safe output for WordPress.org requirements.
      *
      * @param string $name Icon name in format "prefix:icon-name" (e.g., "mdi:home", "bi:github")
      * @param array<string, mixed> $attributes Optional HTML attributes to add to the SVG element
-     * @return null|string the SVG HTML if exists, or null if couldn't found
+     * @return null|string the sanitized SVG HTML if exists, or null if couldn't be found
      */
     public function get_icon(string $name, array $attributes = []): ?string
     {
@@ -66,7 +74,21 @@ class IconService
                 $icon = $icon->withAttributes($attributes);
             }
 
-            return $icon->toHtml();
+            $svg = $icon->toHtml();
+            
+            // Apply SVG sanitization at render time for defense-in-depth security
+            // This ensures all SVG output is safe, even from remote sources (Iconify API)
+            $sanitized = $this->sanitizer->sanitize($svg);
+            
+            if ($sanitized === false || empty($sanitized)) {
+                $this->logger->warning('SVG sanitization failed at render time', [
+                    'component' => LogComponent::ICON_SERVICE,
+                    'icon' => $name,
+                ]);
+                return null;
+            }
+            
+            return $sanitized;
         } catch (IconNotFoundException $e) {
             $this->logger->warning('Icon not found', [
                 'component' => LogComponent::ICON_SERVICE,

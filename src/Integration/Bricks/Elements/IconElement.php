@@ -183,10 +183,15 @@ class IconElement extends Element
 
         // Render omni-icon with SSR support
         if ($svg !== null) {
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes from render_attributes() are escaped, SVG is sanitized by IconService
+            /*
+             * Security: SVG content is sanitized by IconService->get_icon() using enshrined/svg-sanitize library.
+             * Attributes from render_attributes() are escaped by Bricks. The SVG content cannot be escaped with
+             * esc_html() as it would break the SVG markup. We use render-time sanitization for defense-in-depth security.
+             */
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG sanitized by enshrined/svg-sanitize, attributes escaped by Bricks
             echo sprintf('<omni-icon data-prerendered %s>%s</omni-icon>', $this->render_attributes('_root'), $svg);
         } else {
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes from render_attributes() are escaped
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes are escaped by Bricks render_attributes()
             echo sprintf('<omni-icon %s></omni-icon>', $this->render_attributes('_root'));
         }
     }

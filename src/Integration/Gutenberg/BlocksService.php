@@ -136,6 +136,11 @@ class BlocksService
         }
 
         if ($svg !== null) {
+            /*
+             * Security: SVG content is sanitized by IconService->get_icon() using enshrined/svg-sanitize library.
+             * Attributes are escaped with esc_attr() above. The SVG content cannot be escaped with esc_html()
+             * as it would break the SVG markup. We use render-time sanitization for defense-in-depth security.
+             */
             // SSR: Render with data-prerendered attribute and SVG content inside
             return sprintf(
                 '<omni-icon data-prerendered%s>%s</omni-icon>',
