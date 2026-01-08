@@ -47,28 +47,38 @@ class LiveCanvasService
         $blockDef = wp_json_encode($block["block"]);
         $blockOpts = wp_json_encode($block["options"]);
 
-        echo '<script id="omni-icon-lc-add-block">' . "\n";
-        echo 'try {' . "\n";
-        echo '    if (typeof addBlock === "function") {' . "\n";
-        echo '        addBlock(' . "\n";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON encoded data
-        echo '            ' . $blockCat . ',' . "\n";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON encoded data
-        echo '            ' . $blockDef . ',' . "\n";
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON encoded data
-        echo '            ' . $blockOpts . "\n";
-        echo '        );' . "\n";
-        echo '    }' . "\n";
-        echo '' . "\n";
-        echo '    if (typeof addEditable === "function") {' . "\n";
-        echo '        addEditable(\'omni-icon\', {' . "\n";
-        echo '            selector: \'omni-icon\',' . "\n";
-        echo '        });' . "\n";
-        echo '    }' . "\n";
-        echo '} catch (e) {' . "\n";
-        echo '    console.error(e);' . "\n";
-        echo '}' . "\n";
-        echo '</script>' . "\n";
+        // Register and enqueue inline script using WordPress standards
+        wp_register_script(
+            'omni-icon-lc-add-block',
+            '', // Empty source since it's inline only
+            [],
+            OMNI_ICON::VERSION,
+            false
+        );
+        wp_enqueue_script('omni-icon-lc-add-block');
+
+        $inline_script = "
+try {
+    if (typeof addBlock === 'function') {
+        addBlock(
+            {$blockCat},
+            {$blockDef},
+            {$blockOpts}
+        );
+    }
+
+    if (typeof addEditable === 'function') {
+        addEditable('omni-icon', {
+            selector: 'omni-icon',
+        });
+    }
+} catch (e) {
+    console.error(e);
+}
+";
+
+        wp_add_inline_script('omni-icon-lc-add-block', $inline_script);
+        wp_print_scripts('omni-icon-lc-add-block');
     }
 
     #[Hook('lc_define_custom_element')]
@@ -169,6 +179,113 @@ class LiveCanvasService
     #[Hook('lc_render_additional_panels', priority: 10)]
     public function render_icon_panel(): void
     {
+        // Register and enqueue inline script using WordPress standards
+        wp_register_script(
+            'omni-icon-lc-panel',
+            '', // Empty source since it's inline only
+            ['jquery'],
+            OMNI_ICON::VERSION,
+            false
+        );
+        wp_enqueue_script('omni-icon-lc-panel');
+
+        $inline_script = "
+document.addEventListener('DOMContentLoaded', () => {
+    const PANEL_SELECTOR = 'section[item-type=\"omni-icon\"]';
+    const panel = document.querySelector(PANEL_SELECTOR);
+    if (!panel) return;
+
+    // WHEN PANEL BECOMES VISIBLE, INITIALIZE THE PANEL FIELDS
+    onVisible(PANEL_SELECTOR, () => {
+        console.log('[Omni Icon] Panel opened');
+        
+        const selector = panel.getAttribute('selector');
+        const theSection = jQuery(PANEL_SELECTOR);
+        if (!selector) return;
+
+        // Get the omni-icon element
+        const omniIconElement = doc.querySelector(selector);
+        if (!omniIconElement) return;
+
+        // Populate icon name
+        theSection.find('input[attribute-name=\"name\"]').val(omniIconElement.getAttribute('name') || '');
+
+        // Populate size from width attribute
+        const iconWidth = omniIconElement.getAttribute('width');
+        if (iconWidth) {
+            const sizeValue = parseInt(iconWidth);
+            theSection.find('input[name=\"size\"]').val(sizeValue);
+            theSection.find('.size-feedback').text(sizeValue + 'px');
+        }
+    });
+});
+
+// Use jQuery event delegation like LiveCanvas's SVG icon panel
+jQuery(document).ready(function ($) {
+    // Handle icon name changes
+    $('#sidepanel').on('input', 'section[item-type=omni-icon] input[attribute-name=\"name\"]', function(event) {
+        event.preventDefault();
+        const theSection = $(this).closest('section[selector]');
+        const selector = theSection.attr('selector');
+        const omniIconElement = doc.querySelector(selector);
+        
+        if (omniIconElement) {
+            omniIconElement.setAttribute('name', $(this).val());
+            updatePreviewSectorial(selector);
+        }
+    });
+
+    // Handle size slider changes
+    $('#sidepanel').on('input', 'section[item-type=omni-icon] input[name=size]', function(event) {
+        event.preventDefault();
+        const theSection = $(this).closest('section[selector]');
+        const selector = theSection.attr('selector');
+        const omniIconElement = doc.querySelector(selector);
+        
+        if (omniIconElement) {
+            const sizeValue = $(this).val();
+            
+            omniIconElement.setAttribute('width', sizeValue);
+            omniIconElement.setAttribute('height', sizeValue);
+            theSection.find('.size-feedback').text(sizeValue + 'px');
+            
+            // Update the common form field for width/height if it exists
+            theSection.find('.common-form-fields input[attribute-name=width]').val(sizeValue);
+            theSection.find('.common-form-fields input[attribute-name=height]').val(sizeValue);
+            
+            updatePreviewSectorial(selector);
+        }
+    });
+
+    // Handle icon picker button
+    $('#sidepanel').on('click', 'section[item-type=omni-icon] .omni-icon-picker-button', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const theSection = $(this).closest('section[selector]');
+        const selector = theSection.attr('selector');
+        const omniIconElement = doc.querySelector(selector);
+        
+        if (!omniIconElement) return;
+
+        const currentValue = omniIconElement.getAttribute('name') || '';
+        
+        if (window.omniIconPicker) {
+            window.omniIconPicker.open(currentValue, (iconName) => {
+                // Update the input field
+                theSection.find('input[attribute-name=\"name\"]').val(iconName);
+                
+                // Update doc element
+                omniIconElement.setAttribute('name', iconName);
+                updatePreviewSectorial(selector);
+            });
+        }
+    });
+});
+";
+
+        wp_add_inline_script('omni-icon-lc-panel', $inline_script);
+
         ?>
         <!-- Omni Icon Panel -->
         <section item-type="omni-icon">
@@ -214,101 +331,8 @@ class LiveCanvasService
 
             </form>
         </section>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                const PANEL_SELECTOR = 'section[item-type="omni-icon"]';
-                const panel = document.querySelector(PANEL_SELECTOR);
-                if (!panel) return;
-
-                // WHEN PANEL BECOMES VISIBLE, INITIALIZE THE PANEL FIELDS
-                onVisible(PANEL_SELECTOR, () => {
-                    console.log('[Omni Icon] Panel opened');
-                    
-                    const selector = panel.getAttribute("selector");
-                    const theSection = $(PANEL_SELECTOR);
-                    if (!selector) return;
-
-                    // Get the omni-icon element
-                    const omniIconElement = doc.querySelector(selector);
-                    if (!omniIconElement) return;
-
-                    // Populate icon name
-                    theSection.find('input[attribute-name="name"]').val(omniIconElement.getAttribute('name') || '');
-
-                    // Populate size from width attribute
-                    const iconWidth = omniIconElement.getAttribute('width');
-                    if (iconWidth) {
-                        const sizeValue = parseInt(iconWidth);
-                        theSection.find('input[name="size"]').val(sizeValue);
-                        theSection.find('.size-feedback').text(sizeValue + 'px');
-                    }
-                });
-            });
-
-            // Use jQuery event delegation like LiveCanvas's SVG icon panel
-            $(document).ready(function ($) {
-                // Handle icon name changes
-                $('#sidepanel').on('input', 'section[item-type=omni-icon] input[attribute-name="name"]', function(event) {
-                    event.preventDefault();
-                    const theSection = $(this).closest("section[selector]");
-                    const selector = theSection.attr("selector");
-                    const omniIconElement = doc.querySelector(selector);
-                    
-                    if (omniIconElement) {
-                        omniIconElement.setAttribute('name', $(this).val());
-                        updatePreviewSectorial(selector);
-                    }
-                });
-
-                // Handle size slider changes
-                $('#sidepanel').on('input', 'section[item-type=omni-icon] input[name=size]', function(event) {
-                    event.preventDefault();
-                    const theSection = $(this).closest("section[selector]");
-                    const selector = theSection.attr("selector");
-                    const omniIconElement = doc.querySelector(selector);
-                    
-                    if (omniIconElement) {
-                        const sizeValue = $(this).val();
-                        
-                        omniIconElement.setAttribute('width', sizeValue);
-                        omniIconElement.setAttribute('height', sizeValue);
-                        theSection.find('.size-feedback').text(sizeValue + 'px');
-                        
-                        // Update the common form field for width/height if it exists
-                        theSection.find('.common-form-fields input[attribute-name=width]').val(sizeValue);
-                        theSection.find('.common-form-fields input[attribute-name=height]').val(sizeValue);
-                        
-                        updatePreviewSectorial(selector);
-                    }
-                });
-
-                // Handle icon picker button
-                $('#sidepanel').on('click', 'section[item-type=omni-icon] .omni-icon-picker-button', function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    const theSection = $(this).closest("section[selector]");
-                    const selector = theSection.attr("selector");
-                    const omniIconElement = doc.querySelector(selector);
-                    
-                    if (!omniIconElement) return;
-
-                    const currentValue = omniIconElement.getAttribute('name') || '';
-                    
-                    if (window.omniIconPicker) {
-                        window.omniIconPicker.open(currentValue, (iconName) => {
-                            // Update the input field
-                            theSection.find('input[attribute-name="name"]').val(iconName);
-                            
-                            // Update doc element
-                            omniIconElement.setAttribute('name', iconName);
-                            updatePreviewSectorial(selector);
-                        });
-                    }
-                });
-            }); // end doc ready
-        </script>
         <?php
+
+        wp_print_scripts('omni-icon-lc-panel');
     }
 }
