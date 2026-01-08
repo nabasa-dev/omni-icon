@@ -42,6 +42,9 @@
 /vendor/*/*/.git
 /vendor/*/.github
 /vendor/*/*/.github
+/vendor/paragonie/random_compat/build-phar.sh
+/vendor/paragonie/random_compat/dist/random_compat.phar.pubkey
+/vendor/paragonie/random_compat/dist/random_compat.phar.pubkey.asc
 
 # Build tools
 /webpack.config.js

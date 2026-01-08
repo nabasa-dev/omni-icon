@@ -84,14 +84,22 @@ jobs:
         # install only prod dependencies
         - run: composer install --no-dev --classmap-authoritative --ansi
 
-        # copy files to deploy directory using .distignore (same as WordPress.org will use)
-        - name: "Copy files using .distignore"
+        # copy all files for scoping process
+        - name: "Copy files for scoping"
           run: |
             mkdir -p omni-icon-deploy
-            rsync -av --exclude-from=".distignore" --exclude omni-icon-deploy ./ omni-icon-deploy/ --quiet
+            rsync -av --exclude omni-icon-deploy --exclude .git ./ omni-icon-deploy/ --quiet
 
         # prefix the namespaces
         - run: sh deploy/deploy-scoped.sh omni-icon-deploy omni-icon-prefixed
+
+        # apply .distignore to remove unnecessary files from final build
+        - name: "Apply .distignore filter"
+          run: |
+            mkdir -p omni-icon-final
+            rsync -av --exclude-from=".distignore" omni-icon-prefixed/ omni-icon-final/ --quiet
+            rm -rf omni-icon-prefixed
+            mv omni-icon-final omni-icon-prefixed
 
         # clone current repository and checkout/create dist branch
         - name: "Checkout or create dist branch"

@@ -54,18 +54,7 @@ rm -f "$RESULT_DIRECTORY/php-scoper.phar"
 note "Dumping Composer Autoload"
 composer dump-autoload --working-dir "$RESULT_DIRECTORY" --ansi --no-dev
 
-# clean deploy files and directories
+# clean temporary deploy directory
 rm -rf "$DEPLOY_DIRECTORY"
-rm -rf "$RESULT_DIRECTORY/deploy"
-# rm -f "$RESULT_DIRECTORY/composer.json" # required by the auto-discovery
-rm -f "$RESULT_DIRECTORY/composer.lock"
-rm -f "$RESULT_DIRECTORY/.gitattributes"
-rm -f "$RESULT_DIRECTORY/.gitignore"
-rm -f "$RESULT_DIRECTORY/.php-version"
-
-# WordPress new plugin submission review
-rm -f "$RESULT_DIRECTORY/vendor/paragonie/random_compat/build-phar.sh"
-rm -f "$RESULT_DIRECTORY/vendor/paragonie/random_compat/dist/random_compat.phar.pubkey"
-rm -f "$RESULT_DIRECTORY/vendor/paragonie/random_compat/dist/random_compat.phar.pubkey.asc"
 
 note "Finished"
