@@ -138,4 +138,12 @@ Yes, Omni Icon is compatible with any WordPress theme. You can use the web compo
 
 Omni Icon uses the Iconify API to fetch icons from their extensive icon collections.
 
+= Where can I find the source code for compiled/minified files? =
+
+The complete source code, including uncompiled versions of all JavaScript and CSS files in the `dist/` directory, is publicly available on GitHub:
+
+https://github.com/nabasa-dev/omni-icon/
+
+The repository includes the complete development source code in the `src/` directory, along with build configuration files and instructions for compiling the plugin from source.
+
 == Changelog ==
