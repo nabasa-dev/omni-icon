@@ -28,7 +28,9 @@ class BreakdanceService
     public function editor_assets(): void
     {
         // Check if we're in Breakdance builder mode
-        if (!isset($_GET['breakdance']) || $_GET['breakdance'] !== 'builder') {
+        // Sanitize and validate $_GET parameter early
+        $breakdance_mode = isset($_GET['breakdance']) ? sanitize_text_field(wp_unslash($_GET['breakdance'])) : '';
+        if ($breakdance_mode !== 'builder') {
             return;
         }
         // Check if Breakdance is active

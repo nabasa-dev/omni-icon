@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 Requires PHP: 8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -79,7 +79,7 @@ Use the `<omni-icon>` web component directly in your theme or content:
 * **MIME Type Validation**: Server-side validation of uploaded files
 
 = Love Omni Icon? =
-- Give a [5-star review](https://wordpress.org/support/plugin/omni-icon/reviews/?filter=5/#new-post)
+- Give a [5-star review](https://wordpress.org/support/plugin/omni-icon/reviews/)
 - Join our [Facebook Group](https://www.facebook.com/groups/1142662969627943)
 - Sponsor us on [GitHub](https://github.com/sponsors/suasgn) or [Ko-fi](https://ko-fi.com/Q5Q75XSF7)
 
@@ -138,7 +138,19 @@ Yes, Omni Icon is compatible with any WordPress theme. You can use the web compo
 
 Omni Icon uses the Iconify API to fetch icons from their extensive icon collections.
 
+= Where can I find the source code for compiled/minified files? =
+
+The complete source code, including uncompiled versions of all JavaScript and CSS files in the `dist/` directory, is publicly available on GitHub:
+
+https://github.com/nabasa-dev/omni-icon/
+
+The repository includes the complete development source code in the `src/` directory, along with build configuration files and instructions for compiling the plugin from source.
+
 == Changelog ==
+
+= 1.0.3 - 2026-01-08 =
+**Fixed**
+* WordPress.org plugin repository compliance fixes
 
 = 1.0.2 - 2025-12-31 =
 **Added**

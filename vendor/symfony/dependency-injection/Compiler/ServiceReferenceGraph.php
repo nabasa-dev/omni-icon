@@ -66,14 +66,14 @@ class ServiceReferenceGraph
     /**
      * Connects 2 nodes together in the Graph.
      */
-    public function connect(?string $sourceId, mixed $sourceValue, ?string $destId, mixed $destValue = null, ?Reference $reference = null, bool $lazy = \false, bool $weak = \false, bool $byConstructor = \false): void
+    public function connect(?string $sourceId, mixed $sourceValue, ?string $destId, mixed $destValue = null, ?Reference $reference = null, bool $lazy = \false, bool $weak = \false, bool $byConstructor = \false, bool $byMultiUseArgument = \false): void
     {
         if (null === $sourceId || null === $destId) {
             return;
         }
         $sourceNode = $this->createNode($sourceId, $sourceValue);
         $destNode = $this->createNode($destId, $destValue);
-        $edge = new ServiceReferenceGraphEdge($sourceNode, $destNode, $reference, $lazy, $weak, $byConstructor);
+        $edge = new ServiceReferenceGraphEdge($sourceNode, $destNode, $reference, $lazy, $weak, $byConstructor, $byMultiUseArgument);
         $sourceNode->addOutEdge($edge);
         $destNode->addInEdge($edge);
     }

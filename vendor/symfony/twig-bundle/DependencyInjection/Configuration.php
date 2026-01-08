@@ -13,6 +13,7 @@ namespace OmniIconDeps\Symfony\Bundle\TwigBundle\DependencyInjection;
 use OmniIconDeps\Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use OmniIconDeps\Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use OmniIconDeps\Symfony\Component\Config\Definition\ConfigurationInterface;
+use OmniIconDeps\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use OmniIconDeps\Symfony\Component\Mime\HtmlToTextConverter\HtmlToTextConverterInterface;
 /**
  * TwigExtension configuration structure.
@@ -28,7 +29,17 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('twig');
         $rootNode = $treeBuilder->getRootNode();
-        $rootNode->docUrl('https://symfony.com/doc/{version:major}.{version:minor}/reference/configuration/twig.html', 'symfony/twig-bundle')->end();
+        $rootNode->docUrl('https://symfony.com/doc/{version:major}.{version:minor}/reference/configuration/twig.html', 'symfony/twig-bundle')->beforeNormalization()->ifArray()->then(function ($v) {
+            if (!\array_key_exists('exception_controller', $v)) {
+                return $v;
+            }
+            if (isset($v['exception_controller'])) {
+                throw new InvalidConfigurationException('Option "exception_controller" under "twig" must be null or unset, use "error_controller" under "framework" instead.');
+            }
+            unset($v['exception_controller']);
+            trigger_deprecation('symfony/twig-bundle', '7.4', 'Setting the "exception_controller" option under "twig" to null is deprecated. Omit this legacy no-op option instead.');
+            return $v;
+        })->end();
         $this->addFormThemesSection($rootNode);
         $this->addGlobalsSection($rootNode);
         $this->addTwigOptions($rootNode);

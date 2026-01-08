@@ -36,6 +36,7 @@ class AnalyzeServiceReferencesPass extends AbstractRecursivePass
     private bool $lazy;
     private bool $byConstructor;
     private bool $byFactory;
+    private bool $byMultiUseArgument;
     private array $definitions;
     private array $aliases;
     /**
@@ -56,6 +57,7 @@ class AnalyzeServiceReferencesPass extends AbstractRecursivePass
         $this->lazy = \false;
         $this->byConstructor = \false;
         $this->byFactory = \false;
+        $this->byMultiUseArgument = \false;
         $this->definitions = $container->getDefinitions();
         $this->aliases = $container->getAliases();
         foreach ($this->aliases as $id => $alias) {
@@ -74,16 +76,21 @@ class AnalyzeServiceReferencesPass extends AbstractRecursivePass
         $inExpression = $this->inExpression();
         if ($value instanceof ArgumentInterface) {
             $this->lazy = !$this->byFactory || !$value instanceof IteratorArgument;
+            $byMultiUseArgument = $this->byMultiUseArgument;
+            if ($value instanceof IteratorArgument) {
+                $this->byMultiUseArgument = \true;
+            }
             parent::processValue($value->getValues());
+            $this->byMultiUseArgument = $byMultiUseArgument;
             $this->lazy = $lazy;
             return $value;
         }
         if ($value instanceof Reference) {
             $targetId = $this->getDefinitionId((string) $value);
             $targetDefinition = null !== $targetId ? $this->container->getDefinition($targetId) : null;
-            $this->graph->connect($this->currentId, $this->currentDefinition, $targetId, $targetDefinition, $value, $this->lazy || $this->hasProxyDumper && $targetDefinition?->isLazy(), ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE === $value->getInvalidBehavior(), $this->byConstructor);
+            $this->graph->connect($this->currentId, $this->currentDefinition, $targetId, $targetDefinition, $value, $this->lazy || $this->hasProxyDumper && $targetDefinition?->isLazy(), ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE === $value->getInvalidBehavior(), $this->byConstructor, $this->byMultiUseArgument);
             if ($inExpression) {
-                $this->graph->connect('.internal.reference_in_expression', null, $targetId, $targetDefinition, $value, $this->lazy || $targetDefinition?->isLazy(), \true);
+                $this->graph->connect('.internal.reference_in_expression', null, $targetId, $targetDefinition, $value, $this->lazy || $targetDefinition?->isLazy(), \true, $this->byConstructor, $this->byMultiUseArgument);
             }
             return $value;
         }

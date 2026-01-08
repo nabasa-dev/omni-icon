@@ -38,9 +38,14 @@ foreach ($attributes as $key => $value) {
 }
 // Output the complete omni-icon element
 if ($svg !== null) {
-    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes are escaped above, SVG is sanitized by IconService
+    /*
+     * Security: SVG content is sanitized by IconService->get_icon() using enshrined/svg-sanitize library.
+     * Attributes are escaped with esc_attr() above. The SVG content cannot be escaped with esc_html()
+     * as it would break the SVG markup. We use render-time sanitization for defense-in-depth security.
+     */
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG sanitized by enshrined/svg-sanitize, attributes escaped with esc_attr()
     echo \sprintf('<omni-icon data-prerendered%s>%s</omni-icon>', $attr_string, $svg);
 } else {
-    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes are escaped above
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Attributes are escaped with esc_attr() above
     echo \sprintf('<omni-icon%s></omni-icon>', $attr_string);
 }

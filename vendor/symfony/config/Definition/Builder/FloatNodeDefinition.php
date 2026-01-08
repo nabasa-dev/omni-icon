@@ -14,7 +14,7 @@ use OmniIconDeps\Symfony\Component\Config\Definition\FloatNode;
 /**
  * This class provides a fluent interface for defining a float node.
  *
- * @template TParent of NodeParentInterface|null
+ * @template TParent of NodeParentInterface|null = null
  *
  * @extends NumericNodeDefinition<TParent>
  *

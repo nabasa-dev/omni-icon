@@ -10,9 +10,10 @@
  */
 namespace OmniIconDeps\Symfony\Bridge\Twig\Test\Traits;
 
+use OmniIconDeps\Symfony\Component\DependencyInjection\ServiceLocator;
 use OmniIconDeps\Symfony\Component\Form\FormRenderer;
 use OmniIconDeps\Twig\Environment;
-use OmniIconDeps\Twig\RuntimeLoader\RuntimeLoaderInterface;
+use OmniIconDeps\Twig\RuntimeLoader\ContainerRuntimeLoader;
 trait RuntimeLoaderProvider
 {
     /**
@@ -20,8 +21,6 @@ trait RuntimeLoaderProvider
      */
     protected function registerTwigRuntimeLoader(Environment $environment, FormRenderer $renderer)
     {
-        $loader = $this->createMock(RuntimeLoaderInterface::class);
-        $loader->expects($this->any())->method('load')->willReturnMap([['OmniIconDeps\Symfony\Component\Form\FormRenderer', $renderer]]);
-        $environment->addRuntimeLoader($loader);
+        $environment->addRuntimeLoader(new ContainerRuntimeLoader(new ServiceLocator([FormRenderer::class => fn() => $renderer])));
     }
 }

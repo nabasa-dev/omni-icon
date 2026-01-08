@@ -14,7 +14,6 @@ use OmniIconDeps\Symfony\Component\Cache\PruneableInterface;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use OmniIconDeps\Symfony\Component\DependencyInjection\ContainerBuilder;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Reference;
 /**
  * @author Rob Frawley 2nd <rmf@src.run>
@@ -28,12 +27,8 @@ class CachePoolPrunerPass implements CompilerPassInterface
         }
         $services = [];
         foreach ($container->findTaggedServiceIds('cache.pool') as $id => $tags) {
-            $class = $container->getParameterBag()->resolveValue($container->getDefinition($id)->getClass());
-            if (!$reflection = $container->getReflectionClass($class)) {
-                throw new InvalidArgumentException(\sprintf('Class "%s" used for service "%s" cannot be found.', $class, $id));
-            }
-            if ($reflection->implementsInterface(PruneableInterface::class)) {
-                $services[$id] = new Reference($id);
+            if ($tags[0]['pruneable'] ?? $container->getReflectionClass($container->getDefinition($id)->getClass(), \false)?->implementsInterface(PruneableInterface::class) ?? \false) {
+                $services[$tags[0]['name'] ?? $id] = new Reference($id);
             }
         }
         $container->getDefinition('console.command.cache_pool_prune')->replaceArgument(0, new IteratorArgument($services));

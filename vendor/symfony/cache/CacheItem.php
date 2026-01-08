@@ -172,3 +172,4 @@ final class CacheItem implements ItemInterface
         return \true;
     }
 }
+// @php-cs-fixer-ignore protected_to_private Friend-level scope access relies on protected properties

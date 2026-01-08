@@ -14,7 +14,7 @@ use OmniIconDeps\Symfony\Component\Config\Definition\Exception\InvalidDefinition
 /**
  * Abstract class that contains common code of integer and float node definitions.
  *
- * @template TParent of NodeParentInterface|null
+ * @template TParent of NodeParentInterface|null = null
  *
  * @extends ScalarNodeDefinition<TParent>
  *

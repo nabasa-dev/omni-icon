@@ -558,7 +558,7 @@ class FrameworkExtension extends Extension
         if ($this->readConfigEnabled('notifier', $container, $config['notifier'])) {
             $this->registerNotifierConfiguration($config['notifier'], $container, $loader, $this->readConfigEnabled('webhook', $container, $config['webhook']));
         }
-        // profiler depends on form, validation, translation, messenger, mailer, http-client, notifier, serializer being registered
+        // profiler depends on form, validation, translation, messenger, mailer, http-client, notifier, serializer being registered. console is optional
         $this->registerProfilerConfiguration($config['profiler'], $container, $loader);
         if ($this->readConfigEnabled('webhook', $container, $config['webhook'])) {
             $this->registerWebhookConfiguration($config['webhook'], $container, $loader, $this->readConfigEnabled('serializer', $container, $config['serializer']));
@@ -844,7 +844,7 @@ class FrameworkExtension extends Extension
         $container->setParameter('profiler.storage.dsn', $config['dsn']);
         $container->getDefinition('profiler')->addArgument($config['collect'])->addTag('kernel.reset', ['method' => 'reset']);
         $container->getDefinition('profiler_listener')->addArgument($config['collect_parameter']);
-        if (!$container->getParameter('kernel.debug') || !class_exists(CliRequest::class) || !$container->has('debug.stopwatch')) {
+        if (!$container->getParameter('kernel.debug') || !$this->hasConsole() || !class_exists(CliRequest::class) || !$container->has('debug.stopwatch')) {
             $container->removeDefinition('console_profiler_listener');
         }
         if (!class_exists(CommandDataCollector::class)) {

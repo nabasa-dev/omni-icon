@@ -353,7 +353,7 @@ class Route implements \Serializable
                 $this->setRequirement($m[2], substr($m[6], 1, -1));
             }
             if (isset($m[4][0])) {
-                $mapping[$m[2]] = isset($m[5][0]) ? [$m[4], substr($m[5], 1)] : $mapping[$m[2]] = [$m[4], $m[2]];
+                $mapping[$m[2]] = isset($m[5][0]) ? [$m[4], substr($m[5], 1)] : $m[4];
             }
             return '{' . $m[1] . $m[2] . '}';
         }, $pattern);

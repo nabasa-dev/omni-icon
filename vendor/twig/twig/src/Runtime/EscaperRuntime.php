@@ -214,7 +214,7 @@ final class EscaperRuntime implements RuntimeExtensionInterface
                      * @license   https://framework.zend.com/license/new-bsd New BSD License
                      */
                     $chr = $matches[0];
-                    $ord = \ord($chr);
+                    $ord = \ord($chr[0]);
                     /*
                      * The following replaces characters undefined in HTML with the
                      * hex entity for the Unicode replacement character.

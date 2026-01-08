@@ -16,7 +16,7 @@ use OmniIconDeps\Symfony\Component\Form\FormRenderer;
 use OmniIconDeps\Symfony\Component\Form\FormRendererInterface;
 use OmniIconDeps\Symfony\Component\Form\FormView;
 use OmniIconDeps\Symfony\Component\Form\Test\FormIntegrationTestCase;
-use OmniIconDeps\Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use OmniIconDeps\Symfony\Component\Security\Csrf\CsrfTokenManager;
 use OmniIconDeps\Twig\Environment;
 use OmniIconDeps\Twig\Extension\ExtensionInterface;
 use OmniIconDeps\Twig\Loader\FilesystemLoader;
@@ -37,7 +37,7 @@ abstract class FormLayoutTestCase extends FormIntegrationTestCase
             $environment->addGlobal($name, $value);
         }
         $rendererEngine = new TwigRendererEngine($this->getThemes(), $environment);
-        $this->renderer = new FormRenderer($rendererEngine, $this->createMock(CsrfTokenManagerInterface::class));
+        $this->renderer = new FormRenderer($rendererEngine, new CsrfTokenManager());
         $this->registerTwigRuntimeLoader($environment, $this->renderer);
     }
     protected function assertMatchesXpath($html, $expression, $count = 1): void

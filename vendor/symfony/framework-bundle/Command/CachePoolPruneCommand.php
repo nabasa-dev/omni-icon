@@ -43,11 +43,17 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $exitCode = Command::SUCCESS;
         foreach ($this->pools as $name => $pool) {
             $io->comment(\sprintf('Pruning cache pool: <info>%s</info>', $name));
-            $pool->prune();
+            if (!$pool->prune()) {
+                $io->error(\sprintf('Cache pool "%s" could not be pruned.', $name));
+                $exitCode = Command::FAILURE;
+            }
         }
-        $io->success('Successfully pruned cache pool(s).');
-        return 0;
+        if (Command::SUCCESS === $exitCode) {
+            $io->success('Successfully pruned cache pool(s).');
+        }
+        return $exitCode;
     }
 }

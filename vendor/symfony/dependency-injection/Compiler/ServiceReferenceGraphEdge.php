@@ -19,7 +19,7 @@ namespace OmniIconDeps\Symfony\Component\DependencyInjection\Compiler;
  */
 class ServiceReferenceGraphEdge
 {
-    public function __construct(private ServiceReferenceGraphNode $sourceNode, private ServiceReferenceGraphNode $destNode, private mixed $value = null, private bool $lazy = \false, private bool $weak = \false, private bool $byConstructor = \false)
+    public function __construct(private ServiceReferenceGraphNode $sourceNode, private ServiceReferenceGraphNode $destNode, private mixed $value = null, private bool $lazy = \false, private bool $weak = \false, private bool $byConstructor = \false, private bool $byMultiUseArgument = \false)
     {
     }
     /**
@@ -63,5 +63,9 @@ class ServiceReferenceGraphEdge
     public function isReferencedByConstructor(): bool
     {
         return $this->byConstructor;
+    }
+    public function isFromMultiUseArgument(): bool
+    {
+        return $this->byMultiUseArgument;
     }
 }
