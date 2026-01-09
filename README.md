@@ -112,7 +112,7 @@ Use the `<omni-icon>` web component directly in your theme or content:
 **LiveCanvas**:
 - Add the "Omni Icon" element
 
-### Advanced Custom Fields (ACF)
+**Advanced Custom Fields (ACF)**:
 - Create or edit an ACF Field Group
 - Add a new field and select "Omni Icon" as the field type
 - Configure return format (string, array, or HTML)
@@ -159,11 +159,18 @@ Your icons will be permanently accessible to all Omni Icon users through the `om
 - [GitHub Sponsors](https://github.com/sponsors/suasgn)
 - [Ko-fi](https://ko-fi.com/Q5Q75XSF7)
 
-### Current Sponsors
-
 Thank you to our amazing sponsors who support all our plugin development! 🥰🫰🫶
 
 <!-- Sponsor logos will be displayed here -->
+
+
+<p align="center">
+  <a href="https://wind.press" title="WindPress - The Tailwind CSS integration plugin for WordPress"><kbd><img src="./svg/windpress.svg" width="80" height="80" alt="WindPress"/></kbd></a>
+  <a href="https://livecanvas.com" title="LiveCanvas - The Professional Page Builder for WordPress"><kbd><img src="https://livecanvas.com/wp-content/uploads/2022/06/favicon_big.png" width="80" height="80" alt="LiveCanvas"/></kbd></a>
+</p>
+
+
+
 
 <!-- --- -->
 
