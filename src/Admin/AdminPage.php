@@ -56,9 +56,9 @@ class AdminPage
      */
     private function render(): void
     {
-        do_action('a!omni-icon/admin:render.before');
+        do_action('omni-icon/admin:render.before');
         echo '<div id="omni-icon-app"></div>';
-        do_action('a!omni-icon/admin:render.after');
+        do_action('omni-icon/admin:render.after');
     }
 
     /**
@@ -74,7 +74,7 @@ class AdminPage
      */
     private function enqueue_scripts(): void
     {
-        do_action('a!omni-icon/admin:enqueue_scripts.before');
+        do_action('omni-icon/admin:enqueue_scripts.before');
 
         // Enqueue admin app
         $this->viteService->enqueue_asset('resources/admin/admin-app/index.jsx', [
@@ -97,6 +97,6 @@ class AdminPage
             'version' => OMNI_ICON::VERSION,
         ]);
 
-        do_action('a!omni-icon/admin:enqueue_scripts.after');
+        do_action('omni-icon/admin:enqueue_scripts.after');
     }
 }

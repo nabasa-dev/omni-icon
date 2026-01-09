@@ -42,7 +42,7 @@ final class LoggerService extends AbstractLogger
 
     public function __construct()
     {
-        $this->enabled = apply_filters('f!omni-icon/service/logger:enabled', defined('WP_DEBUG') && WP_DEBUG);
+        $this->enabled = apply_filters('omni-icon/service/logger:enabled', defined('WP_DEBUG') && WP_DEBUG);
         $this->prefix = 'OmniIcon';
     }
 

@@ -56,7 +56,7 @@ final class Plugin
         $this->register_hooks();
         $this->booted = true;
 
-        do_action('a!omni-icon/core:plugin.booted', $this);
+        do_action('omni-icon/core:plugin.booted', $this);
     }
 
     public function container(): Container
@@ -72,7 +72,7 @@ final class Plugin
     {
         // load_plugin_textdomain(OMNI_ICON::TEXT_DOMAIN, false, dirname(plugin_basename(OMNI_ICON::FILE)) . '/languages');
 
-        do_action('a!omni-icon/core:init', $this);
+        do_action('omni-icon/core:init', $this);
     }
 
     public function plugins_loaded(): void
@@ -81,7 +81,7 @@ final class Plugin
             return;
         }
 
-        do_action('a!omni-icon/core:plugins-loaded', $this);
+        do_action('omni-icon/core:plugins-loaded', $this);
     }
 
     public function activate(): void
@@ -112,14 +112,14 @@ final class Plugin
             // Discovery manager might not be available yet
         }
 
-        do_action('a!omni-icon/core:activate', $this);
+        do_action('omni-icon/core:activate', $this);
 
         flush_rewrite_rules();
     }
 
     public function deactivate(): void
     {
-        do_action('a!omni-icon/core:deactivate', $this);
+        do_action('omni-icon/core:deactivate', $this);
 
         flush_rewrite_rules();
     }
