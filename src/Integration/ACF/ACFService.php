@@ -56,6 +56,10 @@ class ACFService
             /** @var BricksProviderAcf */
             $bricks_acf = BricksProvider::get_registered_provider('acf');
 
+            if (!$bricks_acf) {
+                return;
+            }
+
             $bricks_acf->tags = array_merge(
                 $bricks_acf->tags,
                 [
