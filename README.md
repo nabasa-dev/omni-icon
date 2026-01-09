@@ -28,13 +28,14 @@ Add beautiful icons to your WordPress site with seamless integration across Gute
 
 ### Integrations
 
-Seamless integration with the most popular visual/page builders:
+Seamless integration with the most popular visual/page builders and custom field plugins:
 
 * [Gutenberg](https://wordpress.org/gutenberg/) / Block Editor — Custom Icon block with live preview
 * [Elementor](https://be.elementor.com/visit/?bta=209150&brand=elementor) — Native widget with Elementor controls
 * [Bricks](https://bricksbuilder.io/?ref=windpress) — Native element with full theme compatibility
 * [Breakdance](https://breakdance.com/ref/165/) — Element Studio integration with SSR
 * [LiveCanvas](https://livecanvas.com/?ref=4008) — Custom block with panel controls
+* [Advanced Custom Fields (ACF)](https://www.advancedcustomfields.com/) — Custom field type with multiple return formats
 
 ## Icon Sources
 
@@ -91,9 +92,8 @@ Use the `<omni-icon>` web component directly in your theme or content:
 - Error handling with visual indicators
 
 ### Gutenberg Block
-
-1. In the block editor, add a new "Omni Icon" block
-2. Click the icon picker to browse or search icons
+- In the block editor, add a new "Omni Icon" block
+- Click the icon picker to browse or search icons
 
 ### Page Builders
 
@@ -111,6 +111,11 @@ Use the `<omni-icon>` web component directly in your theme or content:
 
 **LiveCanvas**:
 - Add the "Omni Icon" element
+
+### Advanced Custom Fields (ACF)
+- Create or edit an ACF Field Group
+- Add a new field and select "Omni Icon" as the field type
+- Configure return format (string, array, or HTML)
 
 ## Performance
 

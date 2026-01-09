@@ -120,6 +120,8 @@ return [
             'WP_CLI',
             'WP_CLI_Command',
             'DOMXPath',
+
+            'acf_field',
         ]
     ),
     'exclude-functions' => array_merge(
@@ -131,6 +133,9 @@ return [
             'bricks_is_builder_main',
             'bricks_is_builder_iframe',
             'bricks_render_dynamic_data',
+
+            'acf_get_url',
+            'acf_register_field_type',
         ]
     ),
     'exclude-constants' => array_merge(

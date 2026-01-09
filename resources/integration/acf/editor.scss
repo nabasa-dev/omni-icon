@@ -1,0 +1,69 @@
+/**
+ * Omni Icon ACF Field Editor Styles
+ */
+
+// ACF field container styles
+.acf-omni-icon-field {
+	.acf-omni-icon-controls {
+		display: flex;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	.acf-omni-icon-preview {
+		padding: 12px;
+		background: #f9f9f9;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		min-height: 80px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.acf-omni-icon-display {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+
+			omni-icon {
+				flex-shrink: 0;
+			}
+
+			.acf-omni-icon-name {
+				code {
+					padding: 4px 8px;
+					background: #fff;
+					border: 1px solid #ddd;
+					border-radius: 3px;
+					font-size: 13px;
+					color: #2c3338;
+				}
+			}
+		}
+
+		.acf-omni-icon-placeholder {
+			color: #8c8f94;
+			font-style: italic;
+
+			p {
+				margin: 0;
+			}
+		}
+	}
+}
+
+// Modal-specific styles for ACF
+.acf-omni-icon-picker-modal {
+	// Ensure modal is on top of ACF UI
+	z-index: 999999;
+
+	// Add body class to prevent scrolling when modal is open
+	body.acf-modal-open & {
+		overflow: hidden;
+	}
+}
+
+// Prevent body scroll when modal is open
+body.oiel-modal-open {
+	overflow: hidden;
+}
