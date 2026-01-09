@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Modal footer visibility on laptop screens - Confirm/Cancel buttons now visible without requiring full-screen mode [#3](https://github.com/nabasa-dev/omni-icon/issues/3)
+
 ## [1.0.3] - 2026-01-08
 
 ### Fixed

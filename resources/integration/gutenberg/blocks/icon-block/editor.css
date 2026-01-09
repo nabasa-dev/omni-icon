@@ -953,8 +953,21 @@
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
-	min-height: 420px;
+	min-height: 170px;
 	overflow: hidden;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (min-height: 800px) {
+	.oiib-icon-picker-content-wrapper {
+		min-height: 300px;
+	}
+}
+
+@media (min-height: 1000px) {
+	.oiib-icon-picker-content-wrapper {
+		min-height: 420px;
+	}
 }
 
 /* Loading State */
