@@ -1769,6 +1769,8 @@ class ComposerStaticInita2801c817e5349c550c7859447488535
         'OmniIcon\\Core\\Logger\\DiscoveryLogger' => __DIR__ . '/../..' . '/src/Core/Logger/DiscoveryLogger.php',
         'OmniIcon\\Core\\Logger\\LogComponent' => __DIR__ . '/../..' . '/src/Core/Logger/LogComponent.php',
         'OmniIcon\\Core\\Logger\\LoggerService' => __DIR__ . '/../..' . '/src/Core/Logger/LoggerService.php',
+        'OmniIcon\\Integration\\ACF\\ACFService' => __DIR__ . '/../..' . '/src/Integration/ACF/ACFService.php',
+        'OmniIcon\\Integration\\ACF\\Fields\\IconField' => __DIR__ . '/../..' . '/src/Integration/ACF/Fields/IconField.php',
         'OmniIcon\\Integration\\Breakdance\\BreakdanceService' => __DIR__ . '/../..' . '/src/Integration/Breakdance/BreakdanceService.php',
         'OmniIcon\\Integration\\Bricks\\BricksService' => __DIR__ . '/../..' . '/src/Integration/Bricks/BricksService.php',
         'OmniIcon\\Integration\\Bricks\\Elements\\IconElement' => __DIR__ . '/../..' . '/src/Integration/Bricks/Elements/IconElement.php',

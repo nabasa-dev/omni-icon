@@ -10,9 +10,9 @@
     "file": "assets/check-qjydXzqM.js",
     "name": "check"
   },
-  "_editor-DOW6C4b-.css": {
-    "file": "assets/editor-DOW6C4b-.css",
-    "src": "_editor-DOW6C4b-.css"
+  "_editor-DqSSOOb8.css": {
+    "file": "assets/editor-DqSSOOb8.css",
+    "src": "_editor-DqSSOOb8.css"
   },
   "resources/admin/admin-app/index.jsx": {
     "file": "assets/admin/admin-app/index-Y9lIXEOC.js",
@@ -66,12 +66,12 @@
     ]
   },
   "resources/integration/gutenberg/blocks/icon-block/editor.css": {
-    "file": "assets/integration/gutenberg/blocks/icon-block/css-B9h5qNxJ.js",
+    "file": "assets/integration/gutenberg/blocks/icon-block/css-DWKFtN9u.js",
     "name": "integration/gutenberg/blocks/icon-block/css",
     "src": "resources/integration/gutenberg/blocks/icon-block/editor.css",
     "isEntry": true,
     "css": [
-      "assets/editor-DOW6C4b-.css"
+      "assets/editor-DqSSOOb8.css"
     ]
   },
   "resources/integration/gutenberg/blocks/icon-block/iframe.ts": {
@@ -81,7 +81,7 @@
     "isEntry": true
   },
   "resources/integration/gutenberg/blocks/icon-block/index.jsx": {
-    "file": "assets/integration/gutenberg/blocks/icon-block-D8_tJ3Pf.js",
+    "file": "assets/integration/gutenberg/blocks/icon-block-CK58H3Qi.js",
     "name": "integration/gutenberg/blocks/icon-block",
     "src": "resources/integration/gutenberg/blocks/icon-block/index.jsx",
     "isEntry": true,
@@ -90,7 +90,7 @@
       "_check-qjydXzqM.js"
     ],
     "css": [
-      "assets/editor-DOW6C4b-.css"
+      "assets/editor-DqSSOOb8.css"
     ]
   },
   "resources/integration/livecanvas/editor.ts": {

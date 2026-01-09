@@ -1559,6 +1559,8 @@ return array(
     'OmniIcon\\Core\\Logger\\DiscoveryLogger' => $baseDir . '/src/Core/Logger/DiscoveryLogger.php',
     'OmniIcon\\Core\\Logger\\LogComponent' => $baseDir . '/src/Core/Logger/LogComponent.php',
     'OmniIcon\\Core\\Logger\\LoggerService' => $baseDir . '/src/Core/Logger/LoggerService.php',
+    'OmniIcon\\Integration\\ACF\\ACFService' => $baseDir . '/src/Integration/ACF/ACFService.php',
+    'OmniIcon\\Integration\\ACF\\Fields\\IconField' => $baseDir . '/src/Integration/ACF/Fields/IconField.php',
     'OmniIcon\\Integration\\Breakdance\\BreakdanceService' => $baseDir . '/src/Integration/Breakdance/BreakdanceService.php',
     'OmniIcon\\Integration\\Bricks\\BricksService' => $baseDir . '/src/Integration/Bricks/BricksService.php',
     'OmniIcon\\Integration\\Bricks\\Elements\\IconElement' => $baseDir . '/src/Integration/Bricks/Elements/IconElement.php',
