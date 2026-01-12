@@ -93,7 +93,7 @@ Use the `<omni-icon>` web component directly in your theme or content:
 
 ### Page Builders
 
-** Gutenberg**:
+**Gutenberg**:
 - In the block editor, add a new "Omni Icon" block
 - Click the icon picker to browse or search icons
 
