@@ -91,11 +91,11 @@ Use the `<omni-icon>` web component directly in your theme or content:
 - Attribute reactivity (changes update in real-time)
 - Error handling with visual indicators
 
-### Gutenberg Block
+### Page Builders
+
+** Gutenberg**:
 - In the block editor, add a new "Omni Icon" block
 - Click the icon picker to browse or search icons
-
-### Page Builders
 
 **Elementor**:
 - Add the "Omni Icon" widget
@@ -163,14 +163,10 @@ Thank you to our amazing sponsors who support all our plugin development! ðŸ¥°ðŸ
 
 <!-- Sponsor logos will be displayed here -->
 
-
 <p align="center">
   <a href="https://wind.press" title="WindPress - The Tailwind CSS integration plugin for WordPress"><kbd><img src="./svg/windpress.svg" width="80" height="80" alt="WindPress"/></kbd></a>
   <a href="https://livecanvas.com" title="LiveCanvas - The Professional Page Builder for WordPress"><kbd><img src="https://livecanvas.com/wp-content/uploads/2022/06/favicon_big.png" width="80" height="80" alt="LiveCanvas"/></kbd></a>
 </p>
-
-
-
 
 <!-- --- -->
 

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.8] - 2026-01-12
+
+### Changed
+- Update readme file
+
 ## [1.0.7] - 2026-01-12
 
 ### Fixed
@@ -42,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🐣 Initial release.
 
-[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.7...HEAD
+[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.8...HEAD
+[1.0.8]: https://github.com/nabasa-dev/omni-icon/compare/1.0.7...1.0.8
 [1.0.7]: https://github.com/nabasa-dev/omni-icon/compare/1.0.6...1.0.7
 [1.0.6]: https://github.com/nabasa-dev/omni-icon/compare/1.0.5...1.0.6
 [1.0.5]: https://github.com/nabasa-dev/omni-icon/compare/1.0.4...1.0.5
