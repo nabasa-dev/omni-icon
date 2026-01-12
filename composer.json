@@ -28,7 +28,8 @@
             "exclude": [
                 "src/Integration/Bricks/Elements",
                 "src/Integration/Breakdance/Elements",
-                "src/Integration/Elementor/Widgets"
+                "src/Integration/Elementor/Widgets",
+                "src/Integration/ACF/Fields"
             ]
         }
     },

@@ -141,6 +141,17 @@ jobs:
             git commit -m "Omni Icon $VERSION_NO_V" -m "$INPUT_LOG"
             git push --quiet origin dist
 
+        # WordPress.org deployment
+        - name: WordPress Plugin Deploy
+          uses: 10up/action-wordpress-plugin-deploy@stable
+          env:
+            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+            SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+            SLUG: omni-icon
+            BUILD_DIR: omni-icon-prefixed
+            VERSION: ${{ github.ref_name }}
+            ASSETS_DIR: .wordpress-org
+
         # Create GitHub Release with changelog and zip file
         - name: "Create plugin zip file"
           run: |

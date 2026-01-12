@@ -3,6 +3,7 @@
 /.github
 /.vscode
 /.agents
+/.wordpress-org
 /node_modules
 /vendor/bin
 /tests
