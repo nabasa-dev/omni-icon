@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -53,6 +53,7 @@ Pre-packaged icons included with the plugin, including sponsor logos and commonl
 
 **Iconify Icons**
 Access to 150+ icon collections with 200,000+ icons including:
+
 * Material Design Icons (mdi)
 * Font Awesome (fa6-brands, fa6-regular, fa6-solid)
 * Bootstrap Icons (bi)
@@ -62,13 +63,39 @@ Access to 150+ icon collections with 200,000+ icons including:
 
 Browse available icons at [Iconify](https://icon-sets.iconify.design/)
 
-### Web Component Usage
+### Usage
+
+**Web Component Usage**
 
 Use the `<omni-icon>` web component directly in your theme or content:
 
 `<omni-icon name="mdi:home"></omni-icon>`
 `<omni-icon name="local:my-logo" width="64" height="64"></omni-icon>`
 `<omni-icon name="fa6-solid:heart" color="#3b82f6"></omni-icon>`
+
+** Gutenberg**:
+- In the block editor, add a new "Omni Icon" block
+- Click the icon picker to browse or search icons
+
+**Elementor**:
+- Add the "Omni Icon" widget
+- Click "Browse Icons" to open the icon picker
+
+**Bricks**:
+- Add the "Omni Icon" element
+- Click "Browse Icons" to open the icon picker
+
+**Breakdance**:
+- Add the "Omni Icon" element
+- Click "Browse Icons" to open the icon picker
+
+**LiveCanvas**:
+- Add the "Omni Icon" element
+
+**Advanced Custom Fields (ACF)**:
+- Create or edit an ACF Field Group
+- Add a new field and select "Omni Icon" as the field type
+- Configure return format (string, array, or HTML)
 
 ### Performance & Security
 
@@ -140,13 +167,13 @@ Omni Icon uses the Iconify API to fetch icons from their extensive icon collecti
 
 = Where can I find the source code for compiled/minified files? =
 
-The complete source code, including uncompiled versions of all JavaScript and CSS files in the `dist/` directory, is publicly available on GitHub:
-
-https://github.com/nabasa-dev/omni-icon/
-
-The repository includes the complete development source code in the `src/` directory, along with build configuration files and instructions for compiling the plugin from source.
+The complete source code, including uncompiled versions of all JavaScript and CSS files in the `dist/` directory, is publicly available on [GitHub](https://github.com/nabasa-dev/omni-icon/)
 
 == Changelog ==
+
+= 1.0.8 - 2026-01-12 =
+**Changed**
+* Update readme file
 
 = 1.0.7 - 2026-01-12 =
 **Fixed**
