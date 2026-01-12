@@ -19,9 +19,15 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\ServiceNotFound
  */
 final class ReverseContainer
 {
+    private Container $serviceContainer;
+    private ContainerInterface $reversibleLocator;
+    private string $tagName;
     private \Closure $getServiceId;
-    public function __construct(private Container $serviceContainer, private ContainerInterface $reversibleLocator, private string $tagName = 'container.reversible')
+    public function __construct(Container $serviceContainer, ContainerInterface $reversibleLocator, string $tagName = 'container.reversible')
     {
+        $this->serviceContainer = $serviceContainer;
+        $this->reversibleLocator = $reversibleLocator;
+        $this->tagName = $tagName;
         $this->getServiceId = \Closure::bind(fn(object $service): ?string => (array_search($service, $this->services, \true) ?: array_search($service, $this->privates, \true)) ?: null, $serviceContainer, Container::class);
     }
     /**

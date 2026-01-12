@@ -10,8 +10,8 @@
  */
 namespace OmniIconDeps\Symfony\Component\HttpClient;
 
-use OmniIconDeps\Amp\Http\Client\Request as AmpRequest;
-use OmniIconDeps\Amp\Http\HttpMessage;
+use OmniIconDeps\Amp\Http\Client\Connection\ConnectionLimitingPool;
+use OmniIconDeps\Amp\Promise;
 use OmniIconDeps\Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * A factory to instantiate the best possible HTTP client for the runtime.
@@ -29,7 +29,7 @@ final class HttpClient
      */
     public static function create(array $defaultOptions = [], int $maxHostConnections = 6, int $maxPendingPushes = 50): HttpClientInterface
     {
-        if ($amp = class_exists(AmpRequest::class) && (\PHP_VERSION_ID >= 80400 || !is_subclass_of(AmpRequest::class, HttpMessage::class))) {
+        if ($amp = class_exists(ConnectionLimitingPool::class) && interface_exists(Promise::class)) {
             if (!\extension_loaded('curl')) {
                 return new AmpHttpClient($defaultOptions, null, $maxHostConnections, $maxPendingPushes);
             }
@@ -53,7 +53,7 @@ final class HttpClient
         if ($amp) {
             return new AmpHttpClient($defaultOptions, null, $maxHostConnections, $maxPendingPushes);
         }
-        @trigger_error((\extension_loaded('curl') ? 'Upgrade' : 'Install') . ' the curl extension or run "composer require amphp/http-client:^5" to perform async HTTP operations, including full HTTP/2 support', \E_USER_NOTICE);
+        @trigger_error((\extension_loaded('curl') ? 'Upgrade' : 'Install') . ' the curl extension or run "composer require amphp/http-client:^4.2.1" to perform async HTTP operations, including full HTTP/2 support', \E_USER_NOTICE);
         return new NativeHttpClient($defaultOptions, $maxHostConnections);
     }
     /**

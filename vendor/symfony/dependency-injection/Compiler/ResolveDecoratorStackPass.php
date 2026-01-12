@@ -22,7 +22,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Reference;
  */
 class ResolveDecoratorStackPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         $stacks = [];
         foreach ($container->findTaggedServiceIds('container.stack') as $id => $tags) {

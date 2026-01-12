@@ -18,19 +18,19 @@ if (version_compare(phpversion('redis'), '6.2.0', '>=')) {
     {
         public function expiremember($key, $field, $ttl, $unit = null): \Redis|false|int
         {
-            return $this->initializeLazyObject()->expiremember(...\func_get_args());
+            return ($this->lazyObjectState->realInstance ??= ($this->lazyObjectState->initializer)())->expiremember(...\func_get_args());
         }
         public function expirememberat($key, $field, $timestamp): \Redis|false|int
         {
-            return $this->initializeLazyObject()->expirememberat(...\func_get_args());
+            return ($this->lazyObjectState->realInstance ??= ($this->lazyObjectState->initializer)())->expirememberat(...\func_get_args());
         }
         public function getdel($key): mixed
         {
-            return $this->initializeLazyObject()->getdel(...\func_get_args());
+            return ($this->lazyObjectState->realInstance ??= ($this->lazyObjectState->initializer)())->getdel(...\func_get_args());
         }
         public function getWithMeta($key): \RedisCluster|array|false
         {
-            return $this->initializeLazyObject()->getWithMeta(...\func_get_args());
+            return ($this->lazyObjectState->realInstance ??= ($this->lazyObjectState->initializer)())->getWithMeta(...\func_get_args());
         }
     }
 } else {

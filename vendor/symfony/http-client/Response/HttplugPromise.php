@@ -21,8 +21,10 @@ use OmniIconDeps\Psr\Http\Message\ResponseInterface as Psr7ResponseInterface;
  */
 final class HttplugPromise implements HttplugPromiseInterface
 {
-    public function __construct(private GuzzlePromiseInterface $promise)
+    private GuzzlePromiseInterface $promise;
+    public function __construct(GuzzlePromiseInterface $promise)
     {
+        $this->promise = $promise;
     }
     public function then(?callable $onFulfilled = null, ?callable $onRejected = null): self
     {

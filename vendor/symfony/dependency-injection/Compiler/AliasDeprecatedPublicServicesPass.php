@@ -27,7 +27,7 @@ final class AliasDeprecatedPublicServicesPass extends AbstractRecursivePass
                 throw new InvalidArgumentException(\sprintf('The "version" attribute is mandatory for the "container.private" tag on the "%s" service.', $id));
             }
             $definition = $container->getDefinition($id);
-            if ($definition->isPrivate()) {
+            if (!$definition->isPublic() || $definition->isPrivate()) {
                 continue;
             }
             $container->setAlias($id, $aliasId = '.container.private.' . $id)->setPublic(\true)->setDeprecated($package, $version, 'Accessing the "%alias_id%" service directly from the container is deprecated, use dependency injection instead.');

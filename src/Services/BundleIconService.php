@@ -7,8 +7,8 @@ use OMNI_ICON;
 use OmniIcon\Core\Discovery\Attributes\Service;
 use OmniIconDeps\Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use OmniIconDeps\Symfony\Contracts\Cache\ItemInterface;
-use OmniIconDeps\Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
-use OmniIconDeps\Symfony\UX\Icons\IconRegistryInterface;
+use OmniIcon\Core\Icon\Registry\LocalSvgIconRegistry;
+use OmniIcon\Core\Icon\IconRegistryInterface;
 /**
  * Service for managing plugin bundled SVG icons from flat directory structure.
  * 
@@ -23,10 +23,10 @@ use OmniIconDeps\Symfony\UX\Icons\IconRegistryInterface;
 #[Service]
 class BundleIconService
 {
-    private readonly string $svg_dir;
-    private readonly string $svg_url;
-    private readonly IconRegistryInterface $registry;
-    private readonly FilesystemAdapter $cache;
+    private string $svg_dir;
+    private string $svg_url;
+    private IconRegistryInterface $registry;
+    private FilesystemAdapter $cache;
     public function __construct()
     {
         // Set up plugin SVG directory

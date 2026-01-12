@@ -4,8 +4,8 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.4
-Requires PHP: 8.2
+Stable tag: 1.0.7
+Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -147,6 +147,10 @@ https://github.com/nabasa-dev/omni-icon/
 The repository includes the complete development source code in the `src/` directory, along with build configuration files and instructions for compiling the plugin from source.
 
 == Changelog ==
+
+= 1.0.7 - 2026-01-12 =
+**Fixed**
+* [ACF] Discovery compatibility issue
 
 = 1.0.4 - 2026-01-09 =
 **Added**

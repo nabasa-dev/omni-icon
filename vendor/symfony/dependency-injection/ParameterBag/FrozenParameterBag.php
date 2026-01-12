@@ -24,32 +24,43 @@ class FrozenParameterBag extends ParameterBag
      *
      * This is always the case when used internally.
      */
-    public function __construct(array $parameters = [], protected array $deprecatedParameters = [], protected array $nonEmptyParameters = [])
+    public function __construct(array $parameters = [], protected array $deprecatedParameters = [])
     {
         $this->parameters = $parameters;
         $this->resolved = \true;
     }
-    public function clear(): never
+    /**
+     * @return never
+     */
+    public function clear()
     {
         throw new LogicException('Impossible to call clear() on a frozen ParameterBag.');
     }
-    public function add(array $parameters): never
+    /**
+     * @return never
+     */
+    public function add(array $parameters)
     {
         throw new LogicException('Impossible to call add() on a frozen ParameterBag.');
     }
-    public function set(string $name, array|bool|string|int|float|\UnitEnum|null $value): never
+    /**
+     * @return never
+     */
+    public function set(string $name, array|bool|string|int|float|\UnitEnum|null $value)
     {
         throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }
-    public function deprecate(string $name, string $package, string $version, string $message = 'The parameter "%s" is deprecated.'): never
+    /**
+     * @return never
+     */
+    public function deprecate(string $name, string $package, string $version, string $message = 'The parameter "%s" is deprecated.')
     {
         throw new LogicException('Impossible to call deprecate() on a frozen ParameterBag.');
     }
-    public function cannotBeEmpty(string $name, string $message = 'A non-empty parameter "%s" is required.'): never
-    {
-        throw new LogicException('Impossible to call cannotBeEmpty() on a frozen ParameterBag.');
-    }
-    public function remove(string $name): never
+    /**
+     * @return never
+     */
+    public function remove(string $name)
     {
         throw new LogicException('Impossible to call remove() on a frozen ParameterBag.');
     }

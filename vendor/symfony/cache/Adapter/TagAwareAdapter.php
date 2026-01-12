@@ -15,11 +15,9 @@ use OmniIconDeps\Psr\Cache\InvalidArgumentException;
 use OmniIconDeps\Psr\Log\LoggerAwareInterface;
 use OmniIconDeps\Psr\Log\LoggerAwareTrait;
 use OmniIconDeps\Symfony\Component\Cache\CacheItem;
-use OmniIconDeps\Symfony\Component\Cache\Exception\BadMethodCallException;
 use OmniIconDeps\Symfony\Component\Cache\PruneableInterface;
 use OmniIconDeps\Symfony\Component\Cache\ResettableInterface;
 use OmniIconDeps\Symfony\Component\Cache\Traits\ContractsTrait;
-use OmniIconDeps\Symfony\Contracts\Cache\NamespacedPoolInterface;
 use OmniIconDeps\Symfony\Contracts\Cache\TagAwareCacheInterface;
 /**
  * Implements simple and robust tag-based invalidation suitable for use with volatile caches.
@@ -33,7 +31,7 @@ use OmniIconDeps\Symfony\Contracts\Cache\TagAwareCacheInterface;
  * @author Nicolas Grekas <p@tchwork.com>
  * @author Sergey Belyshkin <sbelyshkin@gmail.com>
  */
-class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterface, NamespacedPoolInterface, PruneableInterface, ResettableInterface, LoggerAwareInterface
+class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterface, PruneableInterface, ResettableInterface, LoggerAwareInterface
 {
     use ContractsTrait;
     use LoggerAwareTrait;
@@ -42,14 +40,16 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
     private AdapterInterface $pool;
     private AdapterInterface $tags;
     private array $knownTagVersions = [];
+    private float $knownTagVersionsTtl;
     private static \Closure $setCacheItemTags;
     private static \Closure $setTagVersions;
     private static \Closure $getTagsByKey;
     private static \Closure $saveTags;
-    public function __construct(AdapterInterface $itemsPool, ?AdapterInterface $tagsPool = null, private float $knownTagVersionsTtl = 0.15)
+    public function __construct(AdapterInterface $itemsPool, ?AdapterInterface $tagsPool = null, float $knownTagVersionsTtl = 0.15)
     {
         $this->pool = $itemsPool;
         $this->tags = $tagsPool ?? $itemsPool;
+        $this->knownTagVersionsTtl = $knownTagVersionsTtl;
         self::$setCacheItemTags ??= \Closure::bind(static function (array $items, array $itemTags) {
             foreach ($items as $key => $item) {
                 $item->isTaggable = \true;
@@ -164,9 +164,11 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
                     unset($this->deferred[$key]);
                 }
             }
-            return $this->pool->clear($prefix);
         } else {
             $this->deferred = [];
+        }
+        if ($this->pool instanceof AdapterInterface) {
+            return $this->pool->clear($prefix);
         }
         return $this->pool->clear();
     }
@@ -220,26 +222,14 @@ class TagAwareAdapter implements TagAwareAdapterInterface, TagAwareCacheInterfac
         (self::$setTagVersions)($items, array_combine($tagVersions, $tagVersions));
         return $ok;
     }
-    /**
-     * @throws BadMethodCallException When the item pool is not a NamespacedPoolInterface
-     */
-    public function withSubNamespace(string $namespace): static
-    {
-        if (!$this->pool instanceof NamespacedPoolInterface) {
-            throw new BadMethodCallException(\sprintf('Cannot call "%s::withSubNamespace()": this class doesn\'t implement "%s".', get_debug_type($this->pool), NamespacedPoolInterface::class));
-        }
-        $knownTagVersions =& $this->knownTagVersions;
-        // ensures clones share the same array
-        $clone = clone $this;
-        $clone->deferred = [];
-        $clone->pool = $this->pool->withSubNamespace($namespace);
-        return $clone;
-    }
     public function prune(): bool
     {
         return $this->pool instanceof PruneableInterface && $this->pool->prune();
     }
-    public function reset(): void
+    /**
+     * @return void
+     */
+    public function reset()
     {
         $this->commit();
         $this->knownTagVersions = [];

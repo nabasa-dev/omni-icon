@@ -27,9 +27,11 @@ class ResolveParameterPlaceHoldersPass extends AbstractRecursivePass
     {
     }
     /**
+     * @return void
+     *
      * @throws ParameterNotFoundException
      */
-    public function process(ContainerBuilder $container): void
+    public function process(ContainerBuilder $container)
     {
         $this->bag = $container->getParameterBag();
         try {

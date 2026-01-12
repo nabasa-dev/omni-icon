@@ -89,7 +89,10 @@ class MockHttpClient implements HttpClientInterface, ResetInterface
         $clone->defaultOptions = self::mergeDefaultOptions($options, $this->defaultOptions, \true);
         return $clone;
     }
-    public function reset(): void
+    /**
+     * @return void
+     */
+    public function reset()
     {
         $this->requestsCount = 0;
     }

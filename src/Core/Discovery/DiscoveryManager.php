@@ -16,10 +16,10 @@ final class DiscoveryManager
     /** @var array<DiscoveryLocation> */
     private array $discoveryLocations = [];
     private ?\OmniIcon\Core\Discovery\DiscoveryCache $discoveryCache = null;
-    private readonly LoggerInterface $logger;
+    private LoggerInterface $logger;
     /** @var array<string> */
     private array $excludedPaths = [];
-    public function __construct(private readonly Container $container)
+    public function __construct(private Container $container)
     {
         $this->logger = new DiscoveryLogger();
     }

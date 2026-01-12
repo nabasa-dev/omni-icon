@@ -26,7 +26,10 @@ class ValidateEnvPlaceholdersPass implements CompilerPassInterface
 {
     private const TYPE_FIXTURES = ['array' => [], 'bool' => \false, 'float' => 0.0, 'int' => 0, 'string' => ''];
     private array $extensionConfig = [];
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         $this->extensionConfig = [];
         if (!class_exists(BaseNode::class) || !$extensions = $container->getExtensions()) {

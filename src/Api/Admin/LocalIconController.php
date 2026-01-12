@@ -10,10 +10,15 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_Error;
 #[Controller(namespace: 'omni-icon/v1', prefix: 'admin/local-icon')]
-final readonly class LocalIconController
+final class LocalIconController
 {
-    public function __construct(private LocalIconService $localIconService)
+    /**
+     * @var LocalIconService
+     */
+    private LocalIconService $localIconService;
+    public function __construct(LocalIconService $localIconService)
     {
+        $this->localIconService = $localIconService;
     }
     /**
      * Upload custom SVG icon(s)

@@ -18,11 +18,10 @@ use OmniIconDeps\Symfony\Component\Cache\ResettableInterface;
 use OmniIconDeps\Symfony\Component\Cache\Traits\ContractsTrait;
 use OmniIconDeps\Symfony\Component\Cache\Traits\ProxyTrait;
 use OmniIconDeps\Symfony\Contracts\Cache\CacheInterface;
-use OmniIconDeps\Symfony\Contracts\Cache\NamespacedPoolInterface;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class ProxyAdapter implements AdapterInterface, NamespacedPoolInterface, CacheInterface, PruneableInterface, ResettableInterface
+class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterface, ResettableInterface
 {
     use ContractsTrait;
     use ProxyTrait;
@@ -34,17 +33,12 @@ class ProxyAdapter implements AdapterInterface, NamespacedPoolInterface, CacheIn
     private static \Closure $setInnerItem;
     public function __construct(CacheItemPoolInterface $pool, string $namespace = '', int $defaultLifetime = 0)
     {
-        if ('' !== $namespace) {
-            if ($pool instanceof NamespacedPoolInterface) {
-                $pool = $pool->withSubNamespace($namespace);
-                $this->namespace = $namespace = '';
-            } else {
-                \assert('' !== CacheItem::validateKey($namespace));
-                $this->namespace = $namespace;
-            }
-        }
         $this->pool = $pool;
         $this->poolHash = spl_object_hash($pool);
+        if ('' !== $namespace) {
+            \assert('' !== CacheItem::validateKey($namespace));
+            $this->namespace = $namespace;
+        }
         $this->namespaceLen = \strlen($namespace);
         $this->defaultLifetime = $defaultLifetime;
         self::$createCacheItem ??= \Closure::bind(static function ($key, $innerItem, $poolHash) {
@@ -129,17 +123,6 @@ class ProxyAdapter implements AdapterInterface, NamespacedPoolInterface, CacheIn
     public function commit(): bool
     {
         return $this->pool->commit();
-    }
-    public function withSubNamespace(string $namespace): static
-    {
-        $clone = clone $this;
-        if ($clone->pool instanceof NamespacedPoolInterface) {
-            $clone->pool = $clone->pool->withSubNamespace($namespace);
-        } else {
-            $clone->namespace .= CacheItem::validateKey($namespace);
-            $clone->namespaceLen = \strlen($clone->namespace);
-        }
-        return $clone;
     }
     private function doSave(CacheItemInterface $item, string $method): bool
     {

@@ -21,8 +21,7 @@ use OmniIconDeps\Symfony\Component\Mime\Header\Headers;
  */
 class TextPart extends AbstractPart
 {
-    private const DEFAULT_ENCODERS = ['quoted-printable', 'base64', '8bit'];
-    /** @internal, to be removed in 8.0 */
+    /** @internal */
     protected Headers $_headers;
     private static array $encoders = [];
     /** @var resource|string|File */
@@ -55,8 +54,8 @@ class TextPart extends AbstractPart
         if (null === $encoding) {
             $this->encoding = $this->chooseEncoding();
         } else {
-            if (!\in_array($encoding, self::DEFAULT_ENCODERS, \true) && !\array_key_exists($encoding, self::$encoders)) {
-                throw new InvalidArgumentException(\sprintf('The encoding must be one of "%s" ("%s" given).', implode('", "', array_unique(array_merge(self::DEFAULT_ENCODERS, array_keys(self::$encoders)))), $encoding));
+            if ('quoted-printable' !== $encoding && 'base64' !== $encoding && '8bit' !== $encoding) {
+                throw new InvalidArgumentException(\sprintf('The encoding must be one of "quoted-printable", "base64", or "8bit" ("%s" given).', $encoding));
             }
             $this->encoding = $encoding;
         }
@@ -178,17 +177,7 @@ class TextPart extends AbstractPart
         if ('quoted-printable' === $this->encoding) {
             return self::$encoders[$this->encoding] ??= new QpContentEncoder();
         }
-        if ('base64' === $this->encoding) {
-            return self::$encoders[$this->encoding] ??= new Base64ContentEncoder();
-        }
-        return self::$encoders[$this->encoding];
-    }
-    public static function addEncoder(ContentEncoderInterface $encoder): void
-    {
-        if (\in_array($encoder->getName(), self::DEFAULT_ENCODERS, \true)) {
-            throw new InvalidArgumentException('You are not allowed to change the default encoders ("quoted-printable", "base64", and "8bit").');
-        }
-        self::$encoders[$encoder->getName()] = $encoder;
+        return self::$encoders[$this->encoding] ??= new Base64ContentEncoder();
     }
     private function chooseEncoding(): string
     {
@@ -197,84 +186,8 @@ class TextPart extends AbstractPart
         }
         return 'quoted-printable';
     }
-    public function __serialize(): array
-    {
-        if (self::class === (new \ReflectionMethod($this, '__sleep'))->class || self::class !== (new \ReflectionMethod($this, '__serialize'))->class) {
-            // convert resources to strings for serialization
-            if (null !== $this->seekable) {
-                $this->body = $this->getBody();
-                $this->seekable = null;
-            }
-            return ['_headers' => $this->getHeaders(), 'body' => $this->body, 'charset' => $this->charset, 'subtype' => $this->subtype, 'disposition' => $this->disposition, 'name' => $this->name, 'encoding' => $this->encoding];
-        }
-        trigger_deprecation('symfony/mime', '7.4', 'Implementing "%s::__sleep()" is deprecated, use "__serialize()" instead.', get_debug_type($this));
-        $data = [];
-        foreach ($this->__sleep() as $key) {
-            try {
-                if (($r = new \ReflectionProperty($this, $key))->isInitialized($this)) {
-                    $data[$key] = $r->getValue($this);
-                }
-            } catch (\ReflectionException) {
-                $data[$key] = $this->{$key};
-            }
-        }
-        return $data;
-    }
-    public function __unserialize(array $data): void
-    {
-        if ($wakeup = self::class !== (new \ReflectionMethod($this, '__wakeup'))->class && self::class === (new \ReflectionMethod($this, '__unserialize'))->class) {
-            trigger_deprecation('symfony/mime', '7.4', 'Implementing "%s::__wakeup()" is deprecated, use "__unserialize()" instead.', get_debug_type($this));
-        }
-        if ($headers = $data['_headers'] ?? $data["\x00*\x00_headers"] ?? null) {
-            unset($data['_headers'], $data["\x00*\x00_headers"]);
-            parent::__unserialize(['headers' => $headers]);
-        }
-        if (['body', 'charset', 'subtype', 'disposition', 'name', 'encoding'] === array_keys($data)) {
-            parent::__unserialize(['headers' => $headers]);
-            $this->body = $data['body'];
-            $this->charset = $data['charset'];
-            $this->subtype = $data['subtype'];
-            $this->disposition = $data['disposition'];
-            $this->name = $data['name'];
-            $this->encoding = $data['encoding'];
-            if ($wakeup) {
-                $this->__wakeup();
-            } elseif (!\is_string($this->body) && !$this->body instanceof File) {
-                throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
-            }
-            return;
-        }
-        if (["\x00" . self::class . "\x00body", "\x00" . self::class . "\x00charset", "\x00" . self::class . "\x00subtype", "\x00" . self::class . "\x00disposition", "\x00" . self::class . "\x00name", "\x00" . self::class . "\x00encoding"] === array_keys($data)) {
-            $this->body = $data["\x00" . self::class . "\x00body"];
-            $this->charset = $data["\x00" . self::class . "\x00charset"];
-            $this->subtype = $data["\x00" . self::class . "\x00subtype"];
-            $this->disposition = $data["\x00" . self::class . "\x00disposition"];
-            $this->name = $data["\x00" . self::class . "\x00name"];
-            $this->encoding = $data["\x00" . self::class . "\x00encoding"];
-            if ($wakeup) {
-                $this->_headers = $headers;
-                $this->__wakeup();
-            } elseif (!\is_string($this->body) && !$this->body instanceof File) {
-                throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
-            }
-            return;
-        }
-        trigger_deprecation('symfony/mime', '7.4', 'Passing extra keys to "%s::__unserialize()" is deprecated, populate properties in "%s::__unserialize()" instead.', self::class, get_debug_type($this));
-        \Closure::bind(function ($data) use ($wakeup) {
-            foreach ($data as $key => $value) {
-                $this->{"\x00" === $key[0] ?? '' ? substr($key, 1 + strrpos($key, "\x00")) : $key} = $value;
-            }
-            if ($wakeup) {
-                $this->__wakeup();
-            }
-        }, $this, static::class)($data);
-    }
-    /**
-     * @deprecated since Symfony 7.4, will be replaced by `__serialize()` in 8.0
-     */
     public function __sleep(): array
     {
-        trigger_deprecation('symfony/mime', '7.4', 'Calling "%s::__sleep()" is deprecated, use "__serialize()" instead.', get_debug_type($this));
         // convert resources to strings for serialization
         if (null !== $this->seekable) {
             $this->body = $this->getBody();
@@ -284,11 +197,10 @@ class TextPart extends AbstractPart
         return ['_headers', 'body', 'charset', 'subtype', 'disposition', 'name', 'encoding'];
     }
     /**
-     * @deprecated since Symfony 7.4, will be replaced by `__unserialize()` in 8.0
+     * @return void
      */
-    public function __wakeup(): void
+    public function __wakeup()
     {
-        trigger_deprecation('symfony/mime', '7.4', 'Calling "%s::__wakeup()" is deprecated, use "__unserialize()" instead.', get_debug_type($this));
         $r = new \ReflectionProperty(AbstractPart::class, 'headers');
         $r->setValue($this, $this->_headers);
         unset($this->_headers);

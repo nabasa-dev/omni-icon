@@ -17,8 +17,10 @@ namespace OmniIconDeps\Symfony\Component\HttpClient\Internal;
  */
 final class Canary
 {
-    public function __construct(private \Closure $canceller)
+    private \Closure $canceller;
+    public function __construct(\Closure $canceller)
     {
+        $this->canceller = $canceller;
     }
     public function cancel(): void
     {

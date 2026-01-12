@@ -14,10 +14,12 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\InvalidArgument
 class Alias
 {
     private const DEFAULT_DEPRECATION_TEMPLATE = 'The "%alias_id%" service alias is deprecated. You should stop using it, as it will be removed in the future.';
-    private bool $public = \false;
+    private string $id;
+    private bool $public;
     private array $deprecation = [];
-    public function __construct(private string $id, bool $public = \false)
+    public function __construct(string $id, bool $public = \false)
     {
+        $this->id = $id;
         $this->public = $public;
     }
     /**
@@ -83,19 +85,5 @@ class Alias
     public function __toString(): string
     {
         return $this->id;
-    }
-    public function __serialize(): array
-    {
-        $data = [];
-        foreach ((array) $this as $k => $v) {
-            if (!$v) {
-                continue;
-            }
-            if (\false !== $i = strrpos($k, "\x00")) {
-                $k = substr($k, 1 + $i);
-            }
-            $data[$k] = $v;
-        }
-        return $data;
     }
 }

@@ -79,25 +79,18 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
         $this->marshaller = $marshaller ?? new DefaultMarshaller();
         parent::__construct($namespace, $defaultLifetime);
     }
-    public static function createConnection(#[\SensitiveParameter] string $dsn, array $options = []): \PDO|string
-    {
-        if ($options['lazy'] ?? \true) {
-            return $dsn;
-        }
-        $pdo = new \PDO($dsn);
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        return $pdo;
-    }
     /**
      * Creates the table to store cache items which can be called once for setup.
      *
      * Cache ID are saved in a column of maximum length 255. Cache data is
      * saved in a BLOB.
      *
+     * @return void
+     *
      * @throws \PDOException    When the table already exists
      * @throws \DomainException When an unsupported PDO driver is used
      */
-    public function createTable(): void
+    public function createTable()
     {
         $sql = match ($driver = $this->getDriver()) {
             // We use varbinary for the ID column because it prevents unwanted conversions:
@@ -309,15 +302,15 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
     /**
      * @internal
      */
-    protected function getId(mixed $key, ?string $namespace = null): string
+    protected function getId(mixed $key): string
     {
         if ('pgsql' !== $this->getDriver()) {
-            return parent::getId($key, $namespace);
+            return parent::getId($key);
         }
         if (str_contains($key, "\x00") || str_contains($key, '%') || !preg_match('//u', $key)) {
             $key = rawurlencode($key);
         }
-        return parent::getId($key, $namespace);
+        return parent::getId($key);
     }
     private function getConnection(): \PDO
     {

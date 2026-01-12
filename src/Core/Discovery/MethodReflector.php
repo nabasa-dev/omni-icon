@@ -7,7 +7,7 @@ use ReflectionAttribute;
 use ReflectionMethod;
 final class MethodReflector
 {
-    public function __construct(private readonly ReflectionMethod $reflectionMethod)
+    public function __construct(private ReflectionMethod $reflectionMethod)
     {
     }
     public function getName(): string

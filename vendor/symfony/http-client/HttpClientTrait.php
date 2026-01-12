@@ -15,6 +15,7 @@ use OmniIconDeps\Symfony\Component\HttpClient\Exception\TransportException;
 use OmniIconDeps\Symfony\Component\HttpClient\Response\StreamableInterface;
 use OmniIconDeps\Symfony\Component\HttpClient\Response\StreamWrapper;
 use OmniIconDeps\Symfony\Component\Mime\MimeTypes;
+use OmniIconDeps\Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * Provides the common logic from writing HttpClientInterface implementations.
  *
@@ -521,15 +522,6 @@ trait HttpClientTrait
      */
     private static function parseUrl(string $url, array $query = [], array $allowedSchemes = ['http' => 80, 'https' => 443]): array
     {
-        if (\false !== ($i = strpos($url, '\\')) && $i < strcspn($url, '?#')) {
-            throw new InvalidArgumentException(\sprintf('Malformed URL "%s": backslashes are not allowed.', $url));
-        }
-        if (\strlen($url) !== strcspn($url, "\r\n\t")) {
-            throw new InvalidArgumentException(\sprintf('Malformed URL "%s": CR/LF/TAB characters are not allowed.', $url));
-        }
-        if ('' !== $url && (\ord($url[0]) <= 32 || \ord($url[-1]) <= 32)) {
-            throw new InvalidArgumentException(\sprintf('Malformed URL "%s": leading/trailing ASCII control characters or spaces are not allowed.', $url));
-        }
         $tail = '';
         if (\false === $parts = parse_url(\strlen($url) !== strcspn($url, '?#') ? $url : $url . $tail = '#')) {
             throw new InvalidArgumentException(\sprintf('Malformed URL "%s".', $url));
@@ -576,8 +568,10 @@ trait HttpClientTrait
      * Removes dot-segments from a path.
      *
      * @see https://tools.ietf.org/html/rfc3986#section-5.2.4
+     *
+     * @return string
      */
-    private static function removeDotSegments(string $path): string
+    private static function removeDotSegments(string $path)
     {
         $result = '';
         while (!\in_array($path, ['', '.', '..'], \true)) {

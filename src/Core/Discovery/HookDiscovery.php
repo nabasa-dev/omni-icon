@@ -13,7 +13,7 @@ final class HookDiscovery implements \OmniIcon\Core\Discovery\Discovery
     private array $hooks = [];
     /** @var array<string> Track registered hooks to avoid duplicates */
     private array $registeredHooks = [];
-    public function __construct(private readonly Container $container)
+    public function __construct(private Container $container)
     {
         $this->discoveryItems = new \OmniIcon\Core\Discovery\DiscoveryItems();
     }

@@ -29,8 +29,16 @@ use OmniIconDeps\Symfony\Contracts\HttpClient\ResponseInterface;
  */
 class TraceableResponse implements ResponseInterface, StreamableInterface
 {
-    public function __construct(private HttpClientInterface $client, private ResponseInterface $response, private mixed &$content = \false, private ?StopwatchEvent $event = null)
+    private HttpClientInterface $client;
+    private ResponseInterface $response;
+    private mixed $content;
+    private ?StopwatchEvent $event;
+    public function __construct(HttpClientInterface $client, ResponseInterface $response, &$content, ?StopwatchEvent $event = null)
     {
+        $this->client = $client;
+        $this->response = $response;
+        $this->content =& $content;
+        $this->event = $event;
     }
     public function __serialize(): array
     {

@@ -14,8 +14,10 @@ use OmniIconDeps\PHPUnit\Framework\Constraint\Constraint;
 use OmniIconDeps\Symfony\Component\Mime\RawMessage;
 final class EmailHasHeader extends Constraint
 {
-    public function __construct(private string $headerName)
+    private string $headerName;
+    public function __construct(string $headerName)
     {
+        $this->headerName = $headerName;
     }
     public function toString(): string
     {

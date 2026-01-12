@@ -21,10 +21,12 @@ use OmniIconDeps\Symfony\Contracts\HttpClient\ChunkInterface;
 class ErrorChunk implements ChunkInterface
 {
     private bool $didThrow = \false;
+    private int $offset;
     private string $errorMessage;
     private ?\Throwable $error = null;
-    public function __construct(private int $offset, \Throwable|string $error)
+    public function __construct(int $offset, \Throwable|string $error)
     {
+        $this->offset = $offset;
         if (\is_string($error)) {
             $this->errorMessage = $error;
         } else {

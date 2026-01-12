@@ -8,20 +8,20 @@ use OmniIcon\Core\Discovery\Attributes\Service;
 use OmniIcon\Core\Logger\LogComponent;
 use OmniIcon\Core\Logger\LoggerService;
 use OmniIconDeps\Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use OmniIconDeps\Symfony\UX\Icons\Iconify as UXIconify;
-use OmniIconDeps\Symfony\UX\Icons\IconRegistryInterface;
-use OmniIconDeps\Symfony\UX\Icons\Registry\CacheIconRegistry;
-use OmniIconDeps\Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
+use OmniIcon\Core\Icon\Iconify as UXIconify;
+use OmniIcon\Core\Icon\IconRegistryInterface;
+use OmniIcon\Core\Icon\Registry\CacheIconRegistry;
+use OmniIcon\Core\Icon\Registry\IconifyOnDemandRegistry;
 /**
  * Iconify service for registry and metadata access.
  */
 #[Service]
 class IconifyService
 {
-    private readonly IconRegistryInterface $registry;
-    private readonly UXIconify $iconify;
-    private readonly FilesystemAdapter $searchCache;
-    public function __construct(private readonly LoggerService $logger)
+    private IconRegistryInterface $registry;
+    private UXIconify $iconify;
+    private FilesystemAdapter $searchCache;
+    public function __construct(private LoggerService $logger)
     {
         // Initialize Symfony cache adapter for icon metadata
         $cache = new FilesystemAdapter('iconify', 0, wp_upload_dir()['basedir'] . OMNI_ICON::CACHE_DIR . 'iconify');

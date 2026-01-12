@@ -26,7 +26,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Reference;
 class DecoratorServicePass extends AbstractRecursivePass
 {
     protected bool $skipScalars = \true;
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         $definitions = new \SplPriorityQueue();
         $order = \PHP_INT_MAX;

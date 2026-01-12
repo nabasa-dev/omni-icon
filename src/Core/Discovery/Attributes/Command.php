@@ -5,7 +5,7 @@ namespace OmniIcon\Core\Discovery\Attributes;
 
 use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-final readonly class Command
+final class Command
 {
     public function __construct(
         public ?string $name = null,

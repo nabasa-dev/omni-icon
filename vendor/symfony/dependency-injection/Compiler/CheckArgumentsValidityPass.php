@@ -21,8 +21,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\RuntimeExceptio
 class CheckArgumentsValidityPass extends AbstractRecursivePass
 {
     protected bool $skipScalars = \true;
-    public function __construct(private bool $throwExceptions = \true)
+    private bool $throwExceptions;
+    public function __construct(bool $throwExceptions = \true)
     {
+        $this->throwExceptions = $throwExceptions;
     }
     protected function processValue(mixed $value, bool $isRoot = \false): mixed
     {

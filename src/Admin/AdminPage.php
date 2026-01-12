@@ -14,7 +14,7 @@ use OmniIcon\Services\ViteService;
 #[Service]
 class AdminPage
 {
-    public function __construct(private readonly ViteService $viteService)
+    public function __construct(private ViteService $viteService)
     {
     }
     /**

@@ -28,10 +28,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 trait ExtensionTrait
 {
-    private function executeConfiguratorCallback(ContainerBuilder $container, \Closure $callback, ConfigurableExtensionInterface $subject, bool $prepend = \false): void
+    private function executeConfiguratorCallback(ContainerBuilder $container, \Closure $callback, ConfigurableExtensionInterface $subject): void
     {
         $env = $container->getParameter('kernel.environment');
-        $loader = $this->createContainerLoader($container, $env, $prepend);
+        $loader = $this->createContainerLoader($container, $env);
         $file = (new \ReflectionObject($subject))->getFileName();
         $bundleLoader = $loader->getResolver()->resolve($file);
         if (!$bundleLoader instanceof PhpFileLoader) {
@@ -46,11 +46,11 @@ trait ExtensionTrait
             $bundleLoader->registerAliasesForSinglyImplementedInterfaces();
         }
     }
-    private function createContainerLoader(ContainerBuilder $container, string $env, bool $prepend): DelegatingLoader
+    private function createContainerLoader(ContainerBuilder $container, string $env): DelegatingLoader
     {
         $buildDir = $container->getParameter('kernel.build_dir');
         $locator = new FileLocator();
-        $resolver = new LoaderResolver([new XmlFileLoader($container, $locator, $env, $prepend), new YamlFileLoader($container, $locator, $env, $prepend), new IniFileLoader($container, $locator, $env), class_exists(ConfigBuilderGenerator::class) ? new PhpFileLoader($container, $locator, $env, new ConfigBuilderGenerator($buildDir), $prepend) : new PhpFileLoader($container, $locator, $env, $prepend), new GlobFileLoader($container, $locator, $env), new DirectoryLoader($container, $locator, $env), new ClosureLoader($container, $env)]);
+        $resolver = new LoaderResolver([new XmlFileLoader($container, $locator, $env), new YamlFileLoader($container, $locator, $env), new IniFileLoader($container, $locator, $env), new PhpFileLoader($container, $locator, $env, new ConfigBuilderGenerator($buildDir)), new GlobFileLoader($container, $locator, $env), new DirectoryLoader($container, $locator, $env), new ClosureLoader($container, $env)]);
         return new DelegatingLoader($resolver);
     }
 }

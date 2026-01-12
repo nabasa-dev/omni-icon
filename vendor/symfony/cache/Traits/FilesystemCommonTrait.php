@@ -65,7 +65,10 @@ trait FilesystemCommonTrait
         }
         return $ok;
     }
-    protected function doUnlink(string $file): bool
+    /**
+     * @return bool
+     */
+    protected function doUnlink(string $file)
     {
         return @unlink($file);
     }
@@ -93,6 +96,7 @@ trait FilesystemCommonTrait
             }
             if ('\\' === \DIRECTORY_SEPARATOR) {
                 $success = copy($tmp, $file);
+                $unlink = \true;
             } else {
                 $success = rename($tmp, $file);
                 $unlink = !$success;

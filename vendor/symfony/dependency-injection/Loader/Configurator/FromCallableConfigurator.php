@@ -27,8 +27,10 @@ class FromCallableConfigurator extends AbstractServiceConfigurator
     use Traits\ShareTrait;
     use Traits\TagTrait;
     public const FACTORY = 'services';
-    public function __construct(private ServiceConfigurator $serviceConfigurator, Definition $definition)
+    private ServiceConfigurator $serviceConfigurator;
+    public function __construct(ServiceConfigurator $serviceConfigurator, Definition $definition)
     {
+        $this->serviceConfigurator = $serviceConfigurator;
         parent::__construct($serviceConfigurator->parent, $definition, $serviceConfigurator->id);
     }
     public function __destruct()

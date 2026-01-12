@@ -19,6 +19,7 @@ use OmniIconDeps\Symfony\Component\Mime\Exception\LogicException;
  */
 class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
 {
+    private string $cmd;
     /**
      * The $cmd pattern must contain a "%s" string that will be replaced
      * with the file name to guess.
@@ -27,8 +28,9 @@ class FileBinaryMimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @param string $cmd The command to run to get the MIME type of a file
      */
-    public function __construct(private string $cmd = 'file -b --mime -- %s 2>/dev/null')
+    public function __construct(string $cmd = 'file -b --mime -- %s 2>/dev/null')
     {
+        $this->cmd = $cmd;
     }
     public function isGuesserSupported(): bool
     {

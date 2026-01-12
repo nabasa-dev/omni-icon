@@ -123,7 +123,7 @@ class YamlDumper extends Dumper
                 $code .= \sprintf("        decoration_priority: %s\n", $priority);
             }
             $decorationOnInvalid = $decoratedService[3] ?? ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
-            if (\in_array($decorationOnInvalid, [ContainerInterface::IGNORE_ON_INVALID_REFERENCE, ContainerInterface::NULL_ON_INVALID_REFERENCE], \true)) {
+            if (\in_array($decorationOnInvalid, [ContainerInterface::IGNORE_ON_INVALID_REFERENCE, ContainerInterface::NULL_ON_INVALID_REFERENCE])) {
                 $invalidBehavior = ContainerInterface::NULL_ON_INVALID_REFERENCE === $decorationOnInvalid ? 'null' : 'ignore';
                 $code .= \sprintf("        decoration_on_invalid: %s\n", $invalidBehavior);
             }
@@ -259,7 +259,7 @@ class YamlDumper extends Dumper
         } elseif ($value instanceof Definition) {
             return new TaggedValue('service', (new Parser())->parse("_:\n" . $this->addService('_', $value), Yaml::PARSE_CUSTOM_TAGS)['_']['_']);
         } elseif ($value instanceof \UnitEnum) {
-            return new TaggedValue('php/enum', \sprintf('%s::%s', $value::class, $value->name));
+            return new TaggedValue('php/const', \sprintf('%s::%s', $value::class, $value->name));
         } elseif ($value instanceof AbstractArgument) {
             return new TaggedValue('abstract', $value->getText());
         } elseif (\is_object($value) || \is_resource($value)) {

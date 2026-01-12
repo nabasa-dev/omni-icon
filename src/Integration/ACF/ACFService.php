@@ -17,7 +17,7 @@ use function acf_register_field_type;
 #[Service]
 class ACFService
 {
-    public function __construct(private readonly ViteService $viteService)
+    public function __construct(private ViteService $viteService)
     {
     }
     /**
@@ -48,6 +48,9 @@ class ACFService
         if (class_exists(BricksProvider::class)) {
             /** @var BricksProviderAcf */
             $bricks_acf = BricksProvider::get_registered_provider('acf');
+            if (!$bricks_acf) {
+                return;
+            }
             $bricks_acf->tags = array_merge($bricks_acf->tags, ['omni_icon' => ['name' => '{omni_icon}', 'label' => esc_html__('Omni Icon', 'bricks'), 'group' => 'ACF', 'provider' => 'acf', 'queryFiltersExcludeTag' => \true]]);
         }
     }

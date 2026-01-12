@@ -8,11 +8,9 @@ use OmniIconDeps\Psr\Container\ContainerInterface;
 use RuntimeException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\ContainerBuilder;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Definition;
-use OmniIconDeps\Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
-use OmniIconDeps\Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 final class Container implements ContainerInterface
 {
-    private readonly ContainerBuilder $containerBuilder;
+    private ContainerBuilder $containerBuilder;
     private bool $compiled = \false;
     public function __construct()
     {
@@ -91,11 +89,6 @@ final class Container implements ContainerInterface
         $this->parameter('omni-icon.plugin_url', OMNI_ICON::url());
         $this->parameter('omni-icon.version', OMNI_ICON::VERSION);
         $this->containerBuilder->setAlias(ContainerInterface::class, 'service_container');
-        // Register Symfony Messenger Serializer
-        $serializerDefinition = new Definition(PhpSerializer::class);
-        $serializerDefinition->setAutowired(\true);
-        $serializerDefinition->setPublic(\true);
-        $this->containerBuilder->setDefinition(SerializerInterface::class, $serializerDefinition);
     }
     private function register_compiler_passes(): void
     {

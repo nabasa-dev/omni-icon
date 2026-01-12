@@ -17,7 +17,6 @@ namespace OmniIconDeps\Symfony\Component\DependencyInjection\Argument;
  */
 class ServiceLocatorArgument implements ArgumentInterface
 {
-    use ArgumentTrait;
     private array $values;
     private ?TaggedIteratorArgument $taggedIteratorArgument = null;
     public function __construct(array|TaggedIteratorArgument $values = [])
@@ -36,7 +35,10 @@ class ServiceLocatorArgument implements ArgumentInterface
     {
         return $this->values;
     }
-    public function setValues(array $values): void
+    /**
+     * @return void
+     */
+    public function setValues(array $values)
     {
         $this->values = $values;
     }

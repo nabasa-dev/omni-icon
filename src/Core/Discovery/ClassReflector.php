@@ -8,7 +8,7 @@ use ReflectionClass;
 use ReflectionMethod;
 final class ClassReflector
 {
-    private readonly ReflectionClass $reflectionClass;
+    private ReflectionClass $reflectionClass;
     /**
      * @param class-string $className
      */

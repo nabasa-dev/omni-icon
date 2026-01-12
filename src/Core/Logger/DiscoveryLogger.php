@@ -16,7 +16,7 @@ use Throwable;
  */
 final class DiscoveryLogger extends AbstractLogger
 {
-    private readonly bool $enabled;
+    private bool $enabled;
     public function __construct()
     {
         $this->enabled = defined('WP_DEBUG') && \WP_DEBUG;

@@ -20,11 +20,13 @@ use OmniIconDeps\Symfony\Component\Config\Resource\ResourceInterface;
  */
 class ContainerParametersResource implements ResourceInterface
 {
+    private array $parameters;
     /**
      * @param array $parameters The container parameters to track
      */
-    public function __construct(private array $parameters)
+    public function __construct(array $parameters)
     {
+        $this->parameters = $parameters;
     }
     public function __toString(): string
     {

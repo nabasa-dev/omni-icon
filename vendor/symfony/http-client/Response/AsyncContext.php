@@ -25,16 +25,23 @@ final class AsyncContext
 {
     /** @var callable|null */
     private $passthru;
+    private HttpClientInterface $client;
     private ResponseInterface $response;
     private array $info = [];
+    /** @var resource|null */
+    private $content;
+    private int $offset;
     /**
      * @param resource|null $content
      */
-    public function __construct(?callable &$passthru, private HttpClientInterface $client, ResponseInterface &$response, array &$info, private $content, private int $offset)
+    public function __construct(?callable &$passthru, HttpClientInterface $client, ResponseInterface &$response, array &$info, $content, int $offset)
     {
         $this->passthru =& $passthru;
+        $this->client = $client;
         $this->response =& $response;
         $this->info =& $info;
+        $this->content = $content;
+        $this->offset = $offset;
     }
     /**
      * Returns the HTTP status without consuming the response.

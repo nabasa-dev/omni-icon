@@ -11,7 +11,7 @@ final class DirectoryScanner
      * @param array<Discovery> $discoveries
      * @param array<string> $excludedPaths
      */
-    public function __construct(private readonly array $discoveries, private readonly LoggerInterface $logger, private readonly array $excludedPaths = [])
+    public function __construct(private array $discoveries, private LoggerInterface $logger, private array $excludedPaths = [])
     {
     }
     /**

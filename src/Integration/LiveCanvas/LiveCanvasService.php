@@ -13,7 +13,7 @@ use OmniIcon\Services\ViteService;
 #[Service]
 class LiveCanvasService
 {
-    public function __construct(private readonly ViteService $viteService)
+    public function __construct(private ViteService $viteService)
     {
     }
     /**

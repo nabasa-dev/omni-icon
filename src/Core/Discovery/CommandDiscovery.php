@@ -15,8 +15,8 @@ final class CommandDiscovery implements \OmniIcon\Core\Discovery\Discovery
     use \OmniIcon\Core\Discovery\IsDiscovery;
     /** @var array<array<string, mixed>> */
     private array $commands = [];
-    private readonly DependencyResolver $dependencyResolver;
-    public function __construct(private readonly Container $container, private readonly LoggerService $logger)
+    private DependencyResolver $dependencyResolver;
+    public function __construct(private Container $container, private LoggerService $logger)
     {
         $this->discoveryItems = new \OmniIcon\Core\Discovery\DiscoveryItems();
         $this->dependencyResolver = new DependencyResolver($container);

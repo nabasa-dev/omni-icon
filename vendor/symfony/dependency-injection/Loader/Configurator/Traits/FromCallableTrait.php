@@ -17,7 +17,7 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Loader\Configurator\Refer
 use OmniIconDeps\Symfony\Component\ExpressionLanguage\Expression;
 trait FromCallableTrait
 {
-    final public function fromCallable(string|array|\Closure|ReferenceConfigurator|Expression $callable): FromCallableConfigurator
+    final public function fromCallable(string|array|ReferenceConfigurator|Expression $callable): FromCallableConfigurator
     {
         if ($this->definition instanceof ChildDefinition) {
             throw new InvalidArgumentException('The configuration key "parent" is unsupported when using "fromCallable()".');

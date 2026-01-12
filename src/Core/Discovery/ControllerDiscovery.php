@@ -16,8 +16,8 @@ final class ControllerDiscovery implements \OmniIcon\Core\Discovery\Discovery
     private array $controllers = [];
     /** @var array<array<string, mixed>> */
     private array $routes = [];
-    private readonly DependencyResolver $dependencyResolver;
-    public function __construct(private readonly Container $container)
+    private DependencyResolver $dependencyResolver;
+    public function __construct(private Container $container)
     {
         $this->discoveryItems = new \OmniIcon\Core\Discovery\DiscoveryItems();
         $this->dependencyResolver = new DependencyResolver($container);

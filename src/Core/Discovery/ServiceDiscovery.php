@@ -10,7 +10,7 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Reference;
 final class ServiceDiscovery implements \OmniIcon\Core\Discovery\Discovery
 {
     use \OmniIcon\Core\Discovery\IsDiscovery;
-    public function __construct(private readonly Container $container)
+    public function __construct(private Container $container)
     {
         $this->discoveryItems = new \OmniIcon\Core\Discovery\DiscoveryItems();
     }

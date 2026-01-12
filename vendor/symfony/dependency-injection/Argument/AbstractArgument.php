@@ -15,7 +15,6 @@ namespace OmniIconDeps\Symfony\Component\DependencyInjection\Argument;
  */
 final class AbstractArgument
 {
-    use ArgumentTrait;
     private string $text;
     private string $context = '';
     public function __construct(string $text = '')

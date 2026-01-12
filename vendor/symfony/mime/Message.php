@@ -20,9 +20,11 @@ use OmniIconDeps\Symfony\Component\Mime\Part\TextPart;
 class Message extends RawMessage
 {
     private Headers $headers;
-    public function __construct(?Headers $headers = null, private ?AbstractPart $body = null)
+    private ?AbstractPart $body;
+    public function __construct(?Headers $headers = null, ?AbstractPart $body = null)
     {
         $this->headers = $headers ? clone $headers : new Headers();
+        $this->body = $body;
     }
     public function __clone()
     {
@@ -34,8 +36,11 @@ class Message extends RawMessage
     /**
      * @return $this
      */
-    public function setBody(?AbstractPart $body): static
+    public function setBody(?AbstractPart $body = null): static
     {
+        if (1 > \func_num_args()) {
+            trigger_deprecation('symfony/mime', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
+        }
         $this->body = $body;
         return $this;
     }
@@ -96,7 +101,10 @@ class Message extends RawMessage
         yield $this->getPreparedHeaders()->toString();
         yield from $body->toIterable();
     }
-    public function ensureValidity(): void
+    /**
+     * @return void
+     */
+    public function ensureValidity()
     {
         if (!$this->headers->get('To')?->getBody() && !$this->headers->get('Cc')?->getBody() && !$this->headers->get('Bcc')?->getBody()) {
             throw new LogicException('An email must have a "To", "Cc", or "Bcc" header.');

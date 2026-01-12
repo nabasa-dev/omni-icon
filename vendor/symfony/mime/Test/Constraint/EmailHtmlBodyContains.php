@@ -15,8 +15,10 @@ use OmniIconDeps\Symfony\Component\Mime\Message;
 use OmniIconDeps\Symfony\Component\Mime\RawMessage;
 final class EmailHtmlBodyContains extends Constraint
 {
-    public function __construct(private string $expectedText)
+    private string $expectedText;
+    public function __construct(string $expectedText)
     {
+        $this->expectedText = $expectedText;
     }
     public function toString(): string
     {

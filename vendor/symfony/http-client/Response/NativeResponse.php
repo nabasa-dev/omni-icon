@@ -26,6 +26,11 @@ final class NativeResponse implements ResponseInterface, StreamableInterface
 {
     use CommonResponseTrait;
     use TransportResponseTrait;
+    /**
+     * @var resource
+     */
+    private $context;
+    private string $url;
     private \Closure $resolver;
     private ?\Closure $onProgress;
     private ?int $remaining = null;
@@ -33,15 +38,17 @@ final class NativeResponse implements ResponseInterface, StreamableInterface
      * @var resource|null
      */
     private $buffer;
+    private NativeClientState $multi;
     private float $pauseExpiry = 0.0;
     /**
      * @internal
-     *
-     * @param $context resource
      */
-    public function __construct(private NativeClientState $multi, private $context, private string $url, array $options, array &$info, callable $resolver, ?callable $onProgress, ?LoggerInterface $logger)
+    public function __construct(NativeClientState $multi, $context, string $url, array $options, array &$info, callable $resolver, ?callable $onProgress, ?LoggerInterface $logger)
     {
+        $this->multi = $multi;
         $this->id = $id = (int) $context;
+        $this->context = $context;
+        $this->url = $url;
         $this->logger = $logger;
         $this->timeout = $options['timeout'];
         $this->info =& $info;

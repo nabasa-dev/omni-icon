@@ -12,7 +12,6 @@ namespace OmniIconDeps\Symfony\Component\DependencyInjection\Dumper;
 
 use OmniIconDeps\Symfony\Component\DependencyInjection\Alias;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Argument\AbstractArgument;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Argument\ArgumentInterface;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
@@ -31,344 +30,329 @@ use OmniIconDeps\Symfony\Component\ExpressionLanguage\Expression;
  */
 class XmlDumper extends Dumper
 {
+    private \DOMDocument $document;
     /**
      * Dumps the service container as an XML string.
      */
     public function dump(array $options = []): string
     {
-        $xml = <<<EOXML
-<?xml version="1.0" encoding="utf-8"?>
-<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
-EOXML;
-        foreach ($this->addParameters() as $line) {
-            $xml .= "\n  " . $line;
-        }
-        foreach ($this->addServices() as $line) {
-            $xml .= "\n  " . $line;
-        }
-        $xml .= "\n</container>\n";
+        $this->document = new \DOMDocument('1.0', 'utf-8');
+        $this->document->formatOutput = \true;
+        $container = $this->document->createElementNS('http://symfony.com/schema/dic/services', 'container');
+        $container->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+        $container->setAttribute('xsi:schemaLocation', 'http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd');
+        $this->addParameters($container);
+        $this->addServices($container);
+        $this->document->appendChild($container);
+        $xml = $this->document->saveXML();
+        unset($this->document);
         return $this->container->resolveEnvPlaceholders($xml);
     }
-    private function addParameters(): iterable
+    private function addParameters(\DOMElement $parent): void
     {
-        if (!$data = $this->container->getParameterBag()->all()) {
+        $data = $this->container->getParameterBag()->all();
+        if (!$data) {
             return;
         }
         if ($this->container->isCompiled()) {
             $data = $this->escape($data);
         }
-        yield '<parameters>';
-        foreach ($this->convertParameters($data, 'parameter') as $line) {
-            yield '  ' . $line;
-        }
-        yield '</parameters>';
+        $parameters = $this->document->createElement('parameters');
+        $parent->appendChild($parameters);
+        $this->convertParameters($data, 'parameter', $parameters);
     }
-    private function addMethodCalls(array $methodcalls): iterable
+    private function addMethodCalls(array $methodcalls, \DOMElement $parent): void
     {
         foreach ($methodcalls as $methodcall) {
-            $xmlAttr = \sprintf(' method="%s"%s', $this->encode($methodcall[0]), $methodcall[2] ?? \false ? ' returns-clone="true"' : '');
-            if ($methodcall[1]) {
-                yield \sprintf('<call%s>', $xmlAttr);
-                foreach ($this->convertParameters($methodcall[1], 'argument') as $line) {
-                    yield '  ' . $line;
-                }
-                yield '</call>';
-            } else {
-                yield \sprintf('<call%s/>', $xmlAttr);
+            $call = $this->document->createElement('call');
+            $call->setAttribute('method', $methodcall[0]);
+            if (\count($methodcall[1])) {
+                $this->convertParameters($methodcall[1], 'argument', $call);
             }
+            if ($methodcall[2] ?? \false) {
+                $call->setAttribute('returns-clone', 'true');
+            }
+            $parent->appendChild($call);
         }
     }
-    private function addService(Definition $definition, ?string $id): iterable
+    private function addService(Definition $definition, ?string $id, \DOMElement $parent): void
     {
-        $xmlAttr = '';
+        $service = $this->document->createElement('service');
         if (null !== $id) {
-            $xmlAttr .= \sprintf(' id="%s"', $this->encode($id));
+            $service->setAttribute('id', $id);
         }
         if ($class = $definition->getClass()) {
             if (str_starts_with($class, '\\')) {
                 $class = substr($class, 1);
             }
-            $xmlAttr .= \sprintf(' class="%s"', $this->encode($class));
+            $service->setAttribute('class', $class);
         }
         if (!$definition->isShared()) {
-            $xmlAttr .= ' shared="false"';
+            $service->setAttribute('shared', 'false');
         }
         if ($definition->isPublic()) {
-            $xmlAttr .= ' public="true"';
+            $service->setAttribute('public', 'true');
         }
         if ($definition->isSynthetic()) {
-            $xmlAttr .= ' synthetic="true"';
+            $service->setAttribute('synthetic', 'true');
         }
         if ($definition->isLazy()) {
-            $xmlAttr .= ' lazy="true"';
+            $service->setAttribute('lazy', 'true');
         }
         if (null !== $decoratedService = $definition->getDecoratedService()) {
             [$decorated, $renamedId, $priority] = $decoratedService;
-            $xmlAttr .= \sprintf(' decorates="%s"', $this->encode($decorated));
+            $service->setAttribute('decorates', $decorated);
             $decorationOnInvalid = $decoratedService[3] ?? ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
             if (\in_array($decorationOnInvalid, [ContainerInterface::IGNORE_ON_INVALID_REFERENCE, ContainerInterface::NULL_ON_INVALID_REFERENCE], \true)) {
                 $invalidBehavior = ContainerInterface::NULL_ON_INVALID_REFERENCE === $decorationOnInvalid ? 'null' : 'ignore';
-                $xmlAttr .= \sprintf(' decoration-on-invalid="%s"', $invalidBehavior);
+                $service->setAttribute('decoration-on-invalid', $invalidBehavior);
             }
             if (null !== $renamedId) {
-                $xmlAttr .= \sprintf(' decoration-inner-name="%s"', $this->encode($renamedId));
+                $service->setAttribute('decoration-inner-name', $renamedId);
             }
             if (0 !== $priority) {
-                $xmlAttr .= \sprintf(' decoration-priority="%d"', $priority);
+                $service->setAttribute('decoration-priority', $priority);
             }
         }
-        $xml = [];
         $tags = $definition->getTags();
         $tags['container.error'] = array_map(fn($e) => ['message' => $e], $definition->getErrors());
         foreach ($tags as $name => $tags) {
             foreach ($tags as $attributes) {
+                $tag = $this->document->createElement('tag');
                 // Check if we have recursive attributes
                 if (array_filter($attributes, \is_array(...))) {
-                    $xml[] = \sprintf('  <tag name="%s">', $this->encode($name));
-                    foreach ($this->addTagRecursiveAttributes($attributes) as $line) {
-                        $xml[] = '    ' . $line;
-                    }
-                    $xml[] = '  </tag>';
+                    $tag->setAttribute('name', $name);
+                    $this->addTagRecursiveAttributes($tag, $attributes);
                 } else {
-                    $hasNameAttr = \array_key_exists('name', $attributes);
-                    $attr = \sprintf(' name="%s"', $this->encode($hasNameAttr ? $attributes['name'] : $name));
-                    foreach ($attributes as $key => $value) {
-                        if ('name' !== $key) {
-                            $attr .= \sprintf(' %s="%s"', $this->encode($key), $this->encode(self::phpToXml($value ?? '')));
-                        }
-                    }
-                    if ($hasNameAttr) {
-                        $xml[] = \sprintf('  <tag%s>%s</tag>', $attr, $this->encode($name, 0));
+                    if (!\array_key_exists('name', $attributes)) {
+                        $tag->setAttribute('name', $name);
                     } else {
-                        $xml[] = \sprintf('  <tag%s/>', $attr);
+                        $tag->appendChild($this->document->createTextNode($name));
+                    }
+                    foreach ($attributes as $key => $value) {
+                        $tag->setAttribute($key, $value ?? '');
                     }
                 }
+                $service->appendChild($tag);
             }
         }
         if ($definition->getFile()) {
-            $xml[] = \sprintf('  <file>%s</file>', $this->encode($definition->getFile(), 0));
+            $file = $this->document->createElement('file');
+            $file->appendChild($this->document->createTextNode($definition->getFile()));
+            $service->appendChild($file);
         }
-        foreach ($this->convertParameters($definition->getArguments(), 'argument') as $line) {
-            $xml[] = '  ' . $line;
+        if ($parameters = $definition->getArguments()) {
+            $this->convertParameters($parameters, 'argument', $service);
         }
-        foreach ($this->convertParameters($definition->getProperties(), 'property', 'name') as $line) {
-            $xml[] = '  ' . $line;
+        if ($parameters = $definition->getProperties()) {
+            $this->convertParameters($parameters, 'property', $service, 'name');
         }
-        foreach ($this->addMethodCalls($definition->getMethodCalls()) as $line) {
-            $xml[] = '  ' . $line;
-        }
+        $this->addMethodCalls($definition->getMethodCalls(), $service);
         if ($callable = $definition->getFactory()) {
             if (\is_array($callable) && ['Closure', 'fromCallable'] !== $callable && $definition->getClass() === $callable[0]) {
-                $xmlAttr .= \sprintf(' constructor="%s"', $this->encode($callable[1]));
-            } else if (\is_array($callable) && $callable[0] instanceof Definition) {
-                $xml[] = \sprintf('  <factory method="%s">', $this->encode($callable[1]));
-                foreach ($this->addService($callable[0], null) as $line) {
-                    $xml[] = '    ' . $line;
-                }
-                $xml[] = '  </factory>';
-            } elseif (\is_array($callable)) {
-                if (null !== $callable[0]) {
-                    $xml[] = \sprintf('  <factory %s="%s" method="%s"/>', $callable[0] instanceof Reference ? 'service' : 'class', $this->encode($callable[0]), $this->encode($callable[1]));
-                } else {
-                    $xml[] = \sprintf('  <factory method="%s"/>', $this->encode($callable[1]));
-                }
+                $service->setAttribute('constructor', $callable[1]);
             } else {
-                $xml[] = \sprintf('  <factory function="%s"/>', $this->encode($callable));
+                $factory = $this->document->createElement('factory');
+                if (\is_array($callable) && $callable[0] instanceof Definition) {
+                    $this->addService($callable[0], null, $factory);
+                    $factory->setAttribute('method', $callable[1]);
+                } elseif (\is_array($callable)) {
+                    if (null !== $callable[0]) {
+                        $factory->setAttribute($callable[0] instanceof Reference ? 'service' : 'class', $callable[0]);
+                    }
+                    $factory->setAttribute('method', $callable[1]);
+                } else {
+                    $factory->setAttribute('function', $callable);
+                }
+                $service->appendChild($factory);
             }
         }
         if ($definition->isDeprecated()) {
             $deprecation = $definition->getDeprecation('%service_id%');
-            $xml[] = \sprintf('  <deprecated package="%s" version="%s">%s</deprecated>', $this->encode($deprecation['package']), $this->encode($deprecation['version']), $this->encode($deprecation['message'], 0));
+            $deprecated = $this->document->createElement('deprecated');
+            $deprecated->appendChild($this->document->createTextNode($definition->getDeprecation('%service_id%')['message']));
+            $deprecated->setAttribute('package', $deprecation['package']);
+            $deprecated->setAttribute('version', $deprecation['version']);
+            $service->appendChild($deprecated);
         }
         if ($definition->isAutowired()) {
-            $xmlAttr .= ' autowire="true"';
+            $service->setAttribute('autowire', 'true');
         }
         if ($definition->isAutoconfigured()) {
-            $xmlAttr .= ' autoconfigure="true"';
+            $service->setAttribute('autoconfigure', 'true');
         }
         if ($definition->isAbstract()) {
-            $xmlAttr .= ' abstract="true"';
+            $service->setAttribute('abstract', 'true');
         }
         if ($callable = $definition->getConfigurator()) {
+            $configurator = $this->document->createElement('configurator');
             if (\is_array($callable) && $callable[0] instanceof Definition) {
-                $xml[] = \sprintf('  <configurator method="%s">', $this->encode($callable[1]));
-                foreach ($this->addService($callable[0], null) as $line) {
-                    $xml[] = '    ' . $line;
-                }
-                $xml[] = '  </configurator>';
+                $this->addService($callable[0], null, $configurator);
+                $configurator->setAttribute('method', $callable[1]);
             } elseif (\is_array($callable)) {
-                $xml[] = \sprintf('  <configurator %s="%s" method="%s"/>', $callable[0] instanceof Reference ? 'service' : 'class', $this->encode($callable[0]), $this->encode($callable[1]));
+                $configurator->setAttribute($callable[0] instanceof Reference ? 'service' : 'class', $callable[0]);
+                $configurator->setAttribute('method', $callable[1]);
             } else {
-                $xml[] = \sprintf('  <configurator function="%s"/>', $this->encode($callable));
+                $configurator->setAttribute('function', $callable);
             }
+            $service->appendChild($configurator);
         }
-        if (!$xml) {
-            yield \sprintf('<service%s/>', $xmlAttr);
-        } else {
-            yield \sprintf('<service%s>', $xmlAttr);
-            yield from $xml;
-            yield '</service>';
-        }
+        $parent->appendChild($service);
     }
-    private function addServiceAlias(string $alias, Alias $id): iterable
+    private function addServiceAlias(string $alias, Alias $id, \DOMElement $parent): void
     {
-        $xmlAttr = \sprintf(' id="%s" alias="%s"%s', $this->encode($alias), $this->encode($id), $id->isPublic() ? ' public="true"' : '');
+        $service = $this->document->createElement('service');
+        $service->setAttribute('id', $alias);
+        $service->setAttribute('alias', $id);
+        if ($id->isPublic()) {
+            $service->setAttribute('public', 'true');
+        }
         if ($id->isDeprecated()) {
             $deprecation = $id->getDeprecation('%alias_id%');
-            yield \sprintf('<service%s>', $xmlAttr);
-            yield \sprintf('  <deprecated package="%s" version="%s">%s</deprecated>', $this->encode($deprecation['package']), $this->encode($deprecation['version']), $this->encode($deprecation['message'], 0));
-            yield '</service>';
-        } else {
-            yield \sprintf('<service%s/>', $xmlAttr);
+            $deprecated = $this->document->createElement('deprecated');
+            $deprecated->appendChild($this->document->createTextNode($deprecation['message']));
+            $deprecated->setAttribute('package', $deprecation['package']);
+            $deprecated->setAttribute('version', $deprecation['version']);
+            $service->appendChild($deprecated);
         }
+        $parent->appendChild($service);
     }
-    private function addServices(): iterable
+    private function addServices(\DOMElement $parent): void
     {
-        if (!$definitions = $this->container->getDefinitions()) {
+        $definitions = $this->container->getDefinitions();
+        if (!$definitions) {
             return;
         }
-        yield '<services>';
+        $services = $this->document->createElement('services');
         foreach ($definitions as $id => $definition) {
-            foreach ($this->addService($definition, $id) as $line) {
-                yield '  ' . $line;
-            }
+            $this->addService($definition, $id, $services);
         }
         $aliases = $this->container->getAliases();
         foreach ($aliases as $alias => $id) {
             while (isset($aliases[(string) $id])) {
                 $id = $aliases[(string) $id];
             }
-            foreach ($this->addServiceAlias($alias, $id) as $line) {
-                yield '  ' . $line;
-            }
+            $this->addServiceAlias($alias, $id, $services);
         }
-        yield '</services>';
+        $parent->appendChild($services);
     }
-    private function addTagRecursiveAttributes(array $attributes): iterable
+    private function addTagRecursiveAttributes(\DOMElement $parent, array $attributes): void
     {
         foreach ($attributes as $name => $value) {
+            $attribute = $this->document->createElement('attribute');
+            $attribute->setAttribute('name', $name);
             if (\is_array($value)) {
-                yield \sprintf('<attribute name="%s">', $this->encode($name));
-                foreach ($this->addTagRecursiveAttributes($value) as $line) {
-                    yield '  ' . $line;
-                }
-                yield '</attribute>';
-            } elseif ('' !== $value = self::phpToXml($value ?? '')) {
-                yield \sprintf('<attribute name="%s">%s</attribute>', $this->encode($name), $this->encode($value, 0));
+                $this->addTagRecursiveAttributes($attribute, $value);
+            } else {
+                $attribute->appendChild($this->document->createTextNode($value));
             }
+            $parent->appendChild($attribute);
         }
     }
-    private function convertParameters(array $parameters, string $type, string $keyAttribute = 'key'): iterable
+    private function convertParameters(array $parameters, string $type, \DOMElement $parent, string $keyAttribute = 'key'): void
     {
         $withKeys = !array_is_list($parameters);
         foreach ($parameters as $key => $value) {
-            $xmlAttr = $withKeys ? \sprintf(' %s="%s"', $keyAttribute, $this->encode($key)) : '';
-            if ($value instanceof TaggedIteratorArgument && ($tag = $value) || $value instanceof ServiceLocatorArgument && $tag = $value->getTaggedIteratorArgument()) {
-                $xmlAttr .= \sprintf(' type="%s"', $value instanceof TaggedIteratorArgument ? 'tagged_iterator' : 'tagged_locator');
-                $xmlAttr .= \sprintf(' tag="%s"', $this->encode($tag->getTag()));
+            $element = $this->document->createElement($type);
+            if ($withKeys) {
+                $element->setAttribute($keyAttribute, $key);
+            }
+            if (\is_array($tag = $value)) {
+                $element->setAttribute('type', 'collection');
+                $this->convertParameters($value, $type, $element, 'key');
+            } elseif ($value instanceof TaggedIteratorArgument || $value instanceof ServiceLocatorArgument && $tag = $value->getTaggedIteratorArgument()) {
+                $element->setAttribute('type', $value instanceof TaggedIteratorArgument ? 'tagged_iterator' : 'tagged_locator');
+                $element->setAttribute('tag', $tag->getTag());
                 if (null !== $tag->getIndexAttribute()) {
-                    $xmlAttr .= \sprintf(' index-by="%s"', $this->encode($tag->getIndexAttribute()));
+                    $element->setAttribute('index-by', $tag->getIndexAttribute());
                     if (null !== $tag->getDefaultIndexMethod()) {
-                        $xmlAttr .= \sprintf(' default-index-method="%s"', $this->encode($tag->getDefaultIndexMethod()));
+                        $element->setAttribute('default-index-method', $tag->getDefaultIndexMethod());
                     }
                     if (null !== $tag->getDefaultPriorityMethod()) {
-                        $xmlAttr .= \sprintf(' default-priority-method="%s"', $this->encode($tag->getDefaultPriorityMethod()));
+                        $element->setAttribute('default-priority-method', $tag->getDefaultPriorityMethod());
                     }
                 }
-                if (1 === \count($excludes = $tag->getExclude())) {
-                    $xmlAttr .= \sprintf(' exclude="%s"', $this->encode($excludes[0]));
+                if ($excludes = $tag->getExclude()) {
+                    if (1 === \count($excludes)) {
+                        $element->setAttribute('exclude', $excludes[0]);
+                    } else {
+                        foreach ($excludes as $exclude) {
+                            $element->appendChild($this->document->createElement('exclude', $exclude));
+                        }
+                    }
                 }
                 if (!$tag->excludeSelf()) {
-                    $xmlAttr .= ' exclude-self="false"';
+                    $element->setAttribute('exclude-self', 'false');
                 }
-                if (1 < \count($excludes)) {
-                    yield \sprintf('<%s%s>', $type, $xmlAttr);
-                    foreach ($excludes as $exclude) {
-                        yield \sprintf('  <exclude>%s</exclude>', $this->encode($exclude, 0));
-                    }
-                    yield \sprintf('</%s>', $type);
-                } else {
-                    yield \sprintf('<%s%s/>', $type, $xmlAttr);
-                }
-            } elseif (match (\true) {
-                \is_array($value) && $xmlAttr .= ' type="collection"' => \true,
-                $value instanceof IteratorArgument && $xmlAttr .= ' type="iterator"' => \true,
-                $value instanceof ServiceLocatorArgument && $xmlAttr .= ' type="service_locator"' => \true,
-                $value instanceof ServiceClosureArgument && !$value->getValues()[0] instanceof Reference && $xmlAttr .= ' type="service_closure"' => \true,
-                default => \false,
-            }) {
-                if ($value instanceof ArgumentInterface) {
-                    $value = $value->getValues();
-                }
-                if ($value) {
-                    yield \sprintf('<%s%s>', $type, $xmlAttr);
-                    foreach ($this->convertParameters($value, $type, 'key') as $line) {
-                        yield '  ' . $line;
-                    }
-                    yield \sprintf('</%s>', $type);
-                } else {
-                    yield \sprintf('<%s%s/>', $type, $xmlAttr);
-                }
+            } elseif ($value instanceof IteratorArgument) {
+                $element->setAttribute('type', 'iterator');
+                $this->convertParameters($value->getValues(), $type, $element, 'key');
+            } elseif ($value instanceof ServiceLocatorArgument) {
+                $element->setAttribute('type', 'service_locator');
+                $this->convertParameters($value->getValues(), $type, $element, 'key');
+            } elseif ($value instanceof ServiceClosureArgument && !$value->getValues()[0] instanceof Reference) {
+                $element->setAttribute('type', 'service_closure');
+                $this->convertParameters($value->getValues(), $type, $element, 'key');
             } elseif ($value instanceof Reference || $value instanceof ServiceClosureArgument) {
+                $element->setAttribute('type', 'service');
                 if ($value instanceof ServiceClosureArgument) {
-                    $xmlAttr .= ' type="service_closure"';
+                    $element->setAttribute('type', 'service_closure');
                     $value = $value->getValues()[0];
-                } else {
-                    $xmlAttr .= ' type="service"';
                 }
-                $xmlAttr .= \sprintf(' id="%s"', $this->encode((string) $value));
-                $xmlAttr .= match ($value->getInvalidBehavior()) {
-                    ContainerInterface::NULL_ON_INVALID_REFERENCE => ' on-invalid="null"',
-                    ContainerInterface::IGNORE_ON_INVALID_REFERENCE => ' on-invalid="ignore"',
-                    ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE => ' on-invalid="ignore_uninitialized"',
-                    default => '',
-                };
-                yield \sprintf('<%s%s/>', $type, $xmlAttr);
+                $element->setAttribute('id', (string) $value);
+                $behavior = $value->getInvalidBehavior();
+                if (ContainerInterface::NULL_ON_INVALID_REFERENCE == $behavior) {
+                    $element->setAttribute('on-invalid', 'null');
+                } elseif (ContainerInterface::IGNORE_ON_INVALID_REFERENCE == $behavior) {
+                    $element->setAttribute('on-invalid', 'ignore');
+                } elseif (ContainerInterface::IGNORE_ON_UNINITIALIZED_REFERENCE == $behavior) {
+                    $element->setAttribute('on-invalid', 'ignore_uninitialized');
+                }
             } elseif ($value instanceof Definition) {
-                $xmlAttr .= ' type="service"';
-                yield \sprintf('<%s%s>', $type, $xmlAttr);
-                foreach ($this->addService($value, null) as $line) {
-                    yield '  ' . $line;
-                }
-                yield \sprintf('</%s>', $type);
+                $element->setAttribute('type', 'service');
+                $this->addService($value, null, $element);
+            } elseif ($value instanceof Expression) {
+                $element->setAttribute('type', 'expression');
+                $text = $this->document->createTextNode(self::phpToXml((string) $value));
+                $element->appendChild($text);
+            } elseif (\is_string($value) && !preg_match('/^[^\x00-\x08\x0B\x0C\x0E-\x1F\x7F]*+$/u', $value)) {
+                $element->setAttribute('type', 'binary');
+                $text = $this->document->createTextNode(self::phpToXml(base64_encode($value)));
+                $element->appendChild($text);
+            } elseif ($value instanceof \UnitEnum) {
+                $element->setAttribute('type', 'constant');
+                $element->appendChild($this->document->createTextNode(self::phpToXml($value)));
+            } elseif ($value instanceof AbstractArgument) {
+                $element->setAttribute('type', 'abstract');
+                $text = $this->document->createTextNode(self::phpToXml($value->getText()));
+                $element->appendChild($text);
             } else {
-                if ($value instanceof Expression) {
-                    $xmlAttr .= ' type="expression"';
-                    $value = (string) $value;
-                } elseif (\is_string($value) && !preg_match('/^[^\x00-\x08\x0B\x0C\x0E-\x1F\x7F]*+$/u', $value)) {
-                    $xmlAttr .= ' type="binary"';
-                    $value = base64_encode($value);
-                } elseif ($value instanceof \UnitEnum) {
-                    $xmlAttr .= ' type="constant"';
-                } elseif ($value instanceof AbstractArgument) {
-                    $xmlAttr .= ' type="abstract"';
-                    $value = $value->getText();
-                } elseif (\in_array($value, ['null', 'true', 'false'], \true)) {
-                    $xmlAttr .= ' type="string"';
-                } elseif (\is_string($value) && (is_numeric($value) || preg_match('/^0b[01]*$/', $value) || preg_match('/^0x[0-9a-f]++$/i', $value))) {
-                    $xmlAttr .= ' type="string"';
+                if (\in_array($value, ['null', 'true', 'false'], \true)) {
+                    $element->setAttribute('type', 'string');
                 }
-                if ('' === $value = self::phpToXml($value)) {
-                    yield \sprintf('<%s%s/>', $type, $xmlAttr);
-                } else {
-                    yield \sprintf('<%s%s>%s</%1$s>', $type, $xmlAttr, $this->encode($value, 0));
+                if (\is_string($value) && (is_numeric($value) || preg_match('/^0b[01]*$/', $value) || preg_match('/^0x[0-9a-f]++$/i', $value))) {
+                    $element->setAttribute('type', 'string');
                 }
+                $text = $this->document->createTextNode(self::phpToXml($value));
+                $element->appendChild($text);
             }
+            $parent->appendChild($element);
         }
     }
-    private function encode(string $value, int $flags = \ENT_COMPAT): string
-    {
-        return str_replace("\r", '&#13;', htmlspecialchars($value, \ENT_XML1 | \ENT_SUBSTITUTE | $flags, 'UTF-8'));
-    }
+    /**
+     * Escapes arguments.
+     */
     private function escape(array $arguments): array
     {
         $args = [];
         foreach ($arguments as $k => $v) {
-            $args[$k] = match (\true) {
-                \is_array($v) => $this->escape($v),
-                \is_string($v) => str_replace('%', '%%', $v),
-                default => $v,
-            };
+            if (\is_array($v)) {
+                $args[$k] = $this->escape($v);
+            } elseif (\is_string($v)) {
+                $args[$k] = str_replace('%', '%%', $v);
+            } else {
+                $args[$k] = $v;
+            }
         }
         return $args;
     }
@@ -379,14 +363,21 @@ EOXML;
      */
     public static function phpToXml(mixed $value): string
     {
-        return match (\true) {
-            null === $value => 'null',
-            \true === $value => 'true',
-            \false === $value => 'false',
-            $value instanceof Parameter => '%' . $value . '%',
-            $value instanceof \UnitEnum => \sprintf('%s::%s', $value::class, $value->name),
-            \is_object($value), \is_resource($value) => throw new RuntimeException(\sprintf('Unable to dump a service container if a parameter is an object or a resource, got "%s".', get_debug_type($value))),
-            default => (string) $value,
-        };
+        switch (\true) {
+            case null === $value:
+                return 'null';
+            case \true === $value:
+                return 'true';
+            case \false === $value:
+                return 'false';
+            case $value instanceof Parameter:
+                return '%' . $value . '%';
+            case $value instanceof \UnitEnum:
+                return \sprintf('%s::%s', $value::class, $value->name);
+            case \is_object($value) || \is_resource($value):
+                throw new RuntimeException(\sprintf('Unable to dump a service container if a parameter is an object or a resource, got "%s".', get_debug_type($value)));
+            default:
+                return (string) $value;
+        }
     }
 }

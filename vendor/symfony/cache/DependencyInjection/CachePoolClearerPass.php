@@ -18,7 +18,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Reference;
  */
 class CachePoolClearerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         $container->getParameterBag()->remove('cache.prefix.seed');
         foreach ($container->findTaggedServiceIds('cache.pool.clearer') as $id => $attr) {

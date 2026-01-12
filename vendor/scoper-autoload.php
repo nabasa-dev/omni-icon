@@ -14,7 +14,7 @@ $loader = (static function () {
     // Restore the backup and ensure the excluded files are properly marked as loaded
     $GLOBALS['__composer_autoload_files'] = \array_merge(
         $existingComposerAutoloadFiles,
-        \array_fill_keys(['320cde22f66dd4f5d3fd621d3e88b98f', '9eaa6b0f3f04e58e17ae5ecb754ea313', 'f598d06aa772fa33d905e87be6398fb1', 'b48cbeb76a71e226a23fa64ac2b94dc6', 'e69f7f6ee287b969198c3c9d6777bd38', '36dfd6ed9dd74e8062aa61f09caf8554', '0e6d7bf4a5811bfa5cf40c5ccd6fae6a', '5928a00fa978807cf85d90ec3f4b0147', '662a729f963d39afe703c9d9b7ab4a8c', '439927d75b11a5dc11560cd0ea0a9599', '606a39d89246991a373564698c2d8383', '54b9ab13bc86d8251a04a939888e357e', 'b2f9f3fd5c396f96fa6e1e2bd938d3d0', 'd348f2569bd50bd17f658b9fced73856', '0728099c86c7da9b043674ffe354abee', '0f0a493ec6424b03b28812b12c3a3083', 'e071a82732d15e17758a292fa42671d2', '963ad795d6b67b0f3b5bdb455e2783ae', '299128432f1508b581080d7faecb94e6', 'df0fb630b0bc80f94ae5f46644b0587b', '5d061a676f0194f3638848e71a903ec7', '2ce7b16f239603c90fab694e15bb9a83', 'b12cc48dd13968c20d14f4fdf56ced96', 'bf96e31e7c167fef53a9fe56c15eca5b'], true)
+        \array_fill_keys(['f598d06aa772fa33d905e87be6398fb1', 'b48cbeb76a71e226a23fa64ac2b94dc6', 'e69f7f6ee287b969198c3c9d6777bd38', '36dfd6ed9dd74e8062aa61f09caf8554', '0e6d7bf4a5811bfa5cf40c5ccd6fae6a', '5928a00fa978807cf85d90ec3f4b0147', '662a729f963d39afe703c9d9b7ab4a8c', '439927d75b11a5dc11560cd0ea0a9599', '54b9ab13bc86d8251a04a939888e357e', 'b2f9f3fd5c396f96fa6e1e2bd938d3d0', 'd348f2569bd50bd17f658b9fced73856', '0728099c86c7da9b043674ffe354abee', '0f0a493ec6424b03b28812b12c3a3083', 'e071a82732d15e17758a292fa42671d2', '963ad795d6b67b0f3b5bdb455e2783ae', '299128432f1508b581080d7faecb94e6', 'df0fb630b0bc80f94ae5f46644b0587b', '5d061a676f0194f3638848e71a903ec7', '2ce7b16f239603c90fab694e15bb9a83', 'b12cc48dd13968c20d14f4fdf56ced96'], true)
     );
 
     return $loader;
@@ -45,17 +45,6 @@ humbug_phpscoper_expose_class('SQLite3Exception', 'OmniIconDeps\SQLite3Exception
 
 // Function aliases. For more information see:
 // https://github.com/humbug/php-scoper/blob/master/docs/further-reading.md#function-aliases
-if (!function_exists('ctype_alnum')) { function ctype_alnum() { return \OmniIconDeps\ctype_alnum(...func_get_args()); } }
-if (!function_exists('ctype_alpha')) { function ctype_alpha() { return \OmniIconDeps\ctype_alpha(...func_get_args()); } }
-if (!function_exists('ctype_cntrl')) { function ctype_cntrl() { return \OmniIconDeps\ctype_cntrl(...func_get_args()); } }
-if (!function_exists('ctype_digit')) { function ctype_digit() { return \OmniIconDeps\ctype_digit(...func_get_args()); } }
-if (!function_exists('ctype_graph')) { function ctype_graph() { return \OmniIconDeps\ctype_graph(...func_get_args()); } }
-if (!function_exists('ctype_lower')) { function ctype_lower() { return \OmniIconDeps\ctype_lower(...func_get_args()); } }
-if (!function_exists('ctype_print')) { function ctype_print() { return \OmniIconDeps\ctype_print(...func_get_args()); } }
-if (!function_exists('ctype_punct')) { function ctype_punct() { return \OmniIconDeps\ctype_punct(...func_get_args()); } }
-if (!function_exists('ctype_space')) { function ctype_space() { return \OmniIconDeps\ctype_space(...func_get_args()); } }
-if (!function_exists('ctype_upper')) { function ctype_upper() { return \OmniIconDeps\ctype_upper(...func_get_args()); } }
-if (!function_exists('ctype_xdigit')) { function ctype_xdigit() { return \OmniIconDeps\ctype_xdigit(...func_get_args()); } }
 if (!function_exists('idn_to_ascii')) { function idn_to_ascii() { return \OmniIconDeps\idn_to_ascii(...func_get_args()); } }
 if (!function_exists('idn_to_utf8')) { function idn_to_utf8() { return \OmniIconDeps\idn_to_utf8(...func_get_args()); } }
 if (!function_exists('json_validate')) { function json_validate() { return \OmniIconDeps\json_validate(...func_get_args()); } }

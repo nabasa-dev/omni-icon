@@ -10,8 +10,6 @@
  */
 namespace OmniIconDeps\Symfony\Component\DependencyInjection\ParameterBag;
 
-use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\EmptyParameterValueException;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\ParameterCircularReferenceException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -22,19 +20,24 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\RuntimeExceptio
  */
 class ParameterBag implements ParameterBagInterface
 {
-    protected array $parameters = [];
-    protected bool $resolved = \false;
+    protected $parameters = [];
+    protected $resolved = \false;
     protected array $deprecatedParameters = [];
-    protected array $nonEmptyParameters = [];
     public function __construct(array $parameters = [])
     {
         $this->add($parameters);
     }
-    public function clear(): void
+    /**
+     * @return void
+     */
+    public function clear()
     {
         $this->parameters = [];
     }
-    public function add(array $parameters): void
+    /**
+     * @return void
+     */
+    public function add(array $parameters)
     {
         foreach ($parameters as $key => $value) {
             $this->set($key, $value);
@@ -48,18 +51,11 @@ class ParameterBag implements ParameterBagInterface
     {
         return $this->deprecatedParameters;
     }
-    public function allNonEmpty(): array
-    {
-        return $this->nonEmptyParameters;
-    }
     public function get(string $name): array|bool|string|int|float|\UnitEnum|null
     {
         if (!\array_key_exists($name, $this->parameters)) {
             if (!$name) {
                 throw new ParameterNotFoundException($name);
-            }
-            if (\array_key_exists($name, $this->nonEmptyParameters)) {
-                throw new ParameterNotFoundException($name, extraMessage: $this->nonEmptyParameters[$name]);
             }
             $alternatives = [];
             foreach ($this->parameters as $key => $parameterValue) {
@@ -87,43 +83,49 @@ class ParameterBag implements ParameterBagInterface
         if (isset($this->deprecatedParameters[$name])) {
             trigger_deprecation(...$this->deprecatedParameters[$name]);
         }
-        if (\array_key_exists($name, $this->nonEmptyParameters) && (null === $this->parameters[$name] || '' === $this->parameters[$name] || [] === $this->parameters[$name])) {
-            throw new EmptyParameterValueException($this->nonEmptyParameters[$name]);
-        }
         return $this->parameters[$name];
     }
-    public function set(string $name, array|bool|string|int|float|\UnitEnum|null $value): void
+    /**
+     * @return void
+     */
+    public function set(string $name, array|bool|string|int|float|\UnitEnum|null $value)
     {
         if (is_numeric($name)) {
-            throw new InvalidArgumentException(\sprintf('The parameter name "%s" cannot be numeric.', $name));
+            trigger_deprecation('symfony/dependency-injection', '6.2', \sprintf('Using numeric parameter name "%s" is deprecated and will throw as of 7.0.', $name));
+            // uncomment the following line in 7.0
+            // throw new InvalidArgumentException(sprintf('The parameter name "%s" cannot be numeric.', $name));
         }
         $this->parameters[$name] = $value;
     }
     /**
      * Deprecates a service container parameter.
      *
+     * @return void
+     *
      * @throws ParameterNotFoundException if the parameter is not defined
      */
-    public function deprecate(string $name, string $package, string $version, string $message = 'The parameter "%s" is deprecated.'): void
+    public function deprecate(string $name, string $package, string $version, string $message = 'The parameter "%s" is deprecated.')
     {
         if (!\array_key_exists($name, $this->parameters)) {
             throw new ParameterNotFoundException($name);
         }
         $this->deprecatedParameters[$name] = [$package, $version, $message, $name];
     }
-    public function cannotBeEmpty(string $name, string $message): void
-    {
-        $this->nonEmptyParameters[$name] = $message;
-    }
     public function has(string $name): bool
     {
         return \array_key_exists($name, $this->parameters);
     }
-    public function remove(string $name): void
+    /**
+     * @return void
+     */
+    public function remove(string $name)
     {
-        unset($this->parameters[$name], $this->deprecatedParameters[$name], $this->nonEmptyParameters[$name]);
+        unset($this->parameters[$name], $this->deprecatedParameters[$name]);
     }
-    public function resolve(): void
+    /**
+     * @return void
+     */
+    public function resolve()
     {
         if ($this->resolved) {
             return;
@@ -213,7 +215,10 @@ class ParameterBag implements ParameterBagInterface
             return $this->isResolved() ? $resolved : $this->resolveString($resolved, $resolving);
         }, $value);
     }
-    public function isResolved(): bool
+    /**
+     * @return bool
+     */
+    public function isResolved()
     {
         return $this->resolved;
     }

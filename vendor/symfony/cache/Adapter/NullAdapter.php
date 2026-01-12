@@ -13,18 +13,16 @@ namespace OmniIconDeps\Symfony\Component\Cache\Adapter;
 use OmniIconDeps\Psr\Cache\CacheItemInterface;
 use OmniIconDeps\Symfony\Component\Cache\CacheItem;
 use OmniIconDeps\Symfony\Contracts\Cache\CacheInterface;
-use OmniIconDeps\Symfony\Contracts\Cache\NamespacedPoolInterface;
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  */
-class NullAdapter implements AdapterInterface, CacheInterface, NamespacedPoolInterface, TagAwareAdapterInterface
+class NullAdapter implements AdapterInterface, CacheInterface
 {
     private static \Closure $createCacheItem;
     public function __construct()
     {
         self::$createCacheItem ??= \Closure::bind(static function ($key) {
             $item = new CacheItem();
-            $item->isTaggable = \true;
             $item->key = $key;
             $item->isHit = \false;
             return $item;
@@ -75,19 +73,11 @@ class NullAdapter implements AdapterInterface, CacheInterface, NamespacedPoolInt
     {
         return $this->deleteItem($key);
     }
-    public function withSubNamespace(string $namespace): static
-    {
-        return clone $this;
-    }
     private function generateItems(array $keys): \Generator
     {
         $f = self::$createCacheItem;
         foreach ($keys as $key) {
             yield $key => $f($key);
         }
-    }
-    public function invalidateTags(array $tags): bool
-    {
-        return \true;
     }
 }

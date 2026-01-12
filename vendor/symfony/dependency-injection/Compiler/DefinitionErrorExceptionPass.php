@@ -26,7 +26,10 @@ class DefinitionErrorExceptionPass extends AbstractRecursivePass
     protected bool $skipScalars = \true;
     private array $erroredDefinitions = [];
     private array $sourceReferences = [];
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         try {
             parent::process($container);

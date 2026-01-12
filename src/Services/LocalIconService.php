@@ -9,9 +9,9 @@ use OmniIcon\Core\Discovery\Attributes\Service;
 use OmniIconDeps\Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use OmniIconDeps\Symfony\Component\Mime\MimeTypes;
 use OmniIconDeps\Symfony\Contracts\Cache\ItemInterface;
-use OmniIconDeps\Symfony\UX\Icons\Exception\IconNotFoundException;
-use OmniIconDeps\Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
-use OmniIconDeps\Symfony\UX\Icons\IconRegistryInterface;
+use OmniIcon\Core\Icon\Exception\IconNotFoundException;
+use OmniIcon\Core\Icon\Registry\LocalSvgIconRegistry;
+use OmniIcon\Core\Icon\IconRegistryInterface;
 /**
  * Service for managing local uploaded SVG icons.
  * 
@@ -33,11 +33,11 @@ use OmniIconDeps\Symfony\UX\Icons\IconRegistryInterface;
 #[Service]
 class LocalIconService
 {
-    private readonly Sanitizer $sanitizer;
-    private readonly string $upload_dir;
-    private readonly string $upload_url;
-    private readonly IconRegistryInterface $registry;
-    private readonly FilesystemAdapter $cache;
+    private Sanitizer $sanitizer;
+    private string $upload_dir;
+    private string $upload_url;
+    private IconRegistryInterface $registry;
+    private FilesystemAdapter $cache;
     public function __construct()
     {
         $this->sanitizer = new Sanitizer();

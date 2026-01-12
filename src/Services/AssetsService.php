@@ -12,7 +12,7 @@ use OmniIcon\Core\Discovery\Attributes\Service;
 #[Service]
 class AssetsService
 {
-    public function __construct(private readonly \OmniIcon\Services\ViteService $viteService)
+    public function __construct(private \OmniIcon\Services\ViteService $viteService)
     {
     }
     /**

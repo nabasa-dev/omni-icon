@@ -17,7 +17,6 @@ namespace OmniIconDeps\Symfony\Component\DependencyInjection\Argument;
  */
 class IteratorArgument implements ArgumentInterface
 {
-    use ArgumentTrait;
     private array $values;
     public function __construct(array $values)
     {
@@ -27,7 +26,10 @@ class IteratorArgument implements ArgumentInterface
     {
         return $this->values;
     }
-    public function setValues(array $values): void
+    /**
+     * @return void
+     */
+    public function setValues(array $values)
     {
         $this->values = $values;
     }

@@ -11,10 +11,8 @@
 namespace OmniIconDeps\Symfony\Component\DependencyInjection\Compiler;
 
 use OmniIconDeps\Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Attribute\Lazy;
 use OmniIconDeps\Symfony\Component\DependencyInjection\ContainerBuilder;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Definition;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\AutoconfigureFailedException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 /**
  * Reads #[Autoconfigure] attributes on definitions that are autoconfigured
@@ -39,13 +37,7 @@ final class RegisterAutoconfigureAttributesPass implements CompilerPassInterface
     }
     public function processClass(ContainerBuilder $container, \ReflectionClass $class): void
     {
-        $autoconfigure = $class->getAttributes(Autoconfigure::class, \ReflectionAttribute::IS_INSTANCEOF);
-        $lazy = $class->getAttributes(Lazy::class, \ReflectionAttribute::IS_INSTANCEOF);
-        if ($autoconfigure && $lazy) {
-            throw new AutoconfigureFailedException($class->name, 'Using both attributes #[Lazy] and #[Autoconfigure] on an argument is not allowed; use the "lazy" parameter of #[Autoconfigure] instead.');
-        }
-        $attributes = array_merge($autoconfigure, $lazy);
-        foreach ($attributes as $attribute) {
+        foreach ($class->getAttributes(Autoconfigure::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
             self::registerForAutoconfiguration($container, $class, $attribute);
         }
     }
@@ -59,17 +51,11 @@ final class RegisterAutoconfigureAttributesPass implements CompilerPassInterface
         $yamlLoader = $parseDefinitions->getDeclaringClass()->newInstanceWithoutConstructor();
         self::$registerForAutoconfiguration = static function (ContainerBuilder $container, \ReflectionClass $class, \ReflectionAttribute $attribute) use ($parseDefinitions, $yamlLoader) {
             $attribute = (array) $attribute->newInstance();
-            foreach (['tags', 'resourceTags'] as $type) {
-                foreach ($attribute[$type] ?? [] as $i => $tag) {
-                    if (\is_array($tag) && [0] === array_keys($tag)) {
-                        $attribute[$type][$i] = [$class->name => $tag[0]];
-                    }
+            foreach ($attribute['tags'] ?? [] as $i => $tag) {
+                if (\is_array($tag) && [0] === array_keys($tag)) {
+                    $attribute['tags'][$i] = [$class->name => $tag[0]];
                 }
             }
-            if (isset($attribute['resourceTags'])) {
-                $attribute['resource_tags'] = $attribute['resourceTags'];
-            }
-            unset($attribute['resourceTags']);
             $parseDefinitions->invoke($yamlLoader, ['services' => ['_instanceof' => [$class->name => [$container->registerForAutoconfiguration($class->name)] + $attribute]]], $class->getFileName(), \false);
         };
         (self::$registerForAutoconfiguration)($container, $class, $attribute);

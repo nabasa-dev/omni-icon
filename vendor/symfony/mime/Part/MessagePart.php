@@ -19,7 +19,8 @@ use OmniIconDeps\Symfony\Component\Mime\RawMessage;
  */
 class MessagePart extends DataPart
 {
-    public function __construct(private RawMessage $message)
+    private RawMessage $message;
+    public function __construct(RawMessage $message)
     {
         if ($message instanceof Message) {
             $name = $message->getHeaders()->getHeaderBody('Subject') . '.eml';
@@ -27,6 +28,7 @@ class MessagePart extends DataPart
             $name = 'email.eml';
         }
         parent::__construct('', $name);
+        $this->message = $message;
     }
     public function getMediaType(): string
     {

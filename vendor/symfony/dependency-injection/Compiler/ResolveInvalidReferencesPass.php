@@ -32,8 +32,10 @@ class ResolveInvalidReferencesPass implements CompilerPassInterface
     private string $currentId;
     /**
      * Process the ContainerBuilder to resolve invalid references.
+     *
+     * @return void
      */
-    public function process(ContainerBuilder $container): void
+    public function process(ContainerBuilder $container)
     {
         $this->container = $container;
         $this->signalingException = new RuntimeException('Invalid reference.');
@@ -57,7 +59,7 @@ class ResolveInvalidReferencesPass implements CompilerPassInterface
         } elseif ($value instanceof ArgumentInterface) {
             $value->setValues($this->processValue($value->getValues(), $rootLevel, 1 + $level));
         } elseif ($value instanceof Definition) {
-            if ($value->isSynthetic() || $value->isAbstract() || $value->hasTag('container.excluded')) {
+            if ($value->isSynthetic() || $value->isAbstract()) {
                 return $value;
             }
             $value->setArguments($this->processValue($value->getArguments(), 0));

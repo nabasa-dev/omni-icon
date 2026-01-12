@@ -18,7 +18,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\InvalidArgument
  */
 class AutoAliasServicePass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         foreach ($container->findTaggedServiceIds('auto_alias') as $serviceId => $tags) {
             foreach ($tags as $tag) {

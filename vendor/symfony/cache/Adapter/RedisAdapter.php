@@ -15,7 +15,7 @@ use OmniIconDeps\Symfony\Component\Cache\Traits\RedisTrait;
 class RedisAdapter extends AbstractAdapter
 {
     use RedisTrait;
-    public function __construct(\Redis|\RedisArray|\RedisCluster|\OmniIconDeps\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster $redis, string $namespace = '', int $defaultLifetime = 0, ?MarshallerInterface $marshaller = null)
+    public function __construct(\Redis|\RedisArray|\RedisCluster|\OmniIconDeps\Predis\ClientInterface|\Relay\Relay $redis, string $namespace = '', int $defaultLifetime = 0, ?MarshallerInterface $marshaller = null)
     {
         $this->init($redis, $namespace, $defaultLifetime, $marshaller);
     }

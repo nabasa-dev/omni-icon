@@ -12,9 +12,9 @@ use OmniIconDeps\Symfony\Contracts\Cache\ItemInterface;
 use Throwable;
 final class DiscoveryCache
 {
-    private readonly FilesystemAdapter $cache;
-    private readonly LoggerInterface $logger;
-    public function __construct(private readonly \OmniIcon\Core\Discovery\DiscoveryCacheStrategy $discoveryCacheStrategy)
+    private FilesystemAdapter $cache;
+    private LoggerInterface $logger;
+    public function __construct(private \OmniIcon\Core\Discovery\DiscoveryCacheStrategy $discoveryCacheStrategy)
     {
         $uploadDir = wp_upload_dir();
         $cacheDir = $uploadDir['basedir'] . '/omni-icon/cache/discovery/';

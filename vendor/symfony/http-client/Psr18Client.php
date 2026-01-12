@@ -49,7 +49,6 @@ final class Psr18Client implements ClientInterface, RequestFactoryInterface, Str
     private HttpClientInterface $client;
     private ResponseFactoryInterface $responseFactory;
     private StreamFactoryInterface $streamFactory;
-    private bool $autoUpgradeHttpVersion = \true;
     public function __construct(?HttpClientInterface $client = null, ?ResponseFactoryInterface $responseFactory = null, ?StreamFactoryInterface $streamFactory = null)
     {
         $this->client = $client ?? HttpClient::create();
@@ -71,10 +70,6 @@ final class Psr18Client implements ClientInterface, RequestFactoryInterface, Str
     public function withOptions(array $options): static
     {
         $clone = clone $this;
-        if (\array_key_exists('auto_upgrade_http_version', $options)) {
-            $clone->autoUpgradeHttpVersion = $options['auto_upgrade_http_version'];
-            unset($options['auto_upgrade_http_version']);
-        }
         $clone->client = $clone->client->withOptions($options);
         return $clone;
     }
@@ -82,39 +77,16 @@ final class Psr18Client implements ClientInterface, RequestFactoryInterface, Str
     {
         try {
             $body = $request->getBody();
-            $headers = $request->getHeaders();
-            $size = $request->getHeader('content-length')[0] ?? -1;
-            if (0 > $size && 0 < $size = $body->getSize() ?? -1) {
-                $headers['Content-Length'] = [$size];
-            }
-            if (0 === $size) {
-                $body = '';
-            } elseif (0 < $size && $size < 1 << 21) {
-                if ($body->isSeekable()) {
-                    try {
-                        $body->seek(0);
-                    } catch (\RuntimeException) {
-                        // ignore
-                    }
+            if ($body->isSeekable()) {
+                try {
+                    $body->seek(0);
+                } catch (\RuntimeException) {
+                    // ignore
                 }
-                $body = $body->getContents();
-            } else {
-                $body = static function (int $size) use ($body) {
-                    if ($body->isSeekable()) {
-                        try {
-                            $body->seek(0);
-                        } catch (\RuntimeException) {
-                            // ignore
-                        }
-                    }
-                    while (!$body->eof()) {
-                        yield $body->read($size);
-                    }
-                };
             }
-            $options = ['headers' => $headers, 'body' => $body];
-            if (!$this->autoUpgradeHttpVersion || '1.0' === $request->getProtocolVersion()) {
-                $options['http_version'] = $request->getProtocolVersion();
+            $options = ['headers' => $request->getHeaders(), 'body' => $body->getContents()];
+            if ('1.0' === $request->getProtocolVersion()) {
+                $options['http_version'] = '1.0';
             }
             $response = $this->client->request($request->getMethod(), (string) $request->getUri(), $options);
             return HttplugWaitLoop::createPsr7Response($this->responseFactory, $this->streamFactory, $this->client, $response, \false);
@@ -183,9 +155,11 @@ final class Psr18Client implements ClientInterface, RequestFactoryInterface, Str
  */
 class Psr18NetworkException extends \RuntimeException implements NetworkExceptionInterface
 {
-    public function __construct(TransportExceptionInterface $e, private RequestInterface $request)
+    private RequestInterface $request;
+    public function __construct(TransportExceptionInterface $e, RequestInterface $request)
     {
         parent::__construct($e->getMessage(), 0, $e);
+        $this->request = $request;
     }
     public function getRequest(): RequestInterface
     {
@@ -197,9 +171,11 @@ class Psr18NetworkException extends \RuntimeException implements NetworkExceptio
  */
 class Psr18RequestException extends \InvalidArgumentException implements RequestExceptionInterface
 {
-    public function __construct(TransportExceptionInterface $e, private RequestInterface $request)
+    private RequestInterface $request;
+    public function __construct(TransportExceptionInterface $e, RequestInterface $request)
     {
         parent::__construct($e->getMessage(), 0, $e);
+        $this->request = $request;
     }
     public function getRequest(): RequestInterface
     {

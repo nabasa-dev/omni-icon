@@ -14,7 +14,6 @@ use OmniIconDeps\Symfony\Component\Cache\Exception\CacheException;
 use OmniIconDeps\Symfony\Component\Cache\Exception\InvalidArgumentException;
 use OmniIconDeps\Symfony\Component\Cache\Marshaller\DefaultMarshaller;
 use OmniIconDeps\Symfony\Component\Cache\Marshaller\MarshallerInterface;
-use OmniIconDeps\Symfony\Contracts\Cache\ItemInterface;
 /**
  * @author Rob Frawley 2nd <rmf@src.run>
  * @author Nicolas Grekas <p@tchwork.com>
@@ -23,7 +22,7 @@ class MemcachedAdapter extends AbstractAdapter
 {
     /**
      * We are replacing characters that are illegal in Memcached keys with reserved characters from
-     * {@see ItemInterface::RESERVED_CHARACTERS} that are legal in Memcached.
+     * {@see \Symfony\Contracts\Cache\ItemInterface::RESERVED_CHARACTERS} that are legal in Memcached.
      * Note: don’t use {@see AbstractAdapter::NS_SEPARATOR}.
      */
     private const RESERVED_MEMCACHED = " \n\r\t\v\f\x00";
@@ -62,7 +61,10 @@ class MemcachedAdapter extends AbstractAdapter
         $this->enableVersioning();
         $this->marshaller = $marshaller ?? new DefaultMarshaller();
     }
-    public static function isSupported(): bool
+    /**
+     * @return bool
+     */
+    public static function isSupported()
     {
         return \extension_loaded('memcached') && version_compare(phpversion('memcached'), '3.1.6', '>=');
     }

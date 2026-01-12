@@ -12,7 +12,6 @@ namespace OmniIconDeps\Symfony\Component\Mime;
 
 use OmniIconDeps\Symfony\Component\Mime\Exception\InvalidArgumentException;
 use OmniIconDeps\Symfony\Component\Mime\Exception\LogicException;
-use OmniIconDeps\Symfony\Component\Mime\Exception\RuntimeException;
 /**
  * Guesses the MIME type using the PECL extension FileInfo.
  *
@@ -20,17 +19,15 @@ use OmniIconDeps\Symfony\Component\Mime\Exception\RuntimeException;
  */
 class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
 {
-    /**
-     * @var array<string, \finfo>
-     */
-    private static $finfoCache = [];
+    private ?string $magicFile;
     /**
      * @param string|null $magicFile A magic file to use with the finfo instance
      *
      * @see https://php.net/finfo-open
      */
-    public function __construct(private ?string $magicFile = null)
+    public function __construct(?string $magicFile = null)
     {
+        $this->magicFile = $magicFile;
     }
     public function isGuesserSupported(): bool
     {
@@ -44,12 +41,10 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
         if (!$this->isGuesserSupported()) {
             throw new LogicException(\sprintf('The "%s" guesser is not supported.', __CLASS__));
         }
-        try {
-            $finfo = self::$finfoCache[$this->magicFile ?? ''] ??= new \finfo(\FILEINFO_MIME_TYPE, $this->magicFile);
-        } catch (\Exception $e) {
-            throw new RuntimeException($e->getMessage());
+        if (\false === $finfo = new \finfo(\FILEINFO_MIME_TYPE, $this->magicFile)) {
+            return null;
         }
-        $mimeType = $finfo->file($path) ?: null;
+        $mimeType = $finfo->file($path);
         if ($mimeType && 0 === \strlen($mimeType) % 2) {
             $mimeStart = substr($mimeType, 0, \strlen($mimeType) >> 1);
             $mimeType = $mimeStart . $mimeStart === $mimeType ? $mimeStart : $mimeType;

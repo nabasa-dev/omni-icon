@@ -24,8 +24,11 @@ use OmniIconDeps\Symfony\Component\ExpressionLanguage\Expression;
  */
 abstract class AbstractRecursivePass implements CompilerPassInterface
 {
-    protected ?ContainerBuilder $container;
-    protected ?string $currentId = null;
+    /**
+     * @var ContainerBuilder
+     */
+    protected $container;
+    protected $currentId;
     protected bool $skipScalars = \false;
     private bool $processExpressions = \false;
     private ExpressionLanguage $expressionLanguage;
@@ -42,7 +45,10 @@ abstract class AbstractRecursivePass implements CompilerPassInterface
             $this->container = null;
         }
     }
-    protected function enableExpressionProcessing(): void
+    /**
+     * @return void
+     */
+    protected function enableExpressionProcessing()
     {
         $this->processExpressions = \true;
     }
@@ -160,7 +166,7 @@ abstract class AbstractRecursivePass implements CompilerPassInterface
                 throw new RuntimeException(\sprintf('Invalid service "%s": class%s has no constructor.', $this->currentId, \sprintf($class !== $this->currentId ? ' "%s"' : '', $class)));
             }
         } elseif (!$r->isPublic()) {
-            throw new RuntimeException(\sprintf('Invalid service "%s": ', $this->currentId) . \sprintf($class !== $this->currentId ? 'constructor of class "%s"' : 'its constructor', $class) . ' must be public. Did you miss configuring a factory or a static constructor? Try using the "#[Autoconfigure(constructor: ...)]" attribute for the latter.');
+            throw new RuntimeException(\sprintf('Invalid service "%s": ', $this->currentId) . \sprintf($class !== $this->currentId ? 'constructor of class "%s"' : 'its constructor', $class) . ' must be public.');
         }
         return $r;
     }

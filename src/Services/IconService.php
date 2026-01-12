@@ -7,9 +7,9 @@ use OmniIconDeps\enshrined\svgSanitize\Sanitizer;
 use OmniIcon\Core\Discovery\Attributes\Service;
 use OmniIcon\Core\Logger\LogComponent;
 use OmniIcon\Core\Logger\LoggerService;
-use OmniIconDeps\Symfony\UX\Icons\Exception\IconNotFoundException;
-use OmniIconDeps\Symfony\UX\Icons\IconRegistryInterface;
-use OmniIconDeps\Symfony\UX\Icons\Registry\ChainIconRegistry;
+use OmniIcon\Core\Icon\Exception\IconNotFoundException;
+use OmniIcon\Core\Icon\IconRegistryInterface;
+use OmniIcon\Core\Icon\Registry\ChainIconRegistry;
 /**
  * Icon service for rendering SVG icons from local uploads, plugin bundles, and Iconify API.
  *
@@ -26,9 +26,9 @@ use OmniIconDeps\Symfony\UX\Icons\Registry\ChainIconRegistry;
 #[Service]
 class IconService
 {
-    private readonly IconRegistryInterface $registry;
-    private readonly Sanitizer $sanitizer;
-    public function __construct(private readonly \OmniIcon\Services\LocalIconService $localIconService, private readonly \OmniIcon\Services\BundleIconService $bundleIconService, private readonly \OmniIcon\Services\IconifyService $iconifyService, private readonly LoggerService $logger)
+    private IconRegistryInterface $registry;
+    private Sanitizer $sanitizer;
+    public function __construct(private \OmniIcon\Services\LocalIconService $localIconService, private \OmniIcon\Services\BundleIconService $bundleIconService, private \OmniIcon\Services\IconifyService $iconifyService, private LoggerService $logger)
     {
         // Chain registries: local icons take precedence over bundle icons, then on-demand icons
         $this->registry = new ChainIconRegistry([

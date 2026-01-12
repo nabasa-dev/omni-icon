@@ -13,7 +13,7 @@ use RuntimeException;
  */
 final class DependencyResolver
 {
-    public function __construct(private readonly \OmniIcon\Core\Container\Container $container)
+    public function __construct(private \OmniIcon\Core\Container\Container $container)
     {
     }
     /**

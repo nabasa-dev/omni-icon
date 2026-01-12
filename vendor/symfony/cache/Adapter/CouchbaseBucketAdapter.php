@@ -14,11 +14,8 @@ use OmniIconDeps\Symfony\Component\Cache\Exception\CacheException;
 use OmniIconDeps\Symfony\Component\Cache\Exception\InvalidArgumentException;
 use OmniIconDeps\Symfony\Component\Cache\Marshaller\DefaultMarshaller;
 use OmniIconDeps\Symfony\Component\Cache\Marshaller\MarshallerInterface;
-trigger_deprecation('symfony/cache', '7.1', 'The "%s" class is deprecated, use "%s" instead.', CouchbaseBucketAdapter::class, CouchbaseCollectionAdapter::class);
 /**
  * @author Antonio Jose Cerezo Aranda <aj.cerezo@gmail.com>
- *
- * @deprecated since Symfony 7.1, use {@see CouchbaseCollectionAdapter} instead
  */
 class CouchbaseBucketAdapter extends AbstractAdapter
 {
@@ -26,13 +23,15 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     private const MAX_KEY_LENGTH = 250;
     private const KEY_NOT_FOUND = 13;
     private const VALID_DSN_OPTIONS = ['operationTimeout', 'configTimeout', 'configNodeTimeout', 'n1qlTimeout', 'httpTimeout', 'configDelay', 'htconfigIdleTimeout', 'durabilityInterval', 'durabilityTimeout'];
+    private \OmniIconDeps\CouchbaseBucket $bucket;
     private MarshallerInterface $marshaller;
-    public function __construct(private \OmniIconDeps\CouchbaseBucket $bucket, string $namespace = '', int $defaultLifetime = 0, ?MarshallerInterface $marshaller = null)
+    public function __construct(\OmniIconDeps\CouchbaseBucket $bucket, string $namespace = '', int $defaultLifetime = 0, ?MarshallerInterface $marshaller = null)
     {
         if (!static::isSupported()) {
             throw new CacheException('Couchbase >= 2.6.0 < 3.0.0 is required.');
         }
         $this->maxIdLength = static::MAX_KEY_LENGTH;
+        $this->bucket = $bucket;
         parent::__construct($namespace, $defaultLifetime);
         $this->enableVersioning();
         $this->marshaller = $marshaller ?? new DefaultMarshaller();
@@ -75,7 +74,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
             $bucket = $client->openBucket($matches['bucketName']);
             unset($options['username'], $options['password']);
             foreach ($options as $option => $value) {
-                if ($value) {
+                if (!empty($value)) {
                     $bucket->{$option} = $value;
                 }
             }

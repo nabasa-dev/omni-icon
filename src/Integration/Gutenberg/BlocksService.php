@@ -15,7 +15,7 @@ use OmniIcon\Services\ViteService;
 #[Service]
 class BlocksService
 {
-    public function __construct(private readonly IconService $iconService, private readonly ViteService $viteService)
+    public function __construct(private IconService $iconService, private ViteService $viteService)
     {
     }
     /**

@@ -5,7 +5,7 @@ namespace OmniIcon\Core\Discovery;
 
 final class DiscoveryLocation
 {
-    public function __construct(public readonly string $namespace, public readonly string $path)
+    public function __construct(public string $namespace, public string $path)
     {
     }
     /**

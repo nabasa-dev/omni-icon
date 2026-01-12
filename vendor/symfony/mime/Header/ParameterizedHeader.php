@@ -137,8 +137,9 @@ final class ParameterizedHeader extends UnstructuredHeader
                 $paramLines[] = $name . '*' . $i . $this->getEndOfParameterValue($line, \true, 0 === $i);
             }
             return implode(";\r\n ", $paramLines);
+        } else {
+            return $name . $this->getEndOfParameterValue($valueLines[0], $encoded, \true);
         }
-        return $name . $this->getEndOfParameterValue($valueLines[0], $encoded, \true);
     }
     /**
      * Returns the parameter value from the "=" and beyond.

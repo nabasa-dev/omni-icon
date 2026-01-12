@@ -11,30 +11,27 @@
 namespace OmniIconDeps\Symfony\Component\HttpClient;
 
 use OmniIconDeps\Amp\CancelledException;
-use OmniIconDeps\Amp\DeferredFuture;
 use OmniIconDeps\Amp\Http\Client\DelegateHttpClient;
 use OmniIconDeps\Amp\Http\Client\InterceptedHttpClient;
 use OmniIconDeps\Amp\Http\Client\PooledHttpClient;
 use OmniIconDeps\Amp\Http\Client\Request;
-use OmniIconDeps\Amp\Http\HttpMessage;
 use OmniIconDeps\Amp\Http\Tunnel\Http1TunnelConnector;
+use OmniIconDeps\Amp\Promise;
 use OmniIconDeps\Psr\Log\LoggerAwareInterface;
 use OmniIconDeps\Psr\Log\LoggerAwareTrait;
 use OmniIconDeps\Symfony\Component\HttpClient\Exception\TransportException;
-use OmniIconDeps\Symfony\Component\HttpClient\Internal\AmpClientStateV4;
-use OmniIconDeps\Symfony\Component\HttpClient\Internal\AmpClientStateV5;
-use OmniIconDeps\Symfony\Component\HttpClient\Response\AmpResponseV4;
-use OmniIconDeps\Symfony\Component\HttpClient\Response\AmpResponseV5;
+use OmniIconDeps\Symfony\Component\HttpClient\Internal\AmpClientState;
+use OmniIconDeps\Symfony\Component\HttpClient\Response\AmpResponse;
 use OmniIconDeps\Symfony\Component\HttpClient\Response\ResponseStream;
 use OmniIconDeps\Symfony\Contracts\HttpClient\HttpClientInterface;
 use OmniIconDeps\Symfony\Contracts\HttpClient\ResponseInterface;
 use OmniIconDeps\Symfony\Contracts\HttpClient\ResponseStreamInterface;
 use OmniIconDeps\Symfony\Contracts\Service\ResetInterface;
 if (!interface_exists(DelegateHttpClient::class)) {
-    throw new \LogicException('You cannot use "Symfony\Component\HttpClient\AmpHttpClient" as the "amphp/http-client" package is not installed. Try running "composer require amphp/http-client:^5".');
+    throw new \LogicException('You cannot use "Symfony\Component\HttpClient\AmpHttpClient" as the "amphp/http-client" package is not installed. Try running "composer require amphp/http-client:^4.2.1".');
 }
-if (\PHP_VERSION_ID < 80400 && is_subclass_of(Request::class, HttpMessage::class)) {
-    throw new \LogicException('Using "Symfony\Component\HttpClient\AmpHttpClient" with amphp/http-client >= 5 requires PHP >= 8.4. Try running "composer require amphp/http-client:^4.2.1" or upgrade to PHP >= 8.4.');
+if (!interface_exists(Promise::class)) {
+    throw new \LogicException('You cannot use "Symfony\Component\HttpClient\AmpHttpClient" as the installed "amphp/http-client" is not compatible with this version of "symfony/http-client". Try downgrading "amphp/http-client" to "^4.2.1".');
 }
 /**
  * A portable implementation of the HttpClientInterface contracts based on Amp's HTTP client.
@@ -48,7 +45,7 @@ final class AmpHttpClient implements HttpClientInterface, LoggerAwareInterface, 
     public const OPTIONS_DEFAULTS = HttpClientInterface::OPTIONS_DEFAULTS + ['crypto_method' => \STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT];
     private array $defaultOptions = self::OPTIONS_DEFAULTS;
     private static array $emptyDefaults = self::OPTIONS_DEFAULTS;
-    private AmpClientStateV4|AmpClientStateV5 $multi;
+    private AmpClientState $multi;
     /**
      * @param array         $defaultOptions     Default requests' options
      * @param callable|null $clientConfigurator A callable that builds a {@see DelegateHttpClient} from a {@see PooledHttpClient};
@@ -64,14 +61,7 @@ final class AmpHttpClient implements HttpClientInterface, LoggerAwareInterface, 
         if ($defaultOptions) {
             [, $this->defaultOptions] = self::prepareRequest(null, null, $defaultOptions, $this->defaultOptions);
         }
-        if (is_subclass_of(Request::class, HttpMessage::class)) {
-            $this->multi = new AmpClientStateV5($clientConfigurator, $maxHostConnections, $maxPendingPushes, $this->logger);
-        } else {
-            if (\PHP_VERSION_ID >= 80400) {
-                trigger_deprecation('symfony/http-client', '7.4', 'Using amphp/http-client < 5 is deprecated. Try running "composer require amphp/http-client:^5".');
-            }
-            $this->multi = new AmpClientStateV4($clientConfigurator, $maxHostConnections, $maxPendingPushes, $this->logger);
-        }
+        $this->multi = new AmpClientState($clientConfigurator, $maxHostConnections, $maxPendingPushes, $this->logger);
     }
     /**
      * @see HttpClientInterface::OPTIONS_DEFAULTS for available options
@@ -119,15 +109,9 @@ final class AmpHttpClient implements HttpClientInterface, LoggerAwareInterface, 
             $h = explode(': ', $v, 2);
             $request->addHeader($h[0], $h[1]);
         }
-        if ($request instanceof HttpMessage) {
-            $request->setTcpConnectTimeout($options['timeout']);
-            $request->setTlsHandshakeTimeout($options['timeout']);
-            $request->setTransferTimeout($options['max_duration']);
-        } else {
-            $request->setTcpConnectTimeout(ceil(1000 * $options['timeout']));
-            $request->setTlsHandshakeTimeout(ceil(1000 * $options['timeout']));
-            $request->setTransferTimeout(ceil(1000 * $options['max_duration']));
-        }
+        $request->setTcpConnectTimeout(ceil(1000 * $options['timeout']));
+        $request->setTlsHandshakeTimeout(ceil(1000 * $options['timeout']));
+        $request->setTransferTimeout(ceil(1000 * $options['max_duration']));
         if (method_exists($request, 'setInactivityTimeout')) {
             $request->setInactivityTimeout(0);
         }
@@ -136,31 +120,21 @@ final class AmpHttpClient implements HttpClientInterface, LoggerAwareInterface, 
             $auth = array_map('rawurldecode', $auth) + [1 => ''];
             $request->setHeader('Authorization', 'Basic ' . base64_encode(implode(':', $auth)));
         }
-        if ($request instanceof HttpMessage) {
-            return new AmpResponseV5($this->multi, $request, $options, $this->logger);
-        }
-        return new AmpResponseV4($this->multi, $request, $options, $this->logger);
+        return new AmpResponse($this->multi, $request, $options, $this->logger);
     }
     public function stream(ResponseInterface|iterable $responses, ?float $timeout = null): ResponseStreamInterface
     {
-        if ($responses instanceof AmpResponseV4 || $responses instanceof AmpResponseV5) {
+        if ($responses instanceof AmpResponse) {
             $responses = [$responses];
         }
-        if ($this->multi instanceof AmpClientStateV5) {
-            return new ResponseStream(AmpResponseV5::stream($responses, $timeout));
-        }
-        return new ResponseStream(AmpResponseV4::stream($responses, $timeout));
+        return new ResponseStream(AmpResponse::stream($responses, $timeout));
     }
     public function reset(): void
     {
         $this->multi->dnsCache = [];
-        foreach ($this->multi->pushedResponses as $pushedResponses) {
+        foreach ($this->multi->pushedResponses as $authority => $pushedResponses) {
             foreach ($pushedResponses as [$pushedUrl, $pushDeferred]) {
-                if ($pushDeferred instanceof DeferredFuture) {
-                    $pushDeferred->error(new CancelledException());
-                } else {
-                    $pushDeferred->fail(new CancelledException());
-                }
+                $pushDeferred->fail(new CancelledException());
                 $this->logger?->debug(\sprintf('Unused pushed response: "%s"', $pushedUrl));
             }
         }

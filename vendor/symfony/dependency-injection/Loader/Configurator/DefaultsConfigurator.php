@@ -22,9 +22,11 @@ class DefaultsConfigurator extends AbstractServiceConfigurator
     use Traits\BindTrait;
     use Traits\PublicTrait;
     public const FACTORY = 'defaults';
-    public function __construct(ServicesConfigurator $parent, Definition $definition, private ?string $path = null)
+    private ?string $path;
+    public function __construct(ServicesConfigurator $parent, Definition $definition, ?string $path = null)
     {
         parent::__construct($parent, $definition, null, []);
+        $this->path = $path;
     }
     /**
      * Adds a tag for this definition.
@@ -40,22 +42,6 @@ class DefaultsConfigurator extends AbstractServiceConfigurator
         }
         $this->validateAttributes($name, $attributes);
         $this->definition->addTag($name, $attributes);
-        return $this;
-    }
-    /**
-     * Adds a resource tag for this definition.
-     *
-     * @return $this
-     *
-     * @throws InvalidArgumentException when an invalid tag name or attribute is provided
-     */
-    final public function resourceTag(string $name, array $attributes = []): static
-    {
-        if ('' === $name) {
-            throw new InvalidArgumentException('The resource tag name in "_defaults" must be a non-empty string.');
-        }
-        $this->validateAttributes($name, $attributes);
-        $this->definition->addResourceTag($name, $attributes);
         return $this;
     }
     /**

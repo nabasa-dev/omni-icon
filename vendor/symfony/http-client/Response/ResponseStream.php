@@ -18,8 +18,10 @@ use OmniIconDeps\Symfony\Contracts\HttpClient\ResponseStreamInterface;
  */
 final class ResponseStream implements ResponseStreamInterface
 {
-    public function __construct(private \Generator $generator)
+    private \Generator $generator;
+    public function __construct(\Generator $generator)
     {
+        $this->generator = $generator;
     }
     public function key(): ResponseInterface
     {

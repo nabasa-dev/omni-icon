@@ -29,8 +29,10 @@ class CheckCircularReferencesPass implements CompilerPassInterface
     private array $checkedLazyNodes;
     /**
      * Checks the ContainerBuilder object for circular references.
+     *
+     * @return void
      */
-    public function process(ContainerBuilder $container): void
+    public function process(ContainerBuilder $container)
     {
         $graph = $container->getCompiler()->getServiceReferenceGraph();
         $this->checkedNodes = [];

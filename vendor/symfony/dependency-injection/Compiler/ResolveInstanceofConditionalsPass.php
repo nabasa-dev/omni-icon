@@ -22,7 +22,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\RuntimeExceptio
  */
 class ResolveInstanceofConditionalsPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
+    /**
+     * @return void
+     */
+    public function process(ContainerBuilder $container)
     {
         foreach ($container->getAutoconfiguredInstanceof() as $interface => $definition) {
             if ($definition->getArguments()) {
@@ -107,7 +110,7 @@ class ResolveInstanceofConditionalsPass implements CompilerPassInterface
                 foreach ($tags as $k => $v) {
                     if (null === $definition->getDecoratedService() || $interface === $definition->getClass() || \in_array($k, $tagsToKeep, \true)) {
                         foreach ($v as $v) {
-                            if ($definition->hasTag($k) && \in_array($v, $definition->getTag($k), \true)) {
+                            if ($definition->hasTag($k) && \in_array($v, $definition->getTag($k))) {
                                 continue;
                             }
                             $definition->addTag($k, $v);
@@ -119,10 +122,6 @@ class ResolveInstanceofConditionalsPass implements CompilerPassInterface
             $definition->setBindings($bindings + $instanceofBindings);
             // reset fields with "merge" behavior
             $abstract->setBindings([])->setArguments([])->setMethodCalls([])->setDecoratedService(null)->setTags([])->setAbstract(\true);
-        }
-        if ($definition->isSynthetic()) {
-            // Ignore container.excluded tag on synthetic services
-            $definition->clearTag('container.excluded');
         }
         return $definition;
     }

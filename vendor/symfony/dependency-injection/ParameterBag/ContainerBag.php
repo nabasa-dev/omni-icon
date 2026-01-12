@@ -16,8 +16,10 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Container;
  */
 class ContainerBag extends FrozenParameterBag implements ContainerBagInterface
 {
-    public function __construct(private Container $container)
+    private Container $container;
+    public function __construct(Container $container)
     {
+        $this->container = $container;
     }
     public function all(): array
     {

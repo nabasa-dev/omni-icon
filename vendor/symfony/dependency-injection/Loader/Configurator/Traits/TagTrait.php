@@ -27,20 +27,6 @@ trait TagTrait
         $this->definition->addTag($name, $attributes);
         return $this;
     }
-    /**
-     * Adds a resource tag for this definition.
-     *
-     * @return $this
-     */
-    final public function resourceTag(string $name, array $attributes = []): static
-    {
-        if ('' === $name) {
-            throw new InvalidArgumentException(\sprintf('The resource tag name for service "%s" must be a non-empty string.', $this->id));
-        }
-        $this->validateAttributes($name, $attributes);
-        $this->definition->addResourceTag($name, $attributes);
-        return $this;
-    }
     private function validateAttributes(string $tag, array $attributes, array $path = []): void
     {
         foreach ($attributes as $name => $value) {

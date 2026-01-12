@@ -5,16 +5,34 @@ namespace OmniIcon\Core\Discovery\Attributes;
 
 use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
-final readonly class Service
+final class Service
 {
-    public function __construct(
-        public ?string $id = null,
-        public bool $singleton = \true,
-        /** @var array<string> */
-        public array $tags = [],
-        public ?string $alias = null,
-        public bool $public = \false
-    )
+    /**
+     * @var string|null
+     */
+    public ?string $id;
+    /**
+     * @var bool
+     */
+    public bool $singleton;
+    /**
+     * @var array<string>
+     */
+    public array $tags;
+    /**
+     * @var string|null
+     */
+    public ?string $alias;
+    /**
+     * @var bool
+     */
+    public bool $public;
+    public function __construct(?string $id = null, bool $singleton = \true, array $tags = [], ?string $alias = null, bool $public = \false)
     {
+        $this->id = $id;
+        $this->singleton = $singleton;
+        $this->tags = $tags;
+        $this->alias = $alias;
+        $this->public = $public;
     }
 }

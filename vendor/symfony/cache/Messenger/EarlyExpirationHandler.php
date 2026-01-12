@@ -19,11 +19,16 @@ use OmniIconDeps\Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class EarlyExpirationHandler
 {
+    private ReverseContainer $reverseContainer;
     private array $processedNonces = [];
-    public function __construct(private ReverseContainer $reverseContainer)
+    public function __construct(ReverseContainer $reverseContainer)
     {
+        $this->reverseContainer = $reverseContainer;
     }
-    public function __invoke(EarlyExpirationMessage $message): void
+    /**
+     * @return void
+     */
+    public function __invoke(EarlyExpirationMessage $message)
     {
         $item = $message->getItem();
         $metadata = $item->getMetadata();

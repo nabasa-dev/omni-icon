@@ -13,27 +13,26 @@ namespace OmniIconDeps\Symfony\Component\DependencyInjection;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\EnvNotFoundException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\ParameterCircularReferenceException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use OmniIconDeps\Symfony\Contracts\Service\ResetInterface;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class EnvVarProcessor implements EnvVarProcessorInterface, ResetInterface
+class EnvVarProcessor implements EnvVarProcessorInterface
 {
+    private ContainerInterface $container;
     /** @var \Traversable<EnvVarLoaderInterface> */
     private \Traversable $loaders;
-    /** @var \Traversable<EnvVarLoaderInterface> */
-    private \Traversable $originalLoaders;
     private array $loadedVars = [];
     /**
      * @param \Traversable<EnvVarLoaderInterface>|null $loaders
      */
-    public function __construct(private ContainerInterface $container, ?\Traversable $loaders = null)
+    public function __construct(ContainerInterface $container, ?\Traversable $loaders = null)
     {
-        $this->originalLoaders = $this->loaders = $loaders ?? new \ArrayIterator();
+        $this->container = $container;
+        $this->loaders = $loaders ?? new \ArrayIterator();
     }
     public static function getProvidedTypes(): array
     {
-        return ['base64' => 'string', 'bool' => 'bool', 'not' => 'bool', 'const' => 'bool|int|float|string|array', 'csv' => 'array', 'file' => 'string', 'float' => 'float', 'int' => 'int', 'json' => 'array', 'key' => 'bool|int|float|string|array', 'url' => 'array', 'query_string' => 'array', 'resolve' => 'string', 'default' => 'bool|int|float|string|array', 'string' => 'string', 'trim' => 'string', 'require' => 'bool|int|float|string|array', 'enum' => \BackedEnum::class, 'shuffle' => 'array', 'defined' => 'bool', 'urlencode' => 'string'];
+        return ['base64' => 'string', 'bool' => 'bool', 'not' => 'bool', 'const' => 'bool|int|float|string|array', 'csv' => 'array', 'file' => 'string', 'float' => 'float', 'int' => 'int', 'json' => 'array', 'key' => 'bool|int|float|string|array', 'url' => 'array', 'query_string' => 'array', 'resolve' => 'string', 'default' => 'bool|int|float|string|array', 'string' => 'string', 'trim' => 'string', 'require' => 'bool|int|float|string|array', 'enum' => \BackedEnum::class, 'shuffle' => 'array', 'defined' => 'bool'];
     }
     public function getEnv(string $prefix, string $name, \Closure $getEnv): mixed
     {
@@ -103,8 +102,9 @@ class EnvVarProcessor implements EnvVarProcessorInterface, ResetInterface
             }
             if ('file' === $prefix) {
                 return file_get_contents($file);
+            } else {
+                return require $file;
             }
-            return require $file;
         }
         $returnNull = \false;
         if ('' === $prefix) {
@@ -171,7 +171,7 @@ class EnvVarProcessor implements EnvVarProcessorInterface, ResetInterface
             if ($returnNull) {
                 return null;
             }
-            if (!isset(static::getProvidedTypes()[$prefix])) {
+            if (!isset($this->getProvidedTypes()[$prefix])) {
                 throw new RuntimeException(\sprintf('Unsupported env var prefix "%s".', $prefix));
             }
             if (!\in_array($prefix, ['string', 'bool', 'not', 'int', 'float'], \true)) {
@@ -231,12 +231,6 @@ class EnvVarProcessor implements EnvVarProcessorInterface, ResetInterface
             if (!isset($params['scheme'], $params['host'])) {
                 throw new RuntimeException(\sprintf('Invalid URL in env var "%s": scheme and host expected.', $name));
             }
-            if (('\\' !== \DIRECTORY_SEPARATOR || 'file' !== $params['scheme']) && \false !== ($i = strpos($env, '\\')) && $i < strcspn($env, '?#')) {
-                throw new RuntimeException(\sprintf('Invalid URL in env var "%s": backslashes are not allowed.', $name));
-            }
-            if (\ord($env[0]) <= 32 || \ord($env[-1]) <= 32 || \strlen($env) !== strcspn($env, "\r\n\t")) {
-                throw new RuntimeException(\sprintf('Invalid URL in env var "%s": leading/trailing ASCII control characters or whitespaces are not allowed.', $name));
-            }
             $params += ['port' => null, 'user' => null, 'pass' => null, 'path' => null, 'query' => null, 'fragment' => null];
             $params['user'] = null !== $params['user'] ? rawurldecode($params['user']) : null;
             $params['pass'] = null !== $params['pass'] ? rawurldecode($params['pass']) : null;
@@ -271,17 +265,6 @@ class EnvVarProcessor implements EnvVarProcessorInterface, ResetInterface
         if ('trim' === $prefix) {
             return trim($env);
         }
-        if ('urlencode' === $prefix) {
-            return rawurlencode($env);
-        }
         throw new RuntimeException(\sprintf('Unsupported env var prefix "%s" for env name "%s".', $prefix, $name));
-    }
-    public function reset(): void
-    {
-        $this->loadedVars = [];
-        $this->loaders = $this->originalLoaders;
-        if ($this->container instanceof Container) {
-            $this->container->resetEnvCache();
-        }
     }
 }

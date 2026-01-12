@@ -14,17 +14,12 @@ use OmniIconDeps\Symfony\Component\Config\Builder\ConfigBuilderGenerator;
 use OmniIconDeps\Symfony\Component\Config\Builder\ConfigBuilderGeneratorInterface;
 use OmniIconDeps\Symfony\Component\Config\Builder\ConfigBuilderInterface;
 use OmniIconDeps\Symfony\Component\Config\FileLocatorInterface;
-use OmniIconDeps\Symfony\Component\Config\Loader\LoaderResolver;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Attribute\When;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Attribute\WhenNot;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Container;
 use OmniIconDeps\Symfony\Component\DependencyInjection\ContainerBuilder;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\LogicException;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Extension\ConfigurationExtensionInterface;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Loader\Configurator\App;
-use OmniIconDeps\Symfony\Component\DependencyInjection\Loader\Configurator\AppReference;
 use OmniIconDeps\Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 /**
  * PhpFileLoader loads service definitions from a PHP file.
@@ -36,16 +31,12 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Loader\Configurator\Conta
  */
 class PhpFileLoader extends FileLoader
 {
-    protected bool $autoRegisterAliasesForSinglyImplementedInterfaces = \false;
+    protected $autoRegisterAliasesForSinglyImplementedInterfaces = \false;
     private ?ConfigBuilderGeneratorInterface $generator;
-    public function __construct(ContainerBuilder $container, FileLocatorInterface $locator, ?string $env = null, ConfigBuilderGeneratorInterface|bool|null $generator = null, bool $prepend = \false)
+    public function __construct(ContainerBuilder $container, FileLocatorInterface $locator, ?string $env = null, ?ConfigBuilderGeneratorInterface $generator = null)
     {
-        if (\is_bool($generator)) {
-            $prepend = $generator;
-            $generator = null;
-        }
+        parent::__construct($container, $locator, $env);
         $this->generator = $generator;
-        parent::__construct($container, $locator, $env, $prepend);
     }
     public function load(mixed $resource, ?string $type = null): mixed
     {
@@ -55,72 +46,17 @@ class PhpFileLoader extends FileLoader
         $path = $this->locator->locate($resource);
         $this->setCurrentDir(\dirname($path));
         $this->container->fileExists($path);
-        // Force load ContainerConfigurator to make env(), param() etc available.
-        class_exists(ContainerConfigurator::class);
-        // Expose AppReference::config() as App::config()
-        if (!class_exists(App::class)) {
-            class_alias(AppReference::class, App::class);
-        }
         // the closure forbids access to the private scope in the included file
-        $load = \Closure::bind(static function ($path, $env) use ($container, $loader, $resource, $type) {
+        $load = \Closure::bind(function ($path, $env) use ($container, $loader, $resource, $type) {
             return include $path;
-        }, null, null);
+        }, $this, ProtectedPhpFileLoader::class);
         $instanceof = $this->instanceof;
         $this->instanceof = [];
         try {
-            try {
-                if (1 === $result = $load($path, $this->env)) {
-                    $result = null;
-                }
-            } catch (\Error $e) {
-                $load = \Closure::bind(function ($path, $env) use ($container, $loader, $resource, $type) {
-                    return include $path;
-                }, $this, ProtectedPhpFileLoader::class);
-                if (1 === $result = $load($path, $this->env)) {
-                    $result = null;
-                }
-                throw new LogicException(\sprintf('Using `$this` or its internal scope in config files is not supported anymore, use the `$loader` variable instead in "%s" on line %d.', $e->getFile(), $e->getLine()), $e->getCode(), $e);
+            $callback = $load($path, $this->env);
+            if (\is_object($callback) && \is_callable($callback)) {
+                $this->executeCallback($callback, new ContainerConfigurator($this->container, $this, $this->instanceof, $path, $resource, $this->env), $path);
             }
-            if (\is_object($result) && \is_callable($result)) {
-                $this->callConfigurator($result, new ContainerConfigurator($this->container, $this, $this->instanceof, $path, $resource, $this->env), $path);
-            } elseif (\is_array($result)) {
-                $yamlLoader = new YamlFileLoader($this->container, $this->locator, $this->env, $this->prepend);
-                $yamlLoader->setResolver($this->resolver ?? new LoaderResolver([$this]));
-                $loadContent = new \ReflectionMethod(YamlFileLoader::class, 'loadContent');
-                $result = ContainerConfigurator::processValue($result);
-                ++$this->importing;
-                try {
-                    $content = array_intersect_key($result, ['imports' => \true, 'parameters' => \true, 'services' => \true]);
-                    $loadContent->invoke($yamlLoader, $content, $path);
-                    foreach ($result as $namespace => $config) {
-                        if (\in_array($namespace, ['imports', 'parameters', 'services'], \true)) {
-                            continue;
-                        }
-                        if (str_starts_with($namespace, 'when@')) {
-                            $knownEnvs = $this->container->hasParameter('.container.known_envs') ? array_flip($this->container->getParameter('.container.known_envs')) : [];
-                            $this->container->setParameter('.container.known_envs', array_keys($knownEnvs + [substr($namespace, 5) => \true]));
-                            continue;
-                        }
-                        $this->loadExtensionConfig($namespace, $config);
-                    }
-                    // per-env configuration
-                    if ($this->env && isset($result[$when = 'when@' . $this->env])) {
-                        if (!\is_array($result[$when])) {
-                            throw new InvalidArgumentException(\sprintf('The "%s" key should contain an array in "%s".', $when, $path));
-                        }
-                        $content = array_intersect_key($result[$when], ['imports' => \true, 'parameters' => \true, 'services' => \true]);
-                        $loadContent->invoke($yamlLoader, $content, $path);
-                        foreach ($result[$when] as $namespace => $config) {
-                            if (!\in_array($namespace, ['imports', 'parameters', 'services'], \true) && !str_starts_with($namespace, 'when@')) {
-                                $this->loadExtensionConfig($namespace, $config);
-                            }
-                        }
-                    }
-                } finally {
-                    --$this->importing;
-                }
-            }
-            $this->loadExtensionConfigs();
         } finally {
             $this->instanceof = $instanceof;
             $this->registerAliasesForSinglyImplementedInterfaces();
@@ -140,33 +76,20 @@ class PhpFileLoader extends FileLoader
     /**
      * Resolve the parameters to the $callback and execute it.
      */
-    private function callConfigurator(callable $callback, ContainerConfigurator $containerConfigurator, string $path): void
+    private function executeCallback(callable $callback, ContainerConfigurator $containerConfigurator, string $path): void
     {
         $callback = $callback(...);
         $arguments = [];
         $configBuilders = [];
         $r = new \ReflectionFunction($callback);
-        $excluded = \true;
-        $whenAttributes = $r->getAttributes(When::class, \ReflectionAttribute::IS_INSTANCEOF);
-        $notWhenAttributes = $r->getAttributes(WhenNot::class, \ReflectionAttribute::IS_INSTANCEOF);
-        if ($whenAttributes && $notWhenAttributes) {
-            throw new LogicException('Using both #[When] and #[WhenNot] attributes on the same target is not allowed.');
-        }
-        if (!$whenAttributes && !$notWhenAttributes) {
-            $excluded = \false;
-        }
-        foreach ($whenAttributes as $attribute) {
+        $attribute = null;
+        foreach ($r->getAttributes(When::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
             if ($this->env === $attribute->newInstance()->env) {
-                $excluded = \false;
+                $attribute = null;
                 break;
             }
         }
-        foreach ($notWhenAttributes as $attribute) {
-            if ($excluded = $this->env === $attribute->newInstance()->env) {
-                break;
-            }
-        }
-        if ($excluded) {
+        if (null !== $attribute) {
             return;
         }
         foreach ($r->getParameters() as $parameter) {
@@ -198,19 +121,16 @@ class PhpFileLoader extends FileLoader
                     } catch (InvalidArgumentException|\LogicException $e) {
                         throw new \InvalidArgumentException(\sprintf('Could not resolve argument "%s" for "%s".', $type . ' $' . $parameter->getName(), $path), 0, $e);
                     }
-                    trigger_deprecation('symfony/dependency-injection', '7.4', 'Using fluent builders for semantic configuration is deprecated, instantiate the "%s" class with the config array as argument and return it instead in "%s".', $type, $path);
                     $configBuilders[] = $configBuilder;
                     $arguments[] = $configBuilder;
             }
         }
-        ++$this->importing;
-        try {
-            $callback(...$arguments);
-        } finally {
-            --$this->importing;
-        }
+        // Force load ContainerConfigurator to make env(), param() etc available.
+        class_exists(ContainerConfigurator::class);
+        $callback(...$arguments);
+        /** @var ConfigBuilderInterface $configBuilder */
         foreach ($configBuilders as $configBuilder) {
-            $this->loadExtensionConfig($configBuilder->getExtensionAlias(), ContainerConfigurator::processValue($configBuilder->toArray()));
+            $containerConfigurator->extension($configBuilder->getExtensionAlias(), $configBuilder->toArray());
         }
     }
     /**
@@ -239,7 +159,7 @@ class PhpFileLoader extends FileLoader
         }
         if (!$this->container->hasExtension($alias)) {
             $extensions = array_filter(array_map(fn(ExtensionInterface $ext) => $ext->getAlias(), $this->container->getExtensions()));
-            throw new InvalidArgumentException(UndefinedExtensionHandler::getErrorMessage($namespace, null, $alias, $extensions));
+            throw new InvalidArgumentException(\sprintf('There is no extension able to load the configuration for "%s". Looked for namespace "%s", found "%s".', $namespace, $alias, $extensions ? implode('", "', $extensions) : 'none'));
         }
         $extension = $this->container->getExtension($alias);
         if (!$extension instanceof ConfigurationExtensionInterface) {

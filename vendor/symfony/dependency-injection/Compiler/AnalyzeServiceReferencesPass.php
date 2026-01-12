@@ -33,6 +33,8 @@ class AnalyzeServiceReferencesPass extends AbstractRecursivePass
     protected bool $skipScalars = \true;
     private ServiceReferenceGraph $graph;
     private ?Definition $currentDefinition = null;
+    private bool $onlyConstructorArguments;
+    private bool $hasProxyDumper;
     private bool $lazy;
     private bool $byConstructor;
     private bool $byFactory;
@@ -42,14 +44,18 @@ class AnalyzeServiceReferencesPass extends AbstractRecursivePass
     /**
      * @param bool $onlyConstructorArguments Sets this Service Reference pass to ignore method calls
      */
-    public function __construct(private bool $onlyConstructorArguments = \false, private bool $hasProxyDumper = \true)
+    public function __construct(bool $onlyConstructorArguments = \false, bool $hasProxyDumper = \true)
     {
+        $this->onlyConstructorArguments = $onlyConstructorArguments;
+        $this->hasProxyDumper = $hasProxyDumper;
         $this->enableExpressionProcessing();
     }
     /**
      * Processes a ContainerBuilder object to populate the service reference graph.
+     *
+     * @return void
      */
-    public function process(ContainerBuilder $container): void
+    public function process(ContainerBuilder $container)
     {
         $this->container = $container;
         $this->graph = $container->getCompiler()->getServiceReferenceGraph();
