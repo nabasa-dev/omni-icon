@@ -67,7 +67,7 @@ final class Plugin
     {
         if (!$this->check_dependencies()) {
             deactivate_plugins(plugin_basename(OMNI_ICON::FILE));
-            wp_die(esc_html__('Omni Icon requires WordPress 6.0+ and PHP 8.2+', 'omni-icon'), esc_html__('Plugin Activation Error', 'omni-icon'), ['back_link' => \true]);
+            wp_die(esc_html__('Omni Icon requires WordPress 6.0+ and PHP 8.1+', 'omni-icon'), esc_html__('Plugin Activation Error', 'omni-icon'), ['back_link' => \true]);
         }
         // Set plugin version option
         update_option('omni_icon_version', OMNI_ICON::VERSION);
