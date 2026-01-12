@@ -130,6 +130,6 @@ final class Plugin
     {
         /** @var string */
         global $wp_version;
-        return version_compare($wp_version, '6.0', '>=') && \PHP_VERSION_ID >= 80200;
+        return version_compare($wp_version, '6.0', '>=') && \PHP_VERSION_ID >= 80100;
     }
 }
