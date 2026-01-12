@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Blueprint for WordPress.org plugin repository
+
 ## [1.0.9] - 2026-01-12
 
 ### Changed
