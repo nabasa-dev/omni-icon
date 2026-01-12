@@ -8,7 +8,7 @@
  * Text Domain:         omni-icon
  * Version:             1.0.5
  * Requires at least:   6.0
- * Requires PHP:        8.2
+ * Requires PHP:        8.1
  * Author:              Omni Icon
  * Author URI:          https://github.com/nabasa-dev
  * License:             GPL-2.0-or-later

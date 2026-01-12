@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Modified for OmniIcon WordPress plugin.
+ */
+
+namespace OmniIcon\Core\Icon\Exception;
+
+/**
+ * Exception thrown when an icon is not found in a registry.
+ *
+ * @author Kevin Bond <kevinbond@gmail.com>
+ */
+final class IconNotFoundException extends \RuntimeException
+{
+}

@@ -9,10 +9,10 @@ use OmniIcon\Core\Discovery\Attributes\Service;
 use OmniIcon\Core\Logger\LogComponent;
 use OmniIcon\Core\Logger\LoggerService;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\UX\Icons\Iconify as UXIconify;
-use Symfony\UX\Icons\IconRegistryInterface;
-use Symfony\UX\Icons\Registry\CacheIconRegistry;
-use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
+use OmniIcon\Core\Icon\Iconify as UXIconify;
+use OmniIcon\Core\Icon\IconRegistryInterface;
+use OmniIcon\Core\Icon\Registry\CacheIconRegistry;
+use OmniIcon\Core\Icon\Registry\IconifyOnDemandRegistry;
 
 /**
  * Iconify service for registry and metadata access.

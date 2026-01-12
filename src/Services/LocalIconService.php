@@ -10,9 +10,9 @@ use OmniIcon\Core\Discovery\Attributes\Service;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\UX\Icons\Exception\IconNotFoundException;
-use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
-use Symfony\UX\Icons\IconRegistryInterface;
+use OmniIcon\Core\Icon\Exception\IconNotFoundException;
+use OmniIcon\Core\Icon\Registry\LocalSvgIconRegistry;
+use OmniIcon\Core\Icon\IconRegistryInterface;
 
 /**
  * Service for managing local uploaded SVG icons.

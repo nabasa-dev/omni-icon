@@ -8,9 +8,9 @@ use enshrined\svgSanitize\Sanitizer;
 use OmniIcon\Core\Discovery\Attributes\Service;
 use OmniIcon\Core\Logger\LogComponent;
 use OmniIcon\Core\Logger\LoggerService;
-use Symfony\UX\Icons\Exception\IconNotFoundException;
-use Symfony\UX\Icons\IconRegistryInterface;
-use Symfony\UX\Icons\Registry\ChainIconRegistry;
+use OmniIcon\Core\Icon\Exception\IconNotFoundException;
+use OmniIcon\Core\Icon\IconRegistryInterface;
+use OmniIcon\Core\Icon\Registry\ChainIconRegistry;
 
 /**
  * Icon service for rendering SVG icons from local uploads, plugin bundles, and Iconify API.

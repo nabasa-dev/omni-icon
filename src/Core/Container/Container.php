@@ -9,8 +9,7 @@ use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
+
 
 final class Container implements ContainerInterface
 {
@@ -117,11 +116,7 @@ final class Container implements ContainerInterface
 
         $this->containerBuilder->setAlias(ContainerInterface::class, 'service_container');
 
-        // Register Symfony Messenger Serializer
-        $serializerDefinition = new Definition(PhpSerializer::class);
-        $serializerDefinition->setAutowired(true);
-        $serializerDefinition->setPublic(true);
-        $this->containerBuilder->setDefinition(SerializerInterface::class, $serializerDefinition);
+
     }
 
     private function register_compiler_passes(): void

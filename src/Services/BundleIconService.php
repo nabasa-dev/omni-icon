@@ -8,8 +8,8 @@ use OMNI_ICON;
 use OmniIcon\Core\Discovery\Attributes\Service;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
-use Symfony\UX\Icons\IconRegistryInterface;
+use OmniIcon\Core\Icon\Registry\LocalSvgIconRegistry;
+use OmniIcon\Core\Icon\IconRegistryInterface;
 
 /**
  * Service for managing plugin bundled SVG icons from flat directory structure.
