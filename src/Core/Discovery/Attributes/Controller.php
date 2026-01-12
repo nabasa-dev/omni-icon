@@ -7,7 +7,7 @@ namespace OmniIcon\Core\Discovery\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-final readonly class Controller
+final class Controller
 {
     public function __construct(
         public string $namespace = 'omni-icon/v1',

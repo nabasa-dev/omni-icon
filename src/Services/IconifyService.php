@@ -20,12 +20,12 @@ use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
 #[Service]
 class IconifyService
 {
-    private readonly IconRegistryInterface $registry;
-    private readonly UXIconify $iconify;
-    private readonly FilesystemAdapter $searchCache;
+    private IconRegistryInterface $registry;
+    private UXIconify $iconify;
+    private FilesystemAdapter $searchCache;
 
     public function __construct(
-        private readonly LoggerService $logger,
+        private LoggerService $logger,
     ) {
         // Initialize Symfony cache adapter for icon metadata
         $cache = new FilesystemAdapter('iconify', 0, wp_upload_dir()['basedir'] . OMNI_ICON::CACHE_DIR . 'iconify');

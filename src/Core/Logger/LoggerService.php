@@ -37,8 +37,8 @@ use Throwable;
 #[Service]
 final class LoggerService extends AbstractLogger
 {
-    private readonly bool $enabled;
-    private readonly string $prefix;
+    private bool $enabled;
+    private string $prefix;
 
     public function __construct()
     {

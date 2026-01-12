@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 final class Container implements ContainerInterface
 {
-    private readonly ContainerBuilder $containerBuilder;
+    private ContainerBuilder $containerBuilder;
 
     private bool $compiled = false;
 

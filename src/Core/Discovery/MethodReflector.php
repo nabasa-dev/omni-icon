@@ -10,7 +10,7 @@ use ReflectionMethod;
 final class MethodReflector
 {
     public function __construct(
-        private readonly ReflectionMethod $reflectionMethod
+        private ReflectionMethod $reflectionMethod
     ) {
     }
 

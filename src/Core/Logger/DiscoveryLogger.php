@@ -18,7 +18,7 @@ use Throwable;
  */
 final class DiscoveryLogger extends AbstractLogger
 {
-    private readonly bool $enabled;
+    private bool $enabled;
 
     public function __construct()
     {

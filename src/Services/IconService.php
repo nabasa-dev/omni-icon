@@ -28,14 +28,14 @@ use Symfony\UX\Icons\Registry\ChainIconRegistry;
 #[Service]
 class IconService
 {
-    private readonly IconRegistryInterface $registry;
-    private readonly Sanitizer $sanitizer;
+    private IconRegistryInterface $registry;
+    private Sanitizer $sanitizer;
 
     public function __construct(
-        private readonly LocalIconService $localIconService,
-        private readonly BundleIconService $bundleIconService,
-        private readonly IconifyService $iconifyService,
-        private readonly LoggerService $logger,
+        private LocalIconService $localIconService,
+        private BundleIconService $bundleIconService,
+        private IconifyService $iconifyService,
+        private LoggerService $logger,
     ) {
         // Chain registries: local icons take precedence over bundle icons, then on-demand icons
         $this->registry = new ChainIconRegistry([

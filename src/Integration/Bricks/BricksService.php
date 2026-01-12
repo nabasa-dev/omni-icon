@@ -17,7 +17,7 @@ use OmniIcon\Services\ViteService;
 class BricksService
 {
     public function __construct(
-        private readonly ViteService $viteService,
+        private ViteService $viteService,
     ) {}
 
     /**

@@ -14,7 +14,7 @@ final class ServiceDiscovery implements Discovery
     use IsDiscovery;
 
     public function __construct(
-        private readonly Container $container
+        private Container $container
     ) {
         $this->discoveryItems = new DiscoveryItems();
     }

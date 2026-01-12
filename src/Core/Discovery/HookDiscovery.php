@@ -20,7 +20,7 @@ final class HookDiscovery implements Discovery
     private array $registeredHooks = [];
 
     public function __construct(
-        private readonly Container $container
+        private Container $container
     ) {
         $this->discoveryItems = new DiscoveryItems();
     }

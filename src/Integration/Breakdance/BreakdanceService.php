@@ -19,7 +19,7 @@ use function Breakdance\Util\getDirectoryPathRelativeToPluginFolder;
 class BreakdanceService
 {
     public function __construct(
-        private readonly ViteService $viteService,
+        private ViteService $viteService,
     ) {}
 
     /**

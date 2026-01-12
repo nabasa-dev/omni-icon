@@ -16,7 +16,7 @@ use RuntimeException;
 final class DependencyResolver
 {
     public function __construct(
-        private readonly Container $container
+        private Container $container
     ) {
     }
 

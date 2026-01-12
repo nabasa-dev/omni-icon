@@ -14,12 +14,12 @@ use Throwable;
 
 final class DiscoveryCache
 {
-    private readonly FilesystemAdapter $cache;
+    private FilesystemAdapter $cache;
 
-    private readonly LoggerInterface $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
-        private readonly DiscoveryCacheStrategy $discoveryCacheStrategy,
+        private DiscoveryCacheStrategy $discoveryCacheStrategy,
     ) {
         $uploadDir = wp_upload_dir();
         $cacheDir = $uploadDir['basedir'] . '/omni-icon/cache/discovery/';

@@ -22,10 +22,10 @@ final class ControllerDiscovery implements Discovery
     /** @var array<array<string, mixed>> */
     private array $routes = [];
 
-    private readonly DependencyResolver $dependencyResolver;
+    private DependencyResolver $dependencyResolver;
 
     public function __construct(
-        private readonly Container $container
+        private Container $container
     ) {
         $this->discoveryItems = new DiscoveryItems();
         $this->dependencyResolver = new DependencyResolver($container);

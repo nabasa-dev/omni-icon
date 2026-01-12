@@ -21,7 +21,7 @@ use function acf_register_field_type;
 class ACFService
 {
     public function __construct(
-        private readonly ViteService $viteService,
+        private ViteService $viteService,
     ) {}
 
     /**

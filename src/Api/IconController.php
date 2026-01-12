@@ -14,11 +14,16 @@ use WP_REST_Response;
 use WP_Error;
 
 #[Controller(namespace: 'omni-icon/v1', prefix: 'icon')]
-final readonly class IconController
+final class IconController
 {
-    public function __construct(
-        private IconService $iconService
-    ) {
+    /**
+     * @var IconService
+     */
+    private IconService $iconService;
+
+    public function __construct(IconService $iconService)
+    {
+        $this->iconService = $iconService;
     }
 
     /**

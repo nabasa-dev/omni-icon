@@ -19,11 +19,11 @@ final class CommandDiscovery implements Discovery
     /** @var array<array<string, mixed>> */
     private array $commands = [];
 
-    private readonly DependencyResolver $dependencyResolver;
+    private DependencyResolver $dependencyResolver;
 
     public function __construct(
-        private readonly Container $container,
-        private readonly LoggerService $logger,
+        private Container $container,
+        private LoggerService $logger,
     ) {
         $this->discoveryItems = new DiscoveryItems();
         $this->dependencyResolver = new DependencyResolver($container);

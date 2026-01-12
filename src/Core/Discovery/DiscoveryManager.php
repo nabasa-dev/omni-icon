@@ -21,13 +21,13 @@ final class DiscoveryManager
 
     private ?DiscoveryCache $discoveryCache = null;
 
-    private readonly LoggerInterface $logger;
+    private LoggerInterface $logger;
 
     /** @var array<string> */
     private array $excludedPaths = [];
 
     public function __construct(
-        private readonly Container $container
+        private Container $container
     ) {
         $this->logger = new DiscoveryLogger();
     }

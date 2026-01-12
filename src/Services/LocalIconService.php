@@ -35,11 +35,11 @@ use Symfony\UX\Icons\IconRegistryInterface;
 #[Service]
 class LocalIconService
 {
-    private readonly Sanitizer $sanitizer;
-    private readonly string $upload_dir;
-    private readonly string $upload_url;
-    private readonly IconRegistryInterface $registry;
-    private readonly FilesystemAdapter $cache;
+    private Sanitizer $sanitizer;
+    private string $upload_dir;
+    private string $upload_url;
+    private IconRegistryInterface $registry;
+    private FilesystemAdapter $cache;
 
     public function __construct()
     {

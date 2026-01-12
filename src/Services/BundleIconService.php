@@ -25,10 +25,10 @@ use Symfony\UX\Icons\IconRegistryInterface;
 #[Service]
 class BundleIconService
 {
-    private readonly string $svg_dir;
-    private readonly string $svg_url;
-    private readonly IconRegistryInterface $registry;
-    private readonly FilesystemAdapter $cache;
+    private string $svg_dir;
+    private string $svg_url;
+    private IconRegistryInterface $registry;
+    private FilesystemAdapter $cache;
 
     public function __construct()
     {

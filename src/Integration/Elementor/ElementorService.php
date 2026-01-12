@@ -16,7 +16,7 @@ use OmniIcon\Services\ViteService;
 class ElementorService
 {
     public function __construct(
-        private readonly ViteService $viteService,
+        private ViteService $viteService,
     ) {}
 
     /**
