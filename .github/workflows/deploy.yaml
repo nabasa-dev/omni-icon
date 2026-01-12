@@ -49,7 +49,7 @@ jobs:
 
         - run: pnpm build
 
-        # Setup PHP for scoping
+        # Setup PHP 8.1 for initial composer operations (Symfony 6.4 requirement)
         - uses: shivammathur/setup-php@v2
           with:
             php-version: 8.1
@@ -89,6 +89,12 @@ jobs:
           run: |
             mkdir -p omni-icon-deploy
             rsync -av --exclude omni-icon-deploy --exclude .git ./ omni-icon-deploy/ --quiet
+
+        # Setup PHP 8.2 for php-scoper (humbug/php-scoper requires php ^8.2)
+        - uses: shivammathur/setup-php@v2
+          with:
+            php-version: 8.2
+            coverage: none
 
         # prefix the namespaces
         - run: sh deploy/deploy-scoped.sh omni-icon-deploy omni-icon-prefixed

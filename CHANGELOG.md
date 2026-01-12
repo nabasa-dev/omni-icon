@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.10] - 2026-01-12
+## [1.0.11] - 2026-01-12
 
 ### Added
 - Blueprint for WordPress.org plugin repository
@@ -52,13 +52,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🐣 Initial release.
 
-[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.10...HEAD
-[1.0.10]: https://github.com/nabasa-dev/omni-icon/compare/1.0.9...1.0.10
+[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.11...HEAD
+[1.0.11]: https://github.com/nabasa-dev/omni-icon/compare/1.0.10...1.0.11
 [1.0.9]: https://github.com/nabasa-dev/omni-icon/compare/1.0.8...1.0.9
-[1.0.8]: https://github.com/nabasa-dev/omni-icon/compare/1.0.7...1.0.8
 [1.0.7]: https://github.com/nabasa-dev/omni-icon/compare/1.0.6...1.0.7
-[1.0.6]: https://github.com/nabasa-dev/omni-icon/compare/1.0.5...1.0.6
-[1.0.5]: https://github.com/nabasa-dev/omni-icon/compare/1.0.4...1.0.5
 [1.0.4]: https://github.com/nabasa-dev/omni-icon/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/nabasa-dev/omni-icon/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/nabasa-dev/omni-icon/compare/1.0.1...1.0.2
