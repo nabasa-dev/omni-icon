@@ -84,6 +84,17 @@ jobs:
         # install only prod dependencies
         - run: composer install --no-dev --classmap-authoritative --ansi
 
+        # Remove incompatible Redis5Proxy files
+        - name: "Remove Redis5Proxy files"
+          run: |
+            rm -f vendor/symfony/cache/Traits/Redis5Proxy.php
+            rm -f vendor/symfony/cache/Traits/RedisCluster5Proxy.php
+            echo "Removed Redis5Proxy files for compatibility"
+
+        # Regenerate classmap after removing files
+        - name: "Regenerate classmap"
+          run: composer dump-autoload --classmap-authoritative --no-dev --ansi
+
         # copy all files for scoping process
         - name: "Copy files for scoping"
           run: |

@@ -88,6 +88,24 @@ return [
                 );
             }
             
+            // Fix Redis proxy for PhpRedis 6.3.0+ compatibility
+            // Force use of Redis6Proxy instead of Redis5Proxy for all versions >= 6.0
+            // Redis5Proxy has incompatible method signatures with PhpRedis 6.3.0+
+            if (str_ends_with($filePath, 'symfony/cache/Traits/RedisProxy.php')) {
+                $contents = str_replace(
+                    'class_alias(6.0 <= (float) phpversion(\'redis\') ? Redis6Proxy::class : Redis5Proxy::class, RedisProxy::class);',
+                    'class_alias(Redis6Proxy::class, RedisProxy::class);',
+                    $contents
+                );
+            }
+            if (str_ends_with($filePath, 'symfony/cache/Traits/RedisClusterProxy.php')) {
+                $contents = str_replace(
+                    'class_alias(6.0 <= (float) phpversion(\'redis\') ? RedisCluster6Proxy::class : RedisCluster5Proxy::class, RedisClusterProxy::class);',
+                    'class_alias(RedisCluster6Proxy::class, RedisClusterProxy::class);',
+                    $contents
+                );
+            }
+            
             return $contents;
         },
     ],
