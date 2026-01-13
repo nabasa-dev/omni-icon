@@ -10,7 +10,7 @@
  */
 namespace OmniIconDeps\Symfony\Component\Cache\Traits;
 
-class_alias(6.0 <= (float) phpversion('redis') ? RedisCluster6Proxy::class : RedisCluster5Proxy::class, RedisClusterProxy::class);
+class_alias(RedisCluster6Proxy::class, RedisClusterProxy::class);
 if (\false) {
     /**
      * @internal
