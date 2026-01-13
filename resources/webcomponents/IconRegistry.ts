@@ -63,7 +63,7 @@ export interface IconFetchOptions {
 
 const API_BASE_PATH = '/wp-json/omni-icon/v1/icon/item';
 const IDB_KEY = 'oiwc-cache';
-const MAX_CONCURRENT_REQUESTS = 4;
+const MAX_CONCURRENT_REQUESTS = 16;
 
 const iconCache = new Map<string, string>();
 const inflightRequests = new Map<string, InflightEntry>();
