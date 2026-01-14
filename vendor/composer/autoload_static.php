@@ -648,6 +648,7 @@ class ComposerStaticInit101af72e7106884fa1ee3bc16c28bfa4
         'OmniIcon\\Integration\\Bricks\\Elements\\IconElement' => __DIR__ . '/../..' . '/src/Integration/Bricks/Elements/IconElement.php',
         'OmniIcon\\Integration\\Elementor\\ElementorService' => __DIR__ . '/../..' . '/src/Integration/Elementor/ElementorService.php',
         'OmniIcon\\Integration\\Elementor\\Widgets\\IconWidget' => __DIR__ . '/../..' . '/src/Integration/Elementor/Widgets/IconWidget.php',
+        'OmniIcon\\Integration\\Etch\\EtchService' => __DIR__ . '/../..' . '/src/Integration/Etch/EtchService.php',
         'OmniIcon\\Integration\\Gutenberg\\BlocksService' => __DIR__ . '/../..' . '/src/Integration/Gutenberg/BlocksService.php',
         'OmniIcon\\Integration\\LiveCanvas\\LiveCanvasService' => __DIR__ . '/../..' . '/src/Integration/LiveCanvas/LiveCanvasService.php',
         'OmniIcon\\Plugin' => __DIR__ . '/../..' . '/src/Plugin.php',

@@ -1,72 +1,135 @@
 {
-  "_IconItem-BVMBjRxz.js": {
-    "file": "assets/IconItem-BVMBjRxz.js",
+  "_IconItem-CJ_iyf2-.js": {
+    "file": "assets/IconItem-CJ_iyf2-.js",
     "name": "IconItem",
     "imports": [
-      "_check-qjydXzqM.js"
+      "_check-gQh0j7Ci.js"
     ]
   },
-  "_check-qjydXzqM.js": {
-    "file": "assets/check-qjydXzqM.js",
+  "_check-gQh0j7Ci.js": {
+    "file": "assets/check-gQh0j7Ci.js",
     "name": "check"
   },
   "_editor-DqSSOOb8.css": {
     "file": "assets/editor-DqSSOOb8.css",
     "src": "_editor-DqSSOOb8.css"
   },
+  "_preload-helper-CegupboZ.js": {
+    "file": "assets/preload-helper-CegupboZ.js",
+    "name": "preload-helper"
+  },
   "resources/admin/admin-app/index.jsx": {
-    "file": "assets/admin/admin-app/index-Y9lIXEOC.js",
+    "file": "assets/admin/admin-app/index-CfGuukd9.js",
     "name": "admin/admin-app/index",
     "src": "resources/admin/admin-app/index.jsx",
     "isEntry": true,
     "imports": [
-      "_check-qjydXzqM.js"
+      "_check-gQh0j7Ci.js"
     ],
     "css": [
       "assets/index-AmgRX3_0.css"
     ]
   },
+  "resources/integration/acf/editor.ts": {
+    "file": "assets/integration/acf/editor-qxBOHd2p.js",
+    "name": "integration/acf/editor",
+    "src": "resources/integration/acf/editor.ts",
+    "isEntry": true,
+    "imports": [
+      "_IconItem-CJ_iyf2-.js",
+      "_check-gQh0j7Ci.js"
+    ],
+    "css": [
+      "assets/editor-B6Xr8874.css"
+    ]
+  },
   "resources/integration/breakdance/editor.ts": {
-    "file": "assets/integration/breakdance/editor-BKMFl5p8.js",
+    "file": "assets/integration/breakdance/editor-DgVS_VO7.js",
     "name": "integration/breakdance/editor",
     "src": "resources/integration/breakdance/editor.ts",
     "isEntry": true,
     "imports": [
-      "_IconItem-BVMBjRxz.js",
-      "_check-qjydXzqM.js"
+      "_IconItem-CJ_iyf2-.js",
+      "_check-gQh0j7Ci.js"
     ],
     "css": [
       "assets/editor-U-mK1Xnb.css"
     ]
   },
   "resources/integration/bricks/editor.ts": {
-    "file": "assets/integration/bricks/editor-CMHL3VHg.js",
+    "file": "assets/integration/bricks/editor-QJ50nDyv.js",
     "name": "integration/bricks/editor",
     "src": "resources/integration/bricks/editor.ts",
     "isEntry": true,
     "imports": [
-      "_IconItem-BVMBjRxz.js",
-      "_check-qjydXzqM.js"
+      "_IconItem-CJ_iyf2-.js",
+      "_check-gQh0j7Ci.js"
     ],
     "css": [
       "assets/editor-BbAJQKNP.css"
     ]
   },
   "resources/integration/elementor/editor.ts": {
-    "file": "assets/integration/elementor/editor-BuqzYEg4.js",
+    "file": "assets/integration/elementor/editor-CFcDelY7.js",
     "name": "integration/elementor/editor",
     "src": "resources/integration/elementor/editor.ts",
     "isEntry": true,
     "imports": [
-      "_IconItem-BVMBjRxz.js",
-      "_check-qjydXzqM.js"
+      "_IconItem-CJ_iyf2-.js",
+      "_check-gQh0j7Ci.js"
     ],
     "css": [
       "assets/editor-m4MKDXlG.css"
     ]
   },
+  "resources/integration/etch/editor-app.jsx": {
+    "file": "assets/editor-app-DYj50J8E.js",
+    "name": "editor-app",
+    "src": "resources/integration/etch/editor-app.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_IconItem-CJ_iyf2-.js",
+      "_check-gQh0j7Ci.js"
+    ]
+  },
+  "resources/integration/etch/editor.ts": {
+    "file": "assets/integration/etch/editor-AJmBWV8P.js",
+    "name": "integration/etch/editor",
+    "src": "resources/integration/etch/editor.ts",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-CegupboZ.js"
+    ],
+    "dynamicImports": [
+      "resources/integration/etch/editor-app.jsx",
+      "resources/integration/etch/modules/webcomponent-injector.ts",
+      "resources/integration/etch/modules/element-menu-button.ts",
+      "resources/integration/etch/modules/element-settings-panel.ts"
+    ],
+    "css": [
+      "assets/editor-Bc6tZcC2.css"
+    ]
+  },
+  "resources/integration/etch/modules/element-menu-button.ts": {
+    "file": "assets/element-menu-button-C9diJSFY.js",
+    "name": "element-menu-button",
+    "src": "resources/integration/etch/modules/element-menu-button.ts",
+    "isDynamicEntry": true
+  },
+  "resources/integration/etch/modules/element-settings-panel.ts": {
+    "file": "assets/element-settings-panel-BYVZIUNt.js",
+    "name": "element-settings-panel",
+    "src": "resources/integration/etch/modules/element-settings-panel.ts",
+    "isDynamicEntry": true
+  },
+  "resources/integration/etch/modules/webcomponent-injector.ts": {
+    "file": "assets/webcomponent-injector-BB7wUS9n.js",
+    "name": "webcomponent-injector",
+    "src": "resources/integration/etch/modules/webcomponent-injector.ts",
+    "isDynamicEntry": true
+  },
   "resources/integration/gutenberg/blocks/icon-block/editor.css": {
-    "file": "assets/integration/gutenberg/blocks/icon-block/css-DWKFtN9u.js",
+    "file": "assets/integration/gutenberg/blocks/icon-block/css-DJ2_1o0T.js",
     "name": "integration/gutenberg/blocks/icon-block/css",
     "src": "resources/integration/gutenberg/blocks/icon-block/editor.css",
     "isEntry": true,
@@ -81,26 +144,26 @@
     "isEntry": true
   },
   "resources/integration/gutenberg/blocks/icon-block/index.jsx": {
-    "file": "assets/integration/gutenberg/blocks/icon-block-CK58H3Qi.js",
+    "file": "assets/integration/gutenberg/blocks/icon-block-CrQxduUo.js",
     "name": "integration/gutenberg/blocks/icon-block",
     "src": "resources/integration/gutenberg/blocks/icon-block/index.jsx",
     "isEntry": true,
     "imports": [
-      "_IconItem-BVMBjRxz.js",
-      "_check-qjydXzqM.js"
+      "_IconItem-CJ_iyf2-.js",
+      "_check-gQh0j7Ci.js"
     ],
     "css": [
       "assets/editor-DqSSOOb8.css"
     ]
   },
   "resources/integration/livecanvas/editor.ts": {
-    "file": "assets/integration/livecanvas/editor-DgURTmyO.js",
+    "file": "assets/integration/livecanvas/editor-BYRdTIbb.js",
     "name": "integration/livecanvas/editor",
     "src": "resources/integration/livecanvas/editor.ts",
     "isEntry": true,
     "imports": [
-      "_IconItem-BVMBjRxz.js",
-      "_check-qjydXzqM.js"
+      "_IconItem-CJ_iyf2-.js",
+      "_check-gQh0j7Ci.js"
     ],
     "css": [
       "assets/editor-iZs-igZA.css"
@@ -111,7 +174,7 @@
     "src": "resources/webcomponents/ErrorObserver.css"
   },
   "resources/webcomponents/ErrorObserver.ts": {
-    "file": "assets/ErrorObserver-BL-dIQLj.js",
+    "file": "assets/ErrorObserver-C__RmoQr.js",
     "name": "ErrorObserver",
     "src": "resources/webcomponents/ErrorObserver.ts",
     "isDynamicEntry": true,
@@ -120,22 +183,25 @@
     ]
   },
   "resources/webcomponents/OmniIconRenderer.ts": {
-    "file": "assets/OmniIconRenderer-CPDO0Yqc.js",
+    "file": "assets/OmniIconRenderer-BMbn76Tb.js",
     "name": "OmniIconRenderer",
     "src": "resources/webcomponents/OmniIconRenderer.ts",
     "isDynamicEntry": true,
     "imports": [
-      "resources/webcomponents/omni-icon.ts"
+      "_preload-helper-CegupboZ.js"
     ],
     "dynamicImports": [
       "resources/webcomponents/ErrorObserver.ts"
     ]
   },
   "resources/webcomponents/omni-icon.ts": {
-    "file": "assets/webcomponents/omni-icon-D4fSwBeM.js",
+    "file": "assets/webcomponents/omni-icon-ZdMeoQyF.js",
     "name": "webcomponents/omni-icon",
     "src": "resources/webcomponents/omni-icon.ts",
     "isEntry": true,
+    "imports": [
+      "_preload-helper-CegupboZ.js"
+    ],
     "dynamicImports": [
       "resources/webcomponents/OmniIconRenderer.ts"
     ],

@@ -540,6 +540,7 @@ return array(
     'OmniIcon\\Integration\\Bricks\\Elements\\IconElement' => $baseDir . '/src/Integration/Bricks/Elements/IconElement.php',
     'OmniIcon\\Integration\\Elementor\\ElementorService' => $baseDir . '/src/Integration/Elementor/ElementorService.php',
     'OmniIcon\\Integration\\Elementor\\Widgets\\IconWidget' => $baseDir . '/src/Integration/Elementor/Widgets/IconWidget.php',
+    'OmniIcon\\Integration\\Etch\\EtchService' => $baseDir . '/src/Integration/Etch/EtchService.php',
     'OmniIcon\\Integration\\Gutenberg\\BlocksService' => $baseDir . '/src/Integration/Gutenberg/BlocksService.php',
     'OmniIcon\\Integration\\LiveCanvas\\LiveCanvasService' => $baseDir . '/src/Integration/LiveCanvas/LiveCanvasService.php',
     'OmniIcon\\Plugin' => $baseDir . '/src/Plugin.php',

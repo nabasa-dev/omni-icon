@@ -1,15 +1,15 @@
-=== Omni Icon ===
-Contributors: suabahasa, rosua
+=== Omni Icon - Modern SVG icon library for WordPress ===
+Contributors: suabahasa
 Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.13
+Stable tag: 1.0.14
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A modern icon management plugin with support for custom uploads and 200,000+ Iconify icons across multiple page builders.
+A modern SVG icon library for WordPress with support for custom uploads and 200,000+ Iconify icons across block editor, page builders, and themes.
 
 == Description ==
 
@@ -27,7 +27,7 @@ Omni Icon is packed with features designed to make icon management effortless:
 * **Smart Caching**: Multi-layer caching (memory, filesystem, IndexedDB) for blazing fast load times
 * **Web Component**: Use `<omni-icon>` custom element anywhere in your theme or content
 * **Secure**: SVG sanitization prevents XSS attacks on uploaded icons
-* **Modern Architecture**: Built with PHP 8.2+ attributes, Symfony DI, and auto-discovery
+* **Modern Architecture**: Built with PHP 8.0+ attributes, Symfony DI, and auto-discovery
 * **Lightweight**: Small footprint with lazy loading won't slow down your site
 
 Visit [our GitHub repository](https://github.com/nabasa-dev/omni-icon) for more information.
@@ -41,6 +41,8 @@ Omni Icon works perfectly with the most popular visual/page builders:
 * [Bricks](https://bricksbuilder.io/) — Native element with full theme compatibility
 * [Breakdance](https://breakdance.com/ref/165/) — Element Studio integration with SSR
 * [LiveCanvas](https://livecanvas.com/?ref=4008) — Custom block with panel controls
+* [Advanced Custom Fields (ACF)](https://www.advancedcustomfields.com/) — Custom field type for icon selection
+* [Etch](https://etchwp.com/) — Web Component with icon picker
 * More integrations coming soon!
 
 ### Icon Sources
@@ -103,6 +105,13 @@ Use the `<omni-icon>` web component directly in your theme or content:
 - Add a new field and select "Omni Icon" as the field type
 - Configure return format (string, array, or HTML)
 
+**Etch**:
+
+- Add the "omni-icon" Element from the menu element on the bottom of screen
+- Browse or search icons in the icon picker
+- Confirm selection to copy the code to clipboard 
+- Paste the copied code into the HTML editor
+
 ### Performance & Security
 
 * **Lazy Loading**: Web components loaded on-demand
@@ -147,6 +156,7 @@ Omni Icon currently supports:
 - Bricks
 - Breakdance
 - LiveCanvas
+- Etch
 - And more coming soon!
 
 All integrations include icon picker modals for easy icon selection.
@@ -176,6 +186,14 @@ Omni Icon uses the Iconify API to fetch icons from their extensive icon collecti
 The complete source code, including uncompiled versions of all JavaScript and CSS files in the `dist/` directory, is publicly available on [GitHub](https://github.com/nabasa-dev/omni-icon/)
 
 == Changelog ==
+
+= 1.0.14 - 2026-01-14 =
+**Added**
+* [Etch](https://etchwp.com/) integration
+**Changed**
+* Increase webcomponent concurrent request limit from 4 to 16 for faster icon loading
+**Fixed**
+* Missing assets entrypoint in Vite config for ACF integration
 
 = 1.0.13 - 2026-01-13 =
 **Fixed**
