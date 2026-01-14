@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2026-01-14
+
 ### Added
 - [Etch](https://etchwp.com/) integration
 
@@ -71,7 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🐣 Initial release.
 
-[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.13...HEAD
+[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.14...HEAD
+[1.0.14]: https://github.com/nabasa-dev/omni-icon/compare/1.0.13...1.0.14
 [1.0.13]: https://github.com/nabasa-dev/omni-icon/compare/1.0.12...1.0.13
 [1.0.12]: https://github.com/nabasa-dev/omni-icon/compare/1.0.11...1.0.12
 [1.0.11]: https://github.com/nabasa-dev/omni-icon/compare/1.0.10...1.0.11
