@@ -4,7 +4,7 @@
  * @wordpress-plugin
  * Plugin Name:         Omni Icon
  * Plugin URI:          https://github.com/nabasa-dev/omni-icon
- * Description:         A modern icon management plugin with support for custom uploads and 200,000+ Iconify icons across multiple page builders.
+ * Description:         A modern SVG icon library for WordPress with support for custom uploads and 200,000+ Iconify icons across block editor, page builders, and themes.
  * Text Domain:         omni-icon
  * Version:             1.0.13
  * Requires at least:   6.0
@@ -19,7 +19,7 @@
 
 declare(strict_types=1);
 
-namespace OmniIcon;
+use OmniIcon\Plugin;
 
 defined('ABSPATH') || exit;
 

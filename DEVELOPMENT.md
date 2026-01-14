@@ -4,7 +4,7 @@ This guide covers everything you need to know to develop, customize, and contrib
 
 ## Requirements
 
-- [PHP](https://www.php.net/) 8.2+
+- [PHP](https://www.php.net/) 8.1+
 - [WordPress](https://wordpress.org/) 6.0+
 - [Node.js](https://nodejs.org/)
 - [pnpm](https://pnpm.io)
@@ -18,7 +18,7 @@ Clone the repository to your WordPress `wp-content/plugins` directory:
 
 ```bash
 cd /path/to/wordpress/wp-content/plugins
-git clone https://github.com/nabasawp/omni-icon.git
+git clone https://github.com/nabasa-dev/omni-icon.git
 cd omni-icon
 ```
 
@@ -114,14 +114,6 @@ Vite build system integration:
 - Manifest parsing for production
 - Development mode with HMR support
 
-#### BlocksService
-**Location**: `src/Integration/Gutenberg/BlocksService.php`
-
-Gutenberg block registration and rendering:
-- Server-side rendering (SSR)
-- Block asset management
-- Block patterns and variations
-
 ### Dependency Injection Container
 
 **Location**: `src/Core/Container/`
@@ -134,7 +126,6 @@ Omni Icon uses Symfony DependencyInjection for PSR-11 compliant dependency injec
 **Features**:
 - Autowiring for automatic dependency resolution
 - Service tagging and aliases
-- Factory methods for WordPress globals (`$wpdb`)
 - Compiler passes for optimization
 - Singleton and transient services
 
@@ -160,7 +151,7 @@ class MyService {
 
 Options:
 - `singleton`: Register as singleton (default: true)
-- `public`: Make service publicly accessible
+- `public`: Make service publicly accessible (default: false)
 - `tags`: Tag the service for compiler passes
 - `alias`: Register service alias
 
@@ -209,48 +200,6 @@ class IconController {
 }
 ```
 
-#### Migration Discovery
-**Attribute**: `#[Migration]`
-
-Auto-register database migrations:
-
-```php
-use OmniIcon\Core\Database\Migration\Attributes\Migration;
-use OmniIcon\Core\Database\Migration\MigrationInterface;
-
-#[Migration(version: '1.0.0', description: 'Create icons table')]
-class CreateIconsTable implements MigrationInterface {
-    public function up(): void {
-        // Migration up
-    }
-    
-    public function down(): void {
-        // Migration down
-    }
-}
-```
-
-### Database & Migrations
-
-**Location**: `src/Core/Database/`
-
-Version-controlled database migrations with auto-discovery:
-
-**Components**:
-- **MigrationManager**: High-level migration operations
-- **MigrationRegistry**: Tracks available migrations
-- **MigrationRepository**: Stores execution history in database
-- **MigrationRunner**: Executes migrations with transaction support
-- **MigrationDiscovery**: Auto-discovers migration classes
-
-**Features**:
-- Versioned migrations
-- Dry-run support
-- Rollback capability
-- Execution history tracking
-- Pending migration detection
-- Transaction support
-
 ### Caching Strategy
 
 Multi-layer caching for optimal performance:
@@ -290,12 +239,14 @@ Example:
 ```json
 {
   "extra": {
-    "discovery": {
-      "exclude": [
-        "src/Integration/Bricks/Elements",
-        "src/Integration/Breakdance/Elements"
-      ]
-    }
+        "discovery": {
+          "exclude": [
+            "src/Integration/Bricks/Elements",
+            "src/Integration/Breakdance/Elements",
+            "src/Integration/Elementor/Widgets",
+            "src/Integration/ACF/Fields"
+          ]
+        }
   }
 }
 ```
@@ -316,21 +267,13 @@ omni-icon/
 ├── DEVELOPMENT.md            # This file
 │
 ├── resources/                # Frontend resources
+│   ├── admin/                # Admin panel resources
+│   │
 │   ├── integration/          # Page builder integrations
-│   │   ├── breakdance/       # Breakdance integration
-│   │   ├── bricks/           # Bricks integration
-│   │   ├── elementor/        # Elementor integration
-│   │   ├── gutenberg/        # Gutenberg block
-│   │   └── livecanvas/       # LiveCanvas integration
+│   │   └── ...
 │   │
 │   └── webcomponents/        # Web component source
-│       ├── omni-icon.ts      # Main web component
-│       ├── omni-icon.scss    # Web component styles
-│       ├── OmniIconRenderer.ts   # Rendering engine
-│       ├── OmniIconObserver.ts   # Mutation observer
-│       ├── IconRegistry.ts   # Icon fetching and caching
-│       ├── ErrorObserver.ts  # Error handling
-│       └── ErrorObserver.css # Error styles
+│       └── ...
 │
 ├── src/                      # PHP source code
 │   ├── Admin/               # Admin pages
@@ -355,31 +298,7 @@ omni-icon/
 │   │   └── Logger/          # Logging
 │   │
 │   ├── Integration/         # Page builder services
-│   │   ├── Breakdance/
-│   │   │   ├── Elements/
-│   │   │   │   └── OmniIcon/
-│   │   │   │       ├── element.php
-│   │   │   │       ├── ssr.php
-│   │   │   │       ├── html.twig
-│   │   │   │       ├── css.twig
-│   │   │   │       └── default.css
-│   │   │   └── BreakdanceService.php
-│   │   │
-│   │   ├── Bricks/
-│   │   │   ├── Elements/
-│   │   │   │   └── IconElement.php
-│   │   │   └── BricksService.php
-│   │   │
-│   │   ├── Elementor/
-│   │   │   ├── Widgets/
-│   │   │   │   └── IconWidget.php
-│   │   │   └── ElementorService.php
-│   │   │
-│   │   ├── Gutenberg/
-│   │   │   └── BlocksService.php
-│   │   │
-│   │   └── LiveCanvas/
-│   │       └── LiveCanvasService.php
+│   │   └── ...
 │   │
 │   ├── Services/            # Business logic services
 │   │   ├── AssetsService.php
@@ -389,18 +308,18 @@ omni-icon/
 │   │   ├── LocalIconService.php
 │   │   └── ViteService.php
 │   │
+│   ├── Utils/               # Utility classes
+│   │
 │   └── Plugin.php           # Main plugin class
 │
-├── dist/                    # Built assets (gitignored)
+├── dist/                    # Built assets
 │   ├── manifest.json        # Vite manifest
 │   └── ...                  # Built JS/CSS files
 │
-├── svg/                     # Bundled icons
-│   ├── livecanvas.svg
-│   ├── windpress.svg
-│   └── yabe-webfont.svg
+├── svg/                     # Bundled icons]
+│   └── ...
 │
-└── vendor/                  # Composer dependencies (gitignored)
+└── vendor/                  # Composer dependencies
 ```
 
 ## Frontend Architecture
@@ -513,6 +432,7 @@ Custom React hooks:
 - Gutenberg block editor
 - Gutenberg iframe (canvas)
 - Web component
+- ACF integration
 - Bricks integration
 - Elementor integration
 - Breakdance integration
@@ -606,4 +526,4 @@ For development-related questions or issues:
 
 ---
 
-Happy coding! 🚀
+Happy coding!

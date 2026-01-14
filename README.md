@@ -24,7 +24,7 @@ Add beautiful icons to your WordPress site with seamless integration across Gute
 - 🚀 **Smart Caching**: Multi-layer caching (memory, filesystem, IndexedDB) for optimal performance
 - 📦 **Web Component**: Use `<omni-icon>` custom element anywhere in your theme or content
 - 🔒 **Secure**: SVG sanitization prevents XSS attacks on uploaded icons
-- 🏗️ **Modern Architecture**: Built with PHP 8.2+ attributes, Symfony DI, and auto-discovery
+- 🏗️ **Modern Architecture**: Built with PHP 8.0+ attributes, Symfony DI, and auto-discovery
 
 ### Integrations
 
@@ -126,7 +126,7 @@ Use the `<omni-icon>` web component directly in your theme or content:
 
 ## Security
 
-All uploaded SVGs are validate for the MIME type and sanitized to prevent XSS (enshrined/svg-sanitize)
+All SVGs are validate for the MIME type and sanitized to prevent XSS (enshrined/svg-sanitize)
 
 ## Development
 

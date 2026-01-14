@@ -1,5 +1,5 @@
-=== Omni Icon ===
-Contributors: suabahasa, rosua
+=== Omni Icon - Modern SVG icon library for WordPress ===
+Contributors: suabahasa
 Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
@@ -9,7 +9,7 @@ Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A modern icon management plugin with support for custom uploads and 200,000+ Iconify icons across multiple page builders.
+A modern SVG icon library for WordPress with support for custom uploads and 200,000+ Iconify icons across block editor, page builders, and themes.
 
 == Description ==
 
@@ -27,7 +27,7 @@ Omni Icon is packed with features designed to make icon management effortless:
 * **Smart Caching**: Multi-layer caching (memory, filesystem, IndexedDB) for blazing fast load times
 * **Web Component**: Use `<omni-icon>` custom element anywhere in your theme or content
 * **Secure**: SVG sanitization prevents XSS attacks on uploaded icons
-* **Modern Architecture**: Built with PHP 8.2+ attributes, Symfony DI, and auto-discovery
+* **Modern Architecture**: Built with PHP 8.0+ attributes, Symfony DI, and auto-discovery
 * **Lightweight**: Small footprint with lazy loading won't slow down your site
 
 Visit [our GitHub repository](https://github.com/nabasa-dev/omni-icon) for more information.
