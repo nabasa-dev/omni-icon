@@ -8,9 +8,64 @@
   <i>A modern WordPress plugin that seamlessly integrates icons across the WordPress ecosystem with support for multiple page builders, custom icon uploads, and access to 200,000+ icons from Iconify.</i>
 </p>
 
+<p align="center">
+  <a href="https://downloads.wordpress.org/plugin/omni-icon.zip">
+    <picture>
+    <img src="https://img.shields.io/wordpress/plugin/v/omni-icon.svg?logo=wordpress&label=version" alt="WordPress plugin version" />
+    </picture>
+  </a>
+  <a href="https://wordpress.org/plugins/omni-icon/advanced/">
+    <picture>
+    <img src="https://img.shields.io/wordpress/plugin/dt/omni-icon.svg?logo=wordpress" alt="WordPress plugin downloads" />
+    </picture>
+  </a>
+  <a href="https://wordpress.org/plugins/omni-icon/">
+    <picture>
+    <img src="https://img.shields.io/wordpress/plugin/installs/omni-icon.svg?logo=wordpress" alt="WordPress plugin active installs" />
+    </picture>
+  </a>
+  <a href="https://wordpress.org/support/plugin/omni-icon/reviews/?filter=5/#new-post">
+    <picture>
+    <img src="https://img.shields.io/wordpress/plugin/stars/omni-icon.svg?logo=wordpress" alt="WordPress plugin rating" />
+    </picture>
+  </a>
+  <br />
+  <a href="https://github.com/nabasa-dev/omni-icon/releases">
+    <picture>
+    <img src="https://img.shields.io/github/v/release/nabasa-dev/omni-icon.svg?logo=github" alt="GitHub Release" />
+    </picture>
+  </a>
+  <a href="https://github.com/nabasa-dev/omni-icon/blob/master/LICENSE">
+    <picture>
+    <img src="https://img.shields.io/github/license/nabasa-dev/omni-icon.svg" alt="MIT License" />
+    </picture>
+  </a>
+  <a href="https://github.com/nabasa-dev/omni-icon/actions">
+    <picture>
+    <img src="https://img.shields.io/github/actions/workflow/status/nabasa-dev/omni-icon/deploy.yaml" alt="Build Status" />
+    </picture>
+  </a>
+  <br />
+  <a aria-label="GitHub Sponsors" href="https://github.com/sponsors/suasgn">
+    <picture>
+      <img alt="GitHub Sponsors button" src="https://img.shields.io/github/sponsors/suasgn?logo=github">
+    </picture>
+  </a>
+  <a aria-label="Support me on Ko-fi" href="https://ko-fi.com/Q5Q75XSF7">
+    <picture>
+      <img alt="ko-fi button" src="https://img.shields.io/badge/Buy_me_a_Coffee-ff5e5b?logo=ko-fi&label=Ko-fi">
+    </picture>
+  </a>
+  <a aria-label="Join Our Facebook community" href="https://wind.press/go/facebook">
+    <picture>
+      <img alt="facebook group button" src="https://img.shields.io/badge/Join_us-0866ff?logo=facebook&label=Community">
+    </picture>
+  </a>
+</p>
+
 > [!NOTE]
 >
-> Omni Icon provides enterprise-grade icon management with support for local uploads, bundled icons, and on-demand Iconify API integration.
+> Omni Icon is an open-source WordPress plugin by [Nabasa](https://nabasa.dev). Consider sponsoring us to support continued development.
 
 ## Intro
 
