@@ -129,6 +129,8 @@ return [
         
         'LiveCanvas',
 
+        'Etch',
+
         // Cache plugins
     ],
     'exclude-classes' => array_merge(
@@ -190,6 +192,9 @@ return [
 
             // LiveCanvas
             'LC_MU_PLUGIN_NAME',
+
+            // Etch
+            'ETCH_PLUGIN_FILE',
         ]
     ),
 

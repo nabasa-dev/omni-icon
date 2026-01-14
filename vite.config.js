@@ -32,6 +32,7 @@ export default defineConfig({
 				'integration/elementor/editor': 'resources/integration/elementor/editor.ts',
 				'integration/breakdance/editor': 'resources/integration/breakdance/editor.ts',
 				'integration/acf/editor': 'resources/integration/acf/editor.ts',
+				'integration/etch/editor': 'resources/integration/etch/editor.ts',
 			},
 			// outDir: 'public/build',
 		}),
@@ -62,4 +63,7 @@ export default defineConfig({
 			'@': path.resolve(__dirname, 'resources'),
 		},
 	},
+	build: {
+		sourcemap: false,
+	}
 });

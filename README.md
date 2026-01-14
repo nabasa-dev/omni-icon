@@ -36,6 +36,7 @@ Seamless integration with the most popular visual/page builders and custom field
 * [Breakdance](https://breakdance.com/ref/165/) — Element Studio integration with SSR
 * [LiveCanvas](https://livecanvas.com/?ref=4008) — Custom block with panel controls
 * [Advanced Custom Fields (ACF)](https://www.advancedcustomfields.com/) — Custom field type with multiple return formats
+* [Etch](https://etchwp.com/) — Web Component with icon picker
 
 ## Icon Sources
 
@@ -116,6 +117,12 @@ Use the `<omni-icon>` web component directly in your theme or content:
 - Create or edit an ACF Field Group
 - Add a new field and select "Omni Icon" as the field type
 - Configure return format (string, array, or HTML)
+
+**Etch**:
+- Add the "omni-icon" Element from the menu element on the bottom of screen
+- Browse or search icons in the icon picker
+- Confirm selection to copy the code to clipboard
+- Paste the copied code into the HTML editor
 
 ## Performance
 

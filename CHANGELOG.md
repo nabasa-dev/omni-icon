@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- [Etch](https://etchwp.com/) integration
+
 ### Changed
 - Increase webcomponent concurrent request limit from 4 to 16 for faster icon loading
 

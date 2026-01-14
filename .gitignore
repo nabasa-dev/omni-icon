@@ -5,3 +5,5 @@ vendor/
 .env
 .cache
 dist/
+
+opencode.json

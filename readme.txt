@@ -41,6 +41,8 @@ Omni Icon works perfectly with the most popular visual/page builders:
 * [Bricks](https://bricksbuilder.io/) — Native element with full theme compatibility
 * [Breakdance](https://breakdance.com/ref/165/) — Element Studio integration with SSR
 * [LiveCanvas](https://livecanvas.com/?ref=4008) — Custom block with panel controls
+* [Advanced Custom Fields (ACF)](https://www.advancedcustomfields.com/) — Custom field type for icon selection
+* [Etch](https://etchwp.com/) — Web Component with icon picker
 * More integrations coming soon!
 
 ### Icon Sources
@@ -103,6 +105,13 @@ Use the `<omni-icon>` web component directly in your theme or content:
 - Add a new field and select "Omni Icon" as the field type
 - Configure return format (string, array, or HTML)
 
+**Etch**:
+
+- Add the "omni-icon" Element from the menu element on the bottom of screen
+- Browse or search icons in the icon picker
+- Confirm selection to copy the code to clipboard 
+- Paste the copied code into the HTML editor
+
 ### Performance & Security
 
 * **Lazy Loading**: Web components loaded on-demand
@@ -147,6 +156,7 @@ Omni Icon currently supports:
 - Bricks
 - Breakdance
 - LiveCanvas
+- Etch
 - And more coming soon!
 
 All integrations include icon picker modals for easy icon selection.
