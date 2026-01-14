@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Increase webcomponent concurrent request limit from 4 to 16 for faster icon loading
 
+### Fixed
+- Missing assets entrypoint in Vite config for ACF integration
+
 ## [1.0.13] - 2026-01-13
 
 ### Fixed

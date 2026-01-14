@@ -31,6 +31,7 @@ export default defineConfig({
 				'integration/livecanvas/editor': 'resources/integration/livecanvas/editor.ts',
 				'integration/elementor/editor': 'resources/integration/elementor/editor.ts',
 				'integration/breakdance/editor': 'resources/integration/breakdance/editor.ts',
+				'integration/acf/editor': 'resources/integration/acf/editor.ts',
 			},
 			// outDir: 'public/build',
 		}),
