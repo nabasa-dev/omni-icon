@@ -1,5 +1,5 @@
 // Import only what we need for lighter bundle
-import { get as getIdb, set as setIdb } from 'idb-keyval';
+import { createStore, get as getIdb, set as setIdb } from 'idb-keyval';
 
 export interface IconApiResponse {
 	svg: string;
@@ -63,7 +63,10 @@ export interface IconFetchOptions {
 
 const API_BASE_PATH = '/wp-json/omni-icon/v1/icon/item';
 const IDB_KEY = 'oiwc-cache';
+const IDB_DB_NAME = 'omni-icon';
+const IDB_STORE_NAME = 'icon-cache';
 const MAX_CONCURRENT_REQUESTS = 16;
+const idbStore = createStore(IDB_DB_NAME, IDB_STORE_NAME);
 
 const iconCache = new Map<string, string>();
 const inflightRequests = new Map<string, InflightEntry>();
@@ -267,7 +270,7 @@ async function processQueueItem(item: QueueItem): Promise<void> {
 
 async function readFromIndexedDb(iconName: string): Promise<string | undefined> {
 	try {
-		const stored = await getIdb(`${IDB_KEY}.${iconName}`);
+		const stored = await getIdb(`${IDB_KEY}.${iconName}`, idbStore);
 		return typeof stored === 'string' ? stored : undefined;
 	} catch {
 		// Silent fail - fallback to network fetch
@@ -277,7 +280,7 @@ async function readFromIndexedDb(iconName: string): Promise<string | undefined> 
 
 async function saveToIndexedDb(iconName: string, svg: string): Promise<void> {
 	try {
-		await setIdb(`${IDB_KEY}.${iconName}`, svg);
+		await setIdb(`${IDB_KEY}.${iconName}`, svg, idbStore);
 	} catch {
 		// Silent fail - icon will be fetched from network next time
 	}

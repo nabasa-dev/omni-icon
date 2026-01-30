@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.14
+Stable tag: 1.0.15
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -67,14 +67,6 @@ Browse available icons at [Iconify](https://icon-sets.iconify.design/)
 
 ### Usage
 
-**Web Component Usage**
-
-Use the `<omni-icon>` web component directly in your theme or content:
-
-`<omni-icon name="mdi:home"></omni-icon>`
-`<omni-icon name="local:my-logo" width="64" height="64"></omni-icon>`
-`<omni-icon name="fa6-solid:heart" color="#3b82f6"></omni-icon>`
-
 **Gutenberg**:
 
 - In the block editor, add a new "Omni Icon" block
@@ -112,6 +104,14 @@ Use the `<omni-icon>` web component directly in your theme or content:
 - Confirm selection to copy the code to clipboard 
 - Paste the copied code into the HTML editor
 
+**Web Component Usage**
+
+Use the `<omni-icon>` web component directly in your theme or content:
+
+`<omni-icon name="mdi:home"></omni-icon>`
+`<omni-icon name="local:my-logo" width="64" height="64"></omni-icon>`
+`<omni-icon name="fa6-solid:heart" color="#3b82f6"></omni-icon>`
+
 ### Performance & Security
 
 * **Lazy Loading**: Web components loaded on-demand
@@ -131,6 +131,14 @@ Use the `<omni-icon>` web component directly in your theme or content:
 - SVG sanitization by [enshrined/svg-sanitize](https://github.com/darylldoyle/svg-sanitizer)
 
 Affiliate Disclosure: This readme.txt may contain affiliate links. If you decide to make a purchase through these links, we may earn a commission at no extra cost to you.
+
+== Screenshots ==
+
+1. The Omni Icon block in the Gutenberg editor
+2. Opening the icon picker modal in Gutenberg
+3. Searching for icons in the icon picker modal
+4. Customizing icon size and color in the block settings
+5. Managing uploaded local icons in the Omni Icon settings page
 
 == Frequently Asked Questions ==
 
