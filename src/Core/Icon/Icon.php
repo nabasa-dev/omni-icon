@@ -13,38 +13,47 @@ declare (strict_types=1);
  */
 namespace OmniIcon\Core\Icon;
 
+use DOMAttr;
+use DOMComment;
+use DOMDocument;
+use DOMElement;
+use DOMText;
+use InvalidArgumentException;
+use LogicException;
+use RuntimeException;
+use Stringable;
 /**
  * Icon value object representing an SVG icon with its content and attributes.
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final class Icon implements \Stringable
+final class Icon implements Stringable
 {
     /**
      * Transforms a valid icon ID into an icon name.
      *
-     * @throws \InvalidArgumentException if the ID is not valid
+     * @throws InvalidArgumentException if the ID is not valid
      *
      * @see isValidId()
      */
     public static function idToName(string $id): string
     {
         if (!self::isValidId($id)) {
-            throw new \InvalidArgumentException(\sprintf('The id "%s" is not a valid id.', $id));
+            throw new InvalidArgumentException(sprintf('The id "%s" is not a valid id.', $id));
         }
         return str_replace('--', ':', $id);
     }
     /**
      * Transforms a valid icon name into an ID.
      *
-     * @throws \InvalidArgumentException if the name is not valid
+     * @throws InvalidArgumentException if the name is not valid
      *
      * @see isValidName()
      */
     public static function nameToId(string $name): string
     {
         if (!self::isValidName($name)) {
-            throw new \InvalidArgumentException(\sprintf('The name "%s" is not a valid name.', $name));
+            throw new InvalidArgumentException(sprintf('The name "%s" is not a valid name.', $name));
         }
         return str_replace(':', '--', $name);
     }
@@ -74,41 +83,41 @@ final class Icon implements \Stringable
     }
     public static function fromFile(string $filename): self
     {
-        if (!class_exists(\DOMDocument::class)) {
-            throw new \LogicException('The "DOM" PHP extension is required to create icons from files.');
+        if (!class_exists(DOMDocument::class)) {
+            throw new LogicException('The "DOM" PHP extension is required to create icons from files.');
         }
-        $svg = file_get_contents($filename) ?: throw new \RuntimeException(\sprintf('The icon file "%s" could not be read.', $filename));
-        $svgDoc = new \DOMDocument();
+        $svg = file_get_contents($filename) ?: throw new RuntimeException(sprintf('The icon file "%s" could not be read.', $filename));
+        $svgDoc = new DOMDocument();
         $svgDoc->preserveWhiteSpace = \false;
         try {
             $svgDoc->loadXML($svg);
         } catch (\Throwable $e) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename), previous: $e);
+            throw new RuntimeException(sprintf('The icon file "%s" does not contain a valid SVG.', $filename), previous: $e);
         }
         $svgElements = $svgDoc->getElementsByTagName('svg');
         if (0 === $svgElements->length) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
+            throw new RuntimeException(sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
         }
         if (1 !== $svgElements->length) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" contains more than one SVG.', $filename));
+            throw new RuntimeException(sprintf('The icon file "%s" contains more than one SVG.', $filename));
         }
-        $svgElement = $svgElements->item(0) ?? throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
+        $svgElement = $svgElements->item(0) ?? throw new RuntimeException(sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
         $innerSvg = '';
         foreach ($svgElement->childNodes as $node) {
             // Ignore comments and text nodes
-            if ($node instanceof \DOMComment || $node instanceof \DOMText) {
+            if ($node instanceof DOMComment || $node instanceof DOMText) {
                 continue;
             }
             // Ignore script tags
-            if ($node instanceof \DOMElement && 'script' === $node->nodeName) {
+            if ($node instanceof DOMElement && 'script' === $node->nodeName) {
                 continue;
             }
             $innerSvg .= $svgDoc->saveHTML($node);
         }
         if (!$innerSvg) {
-            throw new \RuntimeException(\sprintf('The icon file "%s" contains an empty SVG.', $filename));
+            throw new RuntimeException(sprintf('The icon file "%s" contains an empty SVG.', $filename));
         }
-        $attributes = array_map(static fn(\DOMAttr $a) => $a->value, [...$svgElement->attributes]);
+        $attributes = array_map(static fn(DOMAttr $a) => $a->value, [...$svgElement->attributes]);
         return new self($innerSvg, $attributes);
     }
     public function __construct(private readonly string $innerSvg, private readonly array $attributes = [])
@@ -152,14 +161,14 @@ final class Icon implements \Stringable
     public function withAttributes(array $attributes): self
     {
         foreach ($attributes as $name => $value) {
-            if (!\is_string($name)) {
-                throw new \InvalidArgumentException(\sprintf('Attribute names must be string, "%s" given.', get_debug_type($name)));
+            if (!is_string($name)) {
+                throw new InvalidArgumentException(sprintf('Attribute names must be string, "%s" given.', get_debug_type($name)));
             }
             if (!ctype_alnum($name) && !str_contains($name, '-')) {
-                throw new \InvalidArgumentException(\sprintf('Invalid attribute name "%s".', $name));
+                throw new InvalidArgumentException(sprintf('Invalid attribute name "%s".', $name));
             }
-            if (!\is_string($value) && !\is_bool($value) && !\is_int($value) && !\is_float($value)) {
-                throw new \InvalidArgumentException(\sprintf('Invalid value type for attribute "%s". Boolean, string, int or float allowed, "%s" provided. ', $name, get_debug_type($value)));
+            if (!is_string($value) && !is_bool($value) && !is_int($value) && !is_float($value)) {
+                throw new InvalidArgumentException(sprintf('Invalid value type for attribute "%s". Boolean, string, int or float allowed, "%s" provided. ', $name, get_debug_type($value)));
             }
         }
         return new self($this->innerSvg, [...$this->attributes, ...$attributes]);
