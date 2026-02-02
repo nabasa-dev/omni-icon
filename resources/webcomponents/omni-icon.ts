@@ -7,9 +7,9 @@ class OmniIcon extends HTMLElement {
 		clearSeenElement(this);
 	}
 
-	restartAnimation(): void {
-		getRenderer()?.restartAnimation(this);
-	}
+	// restartAnimation(): void {
+	// 	getRenderer()?.restartAnimation(this);
+	// }
 }
 
 if ('customElements' in window) {
