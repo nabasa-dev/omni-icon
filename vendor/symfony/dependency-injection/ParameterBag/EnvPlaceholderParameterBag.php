@@ -15,7 +15,7 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\RuntimeExceptio
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class EnvPlaceholderParameterBag extends ParameterBag
+class EnvPlaceholderParameterBag extends \OmniIconDeps\Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
 {
     private string $envPlaceholderUniquePrefix;
     private array $envPlaceholders = [];

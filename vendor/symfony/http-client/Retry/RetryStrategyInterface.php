@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace OmniIconDeps\Symfony\Component\HttpClient\Retry;
+namespace Symfony\Component\HttpClient\Retry;
 
 use OmniIconDeps\Symfony\Component\HttpClient\Response\AsyncContext;
 use OmniIconDeps\Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;

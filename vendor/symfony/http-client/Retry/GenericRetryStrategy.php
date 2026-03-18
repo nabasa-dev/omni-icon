@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace OmniIconDeps\Symfony\Component\HttpClient\Retry;
+namespace Symfony\Component\HttpClient\Retry;
 
 use OmniIconDeps\Symfony\Component\HttpClient\Exception\InvalidArgumentException;
 use OmniIconDeps\Symfony\Component\HttpClient\Response\AsyncContext;
@@ -18,7 +18,7 @@ use OmniIconDeps\Symfony\Contracts\HttpClient\Exception\TransportExceptionInterf
  *
  * @author Jérémy Derussé <jeremy@derusse.com>
  */
-class GenericRetryStrategy implements RetryStrategyInterface
+class GenericRetryStrategy implements \Symfony\Component\HttpClient\Retry\RetryStrategyInterface
 {
     public const IDEMPOTENT_METHODS = ['GET', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'TRACE'];
     public const DEFAULT_RETRY_STATUS_CODES = [

@@ -18,7 +18,7 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\RuntimeExceptio
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class ParameterBag implements ParameterBagInterface
+class ParameterBag implements \OmniIconDeps\Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface
 {
     protected $parameters = [];
     protected $resolved = \false;

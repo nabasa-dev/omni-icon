@@ -16,7 +16,7 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\LogicException;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class FrozenParameterBag extends ParameterBag
+class FrozenParameterBag extends \OmniIconDeps\Symfony\Component\DependencyInjection\ParameterBag\ParameterBag
 {
     /**
      * For performance reasons, the constructor assumes that

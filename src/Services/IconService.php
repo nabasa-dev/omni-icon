@@ -65,6 +65,9 @@ class IconService
                 $icon = $icon->withAttributes($attributes);
             }
             $svg = $icon->toHtml();
+            if (apply_filters('omni-icon/service/icon:skip_render_sanitization', \false, $name, $attributes)) {
+                return $svg;
+            }
             // Apply SVG sanitization at render time for defense-in-depth security
             // This ensures all SVG output is safe, even from remote sources (Iconify API)
             $sanitized = $this->sanitizer->sanitize($svg);

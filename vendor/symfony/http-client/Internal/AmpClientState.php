@@ -22,12 +22,12 @@ use OmniIconDeps\Amp\Http\Client\Response;
 use OmniIconDeps\Amp\Http\Tunnel\Http1TunnelConnector;
 use OmniIconDeps\Amp\Http\Tunnel\Https1TunnelConnector;
 use OmniIconDeps\Amp\Promise;
-use OmniIconDeps\Amp\Socket\Certificate;
-use OmniIconDeps\Amp\Socket\ClientTlsContext;
-use OmniIconDeps\Amp\Socket\ConnectContext;
-use OmniIconDeps\Amp\Socket\Connector;
-use OmniIconDeps\Amp\Socket\DnsConnector;
-use OmniIconDeps\Amp\Socket\SocketAddress;
+use Amp\Socket\Certificate;
+use Amp\Socket\ClientTlsContext;
+use Amp\Socket\ConnectContext;
+use Amp\Socket\Connector;
+use Amp\Socket\DnsConnector;
+use Amp\Socket\SocketAddress;
 use OmniIconDeps\Amp\Success;
 use OmniIconDeps\Psr\Log\LoggerInterface;
 /**

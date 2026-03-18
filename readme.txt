@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.15
+Stable tag: 1.0.16
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -42,7 +42,8 @@ Omni Icon works perfectly with the most popular visual/page builders:
 * [Breakdance](https://breakdance.com/ref/165/) — Element Studio integration with SSR
 * [LiveCanvas](https://livecanvas.com/?ref=4008) — Custom block with panel controls
 * [Advanced Custom Fields (ACF)](https://www.advancedcustomfields.com/) — Custom field type for icon selection
-* [Etch](https://etchwp.com/) — Web Component with icon picker
+* [Etch](https://etchwp.com?aff=bce0d1ab) — Web Component with icon picker
+* [Divi 5](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) — Native module
 * More integrations coming soon!
 
 ### Icon Sources
@@ -195,60 +196,100 @@ The complete source code, including uncompiled versions of all JavaScript and CS
 
 == Changelog ==
 
+= 1.0.16 - 2026-03-18 =
+
+**Fixed**
+
+* Release build Symfony DI ParameterBag scoping issue
+
+**Added**
+
+* [Divi 5](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) integration
+
 = 1.0.15 - 2026-01-30 =
+
 **Changed**
+
 * Update readme file
 
 = 1.0.14 - 2026-01-14 =
+
 **Added**
-* [Etch](https://etchwp.com/) integration
+
+* [Etch](https://etchwp.com?aff=bce0d1ab) integration
+
 **Changed**
+
 * Increase webcomponent concurrent request limit from 4 to 16 for faster icon loading
+
 **Fixed**
+
 * Missing assets entrypoint in Vite config for ACF integration
 
 = 1.0.13 - 2026-01-13 =
+
 **Fixed**
+
 * Redis compatibility issue
 
 = 1.0.12 - 2026-01-12 =
+
 **Fixed**
+
 * PHP 8.1 compatibility issues
 
 = 1.0.11 - 2026-01-12 =
+
 **Added**
+
 * Blueprint for WordPress.org plugin repository
 
 = 1.0.9 - 2026-01-12 =
+
 **Changed**
+
 * Update readme file
 
 = 1.0.7 - 2026-01-12 =
+
 **Fixed**
+
 * [ACF] Discovery compatibility issue
 
 = 1.0.4 - 2026-01-09 =
+
 **Added**
+
 * ACF (Advanced Custom Fields) integration [#4](https://github.com/nabasa-dev/omni-icon/issues/4)
+
 **Fixed**
+
 * Modal footer visibility on laptop screens - Confirm/Cancel buttons now visible without requiring full-screen mode [#3](https://github.com/nabasa-dev/omni-icon/issues/3)
 * WordPress.org plugin repository compliance fixes
 
 = 1.0.3 - 2026-01-08 =
+
 **Fixed**
+
 * WordPress.org plugin repository compliance fixes
 
 = 1.0.2 - 2025-12-31 =
+
 **Added**
+
 * Multiple and drag-and-drop icon upload support - upload multiple SVG files at once
 * Multi-select icons with keyboard shortcuts (Ctrl/Cmd+Click, Shift+Click) and mouse drag area selection for bulk operations
 
 = 1.0.1 - 2025-12-31 =
+
 **Fixed**
+
 * WordPress.org plugin repository compliance fixes
 
 = 1.0.0 - 2025-12-31 =
+
 **Added**
+
 * 🐣 Initial release.
 
 [See changelog for all versions.](https://github.com/nabasa-dev/omni-icon/blob/main/CHANGELOG.md)

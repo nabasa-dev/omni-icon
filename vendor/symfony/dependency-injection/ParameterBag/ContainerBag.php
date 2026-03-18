@@ -14,7 +14,7 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Container;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class ContainerBag extends FrozenParameterBag implements ContainerBagInterface
+class ContainerBag extends \OmniIconDeps\Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag implements \OmniIconDeps\Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface
 {
     private Container $container;
     public function __construct(Container $container)
