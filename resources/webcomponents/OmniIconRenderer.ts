@@ -26,9 +26,6 @@ export interface IconRendererState {
 }
 
 export class OmniIconRenderer {
-	private static readonly ICON_NAME_SEPARATOR = ':';
-	private static readonly FALLBACK_ICON = 'tabler:error-404';
-	private static readonly FALLBACK_PRIORITY = 10;
 	private static readonly RESERVED_ATTRS = new Set(['name', 'id', 'role', 'aria-expanded', 'tabindex']);
 	private static readonly SVG_ATTRS = new Set(['xmlns', 'viewBox', 'aria-hidden', 'focusable']);
 	private static readonly CLEANUP_ATTRS = ['data-oiwc-state', 'data-oiwc-error-type', 'data-oiwc-original-icon', 'data-oiwc-expanded', 'role', 'aria-expanded', 'tabindex'];
@@ -182,7 +179,7 @@ export class OmniIconRenderer {
 			throw new IconError(IconErrorType.NO_NAME, 'No icon name specified');
 		}
 
-		const separatorIndex = iconName.indexOf(OmniIconRenderer.ICON_NAME_SEPARATOR);
+		const separatorIndex = iconName.indexOf(/* OmniIconRenderer.ICON_NAME_SEPARATOR */ ':');
 
 		if (separatorIndex === -1 || separatorIndex === 0 || separatorIndex === iconName.length - 1) {
 			throw new IconError(
@@ -260,8 +257,8 @@ export class OmniIconRenderer {
 	private renderLoading(element: Element, config: IconConfig): void {
 		element.setAttribute('data-oiwc-state', 'loading');
 		['data-oiwc-error-type', 'data-oiwc-original-icon', 'data-oiwc-expanded'].forEach(attr => element.removeAttribute(attr));
-		if (config.width) (element as HTMLElement).style.width = `${config.width}px`;
-		if (config.height) (element as HTMLElement).style.height = `${config.height}px`;
+		if (config.width) (element as HTMLElement).style.width = this.toCssLength(config.width);
+		if (config.height) (element as HTMLElement).style.height = this.toCssLength(config.height);
 		element.innerHTML = '';
 	}
 
@@ -317,14 +314,14 @@ export class OmniIconRenderer {
 		element.setAttribute('data-oiwc-error-type', error.type);
 		element.setAttribute('data-oiwc-original-icon', config.name);
 		// Only set dimensions if they exist
-		if (config.width) (element as HTMLElement).style.width = `${config.width}px`;
-		if (config.height) (element as HTMLElement).style.height = `${config.height}px`;
+		if (config.width) (element as HTMLElement).style.width = this.toCssLength(config.width);
+		if (config.height) (element as HTMLElement).style.height = this.toCssLength(config.height);
 
 		try {
 			const fallbackSvg = await this.fetchIcon(
-				OmniIconRenderer.FALLBACK_ICON,
+				/* OmniIconRenderer.FALLBACK_ICON */ 'tabler:error-404',
 				signal,
-				OmniIconRenderer.FALLBACK_PRIORITY
+				/* OmniIconRenderer.FALLBACK_PRIORITY */ 10
 			);
 			if (signal?.aborted) {
 				return;
@@ -374,6 +371,10 @@ export class OmniIconRenderer {
 
 	private shouldSkipAttribute(attrName: string): boolean {
 		return attrName.startsWith('data-oiwc-') || OmniIconRenderer.RESERVED_ATTRS.has(attrName);
+	}
+
+	private toCssLength(value: string): string {
+		return /^-?\d+(?:\.\d+)?$/.test(value) ? `${value}px` : value;
 	}
 
 	private passAttributesToSvg(element: Element, svgElement: SVGSVGElement): void {

@@ -49,12 +49,12 @@ function ensureRenderer(el: Element) {
 
 function processNode(node: Node) {
     // DocumentFragment (framework inserts)
-    if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+    if (node.nodeType === /* Node.DOCUMENT_FRAGMENT_NODE */ 11) {
         node.childNodes.forEach(processNode);
         return;
     }
 
-    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    if (node.nodeType !== /* Node.ELEMENT_NODE */ 1) return;
 
     const targets =
         (node as Element).matches('omni-icon')

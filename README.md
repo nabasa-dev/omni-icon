@@ -91,7 +91,8 @@ Seamless integration with the most popular visual/page builders and custom field
 * [Breakdance](https://breakdance.com/ref/165/) — Element Studio integration with SSR
 * [LiveCanvas](https://livecanvas.com/?ref=4008) — Custom block with panel controls
 * [Advanced Custom Fields (ACF)](https://www.advancedcustomfields.com/) — Custom field type with multiple return formats
-* [Etch](https://etchwp.com/) — Web Component with icon picker
+* [Etch](https://etchwp.com?aff=bce0d1ab) — Web Component with icon picker
+* [Divi 5](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) — Native module
 
 ## Icon Sources
 

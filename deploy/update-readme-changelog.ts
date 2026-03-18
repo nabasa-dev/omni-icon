@@ -70,7 +70,8 @@ function parseChangelog(changelogContent: string): ChangelogEntry[] {
       // Convert ### headers (Added, Fixed, etc.) to bold text
       if (line.startsWith('### ')) {
         const sectionName = line.replace('### ', '').trim();
-        processedLine = `**${sectionName}**`;
+        const sectionHeader = `**${sectionName}**`;
+        processedLine = `\n${sectionHeader}\n`;
       }
       
       // Convert list items to readme.txt format

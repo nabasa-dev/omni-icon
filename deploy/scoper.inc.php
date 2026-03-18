@@ -105,6 +105,29 @@ return [
                     $contents
                 );
             }
+
+            // Fix Symfony DependencyInjection ParameterBag classes left unprefixed by php-scoper
+            if (str_contains($filePath, 'symfony/dependency-injection/')) {
+                $contents = preg_replace(
+                    '/^use Symfony\\\\Component\\\\DependencyInjection\\\\ParameterBag\\\\/m',
+                    'use ' . $prefix . '\\Symfony\\Component\\DependencyInjection\\ParameterBag' . '\\',
+                    $contents
+                ) ?? $contents;
+
+                $contents = preg_replace(
+                    '/(?<!' . preg_quote($prefix, '/') . ')\\\\Symfony\\\\Component\\\\DependencyInjection\\\\ParameterBag\\\\/',
+                    '\\\\' . $prefix . '\\Symfony\\Component\\DependencyInjection\\ParameterBag' . '\\',
+                    $contents
+                ) ?? $contents;
+            }
+
+            if (str_contains($filePath, 'symfony/dependency-injection/ParameterBag/')) {
+                $contents = preg_replace(
+                    '/^namespace Symfony\\\\Component\\\\DependencyInjection\\\\ParameterBag;$/m',
+                    'namespace ' . $prefix . '\\Symfony\\Component\\DependencyInjection\\ParameterBag;',
+                    $contents
+                ) ?? $contents;
+            }
             
             return $contents;
         },
@@ -130,6 +153,8 @@ return [
         'LiveCanvas',
 
         'Etch',
+
+        'ET',
 
         // Cache plugins
     ],

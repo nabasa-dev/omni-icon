@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.15
+Stable tag: 0.0.17
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -42,7 +42,8 @@ Omni Icon works perfectly with the most popular visual/page builders:
 * [Breakdance](https://breakdance.com/ref/165/) — Element Studio integration with SSR
 * [LiveCanvas](https://livecanvas.com/?ref=4008) — Custom block with panel controls
 * [Advanced Custom Fields (ACF)](https://www.advancedcustomfields.com/) — Custom field type for icon selection
-* [Etch](https://etchwp.com/) — Web Component with icon picker
+* [Etch](https://etchwp.com?aff=bce0d1ab) — Web Component with icon picker
+* [Divi 5](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) — Native module
 * More integrations coming soon!
 
 ### Icon Sources

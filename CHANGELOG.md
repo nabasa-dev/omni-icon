@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Release build Symfony DI ParameterBag scoping issue
+
+### Added
+- [Divi 5](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) integration
+
 ## [1.0.15] - 2026-01-30
 
 ### Changed
@@ -15,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.14] - 2026-01-14
 
 ### Added
-- [Etch](https://etchwp.com/) integration
+- [Etch](https://etchwp.com?aff=bce0d1ab) integration
 
 ### Changed
 - Increase webcomponent concurrent request limit from 4 to 16 for faster icon loading
