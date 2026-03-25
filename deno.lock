@@ -13,7 +13,7 @@
       "dependencies": [
         "npm:@floating-ui/dom@^1.7.5",
         "npm:@iconify-json/tabler@^1.2.26",
-        "npm:@kucrut/vite-for-wp@0.12",
+        "npm:@nabasa/vp-wp@^0.3.0",
         "npm:@svgr/core@^8.1.0",
         "npm:@svgr/plugin-jsx@^8.1.0",
         "npm:@vitejs/plugin-react@^5.1.2",
@@ -35,7 +35,7 @@
         "npm:vite-plugin-node-polyfills@0.25",
         "npm:vite-plugin-static-copy@^3.2.0",
         "npm:vite-plugin-svgr@^4.5.0",
-        "npm:vite@8.0.0-beta.11"
+        "npm:vite-plus@^0.1.13"
       ]
     }
   }

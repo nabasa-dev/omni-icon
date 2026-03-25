@@ -28,7 +28,7 @@ class OMNI_ICON
     /**
      * @var string
      */
-    public const VERSION = '1.0.16';
+    public const VERSION = '1.0.17';
 
     /**
      * @var string

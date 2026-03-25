@@ -79,7 +79,7 @@ class AdminPage
         // Enqueue admin app
         $this->viteService->enqueue_asset('resources/admin/admin-app/index.jsx', [
             'handle' => 'omni-icon-admin',
-            'in-footer' => true,
+            'in_footer' => true,
             'dependencies' => [
                 'react',
                 'react-dom',

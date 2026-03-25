@@ -24,7 +24,7 @@ jobs:
           with:
             fetch-depth: 0
 
-        # Use pnpm to install dependencies and build the assets.
+        # Use pnpm to install dependencies and build the Vite+ assets.
         - uses: actions/setup-node@v4
           with:
             node-version: 22
@@ -45,9 +45,11 @@ jobs:
               ${{ runner.os }}-pnpm-store-
 
         # install dependencies and build the assets
-        - run: pnpm install
+        - name: Install JavaScript dependencies
+          run: pnpm install --frozen-lockfile
 
-        - run: pnpm build
+        - name: Build frontend assets
+          run: pnpm run build
 
         # Setup PHP 8.1 for initial composer operations (Symfony 6.4 requirement)
         - uses: shivammathur/setup-php@v2

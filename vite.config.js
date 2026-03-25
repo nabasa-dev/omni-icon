@@ -1,8 +1,7 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite-plus';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import react from '@vitejs/plugin-react';
-import { v4wp } from '@kucrut/vite-for-wp';
-import { wp_scripts } from '@kucrut/vite-for-wp/plugins';
+import { wordpress, wordpressExternals } from '@nabasa/vp-wp';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import svgr from 'vite-plugin-svgr';
 import Icons from 'unplugin-icons/vite';
@@ -10,14 +9,17 @@ import path from 'path';
 
 export default defineConfig({
 	plugins: [
+		react({
+			jsxRuntime: 'classic',
+		}),
 		nodePolyfills({
 			// Override the default polyfills for specific modules.
 			overrides: {
 				fs: 'memfs', // Since `fs` is not supported in browsers, we can use the `memfs` package to polyfill it.
 			},
 		}),
-		v4wp({
-			input: {
+		wordpress({
+			entry: {
 				'integration/gutenberg/blocks/icon-block': 'resources/integration/gutenberg/blocks/icon-block/index.jsx',
 				'integration/gutenberg/blocks/icon-block/css': 'resources/integration/gutenberg/blocks/icon-block/editor.css',
 				'integration/gutenberg/blocks/icon-block/iframe': 'resources/integration/gutenberg/blocks/icon-block/iframe.ts',
@@ -37,8 +39,7 @@ export default defineConfig({
 			},
 			// outDir: 'public/build',
 		}),
-		react(),
-		wp_scripts(),
+		wordpressExternals(),
 		Icons({ compiler: 'jsx', jsx: 'react', autoInstall: true, scale: 1 }),
 		svgr({
 			svgrOptions: {

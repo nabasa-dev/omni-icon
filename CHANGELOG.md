@@ -7,13 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.16] - 2026-03-18
+## [1.0.17] - 2026-03-25
 
-### Fixed
-- Release build Symfony DI ParameterBag scoping issue
+### Changed
+- Migrate the build system to [`@nabasa/vp-wp`](https://github.com/nabasa-dev/vp-wp) for improved performance and better WordPress integration
+
+## [1.0.16] - 2026-03-18
 
 ### Added
 - [Divi 5](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) integration
+
+### Fixed
+- Release build Symfony DI ParameterBag scoping issue
 
 ## [1.0.15] - 2026-01-30
 
@@ -86,7 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🐣 Initial release.
 
-[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.16...HEAD
+[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.17...HEAD
+[1.0.17]: https://github.com/nabasa-dev/omni-icon/compare/1.0.16...1.0.17
 [1.0.16]: https://github.com/nabasa-dev/omni-icon/compare/1.0.15...1.0.16
 [1.0.15]: https://github.com/nabasa-dev/omni-icon/compare/1.0.14...1.0.15
 [1.0.14]: https://github.com/nabasa-dev/omni-icon/compare/1.0.13...1.0.14

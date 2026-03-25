@@ -89,7 +89,7 @@ class ACFService
         // Enqueue omni-icon web component
         $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', [
             'handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon',
-            'in-footer' => true,
+            'in_footer' => true,
         ]);
 
         // Enqueue Gutenberg icon block styles (reuse for ACF)

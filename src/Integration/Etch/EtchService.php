@@ -59,7 +59,7 @@ class EtchService
             'resources/webcomponents/omni-icon.ts',
             [
                 'handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon',
-                'in-footer' => true,
+                'in_footer' => true,
             ]
         );
 

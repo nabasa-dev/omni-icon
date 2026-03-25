@@ -153,7 +153,7 @@ const AboutTab = () => {
 					<h3 className="sponsors-title">{__('Proudly Sponsored By', 'omni-icon')}</h3>
 					<div className="sponsors-grid">
 						<a
-							href="https://windpress.com"
+							href="https://windpress.jooo.si"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="sponsor-card"

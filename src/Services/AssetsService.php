@@ -32,7 +32,7 @@ class AssetsService
                 'dependencies' => [
                     // OMNI_ICON::TEXT_DOMAIN . ':web-component-module:error-handler',
                 ],
-                'in-footer' => false,
+                'in_footer' => false,
             ]
         );
     }

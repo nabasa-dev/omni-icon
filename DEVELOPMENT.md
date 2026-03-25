@@ -38,13 +38,13 @@ pnpm install
 
 ### 3. Start Development Server
 
-Start the Vite development server with hot module replacement:
+Start the Vite+ development server with hot module replacement:
 
 ```bash
 pnpm run dev
 ```
 
-This will start the Vite dev server on `http://localhost:5173` and watch for changes.
+This will start the Vite+ dev server on `http://localhost:5173` and watch for changes.
 
 ### 4. Activate the Plugin
 
@@ -59,7 +59,7 @@ This will start the Vite dev server on `http://localhost:5173` and watch for cha
 Omni Icon uses modern PHP and JavaScript architecture patterns:
 
 - **PHP**: Symfony-based dependency injection with attribute-based discovery
-- **JavaScript**: Vite + React + TypeScript with web components
+- **JavaScript**: Vite+ + React + TypeScript with web components
 - **Caching**: Multi-layer caching (memory, filesystem, IndexedDB)
 - **SSR**: Server-side rendering for instant icon display
 
@@ -104,7 +104,7 @@ On-demand Iconify API integration:
 
 Manages plugin asset enqueuing:
 - Enqueues web components on frontend and admin
-- Vite integration for development and production
+- Vite+ integration for development and production
 
 #### ViteService
 **Location**: `src/Services/ViteService.php`
@@ -402,7 +402,7 @@ Custom React hooks:
 
 #### Plugins
 
-1. **@kucrut/vite-for-wp**
+1. **@nabasa/vp-wp**
    - WordPress integration
    - Automatic asset enqueuing
    - Manifest generation

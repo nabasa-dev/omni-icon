@@ -4,9 +4,9 @@
   "description": "WordPress plugin for Iconify icon blocks in Gutenberg",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
     "release": "node deploy/release.js"
   },
   "keywords": [
@@ -20,7 +20,7 @@
   "license": "GPL-2.0-or-later",
   "devDependencies": {
     "@iconify-json/tabler": "^1.2.26",
-    "@kucrut/vite-for-wp": "^0.12.0",
+    "@nabasa/vp-wp": "^0.3.0",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@vitejs/plugin-react": "^5.1.2",
@@ -29,11 +29,11 @@
     "rollup-plugin-external-globals": "^0.13.0",
     "sass-embedded": "^1.97.3",
     "unplugin-icons": "^23.0.1",
-    "vite": "8.0.0-beta.11",
     "vite-plugin-external": "^6.2.2",
     "vite-plugin-node-polyfills": "^0.25.0",
     "vite-plugin-static-copy": "^3.2.0",
-    "vite-plugin-svgr": "^4.5.0"
+    "vite-plugin-svgr": "^4.5.0",
+    "vite-plus": "^0.1.13"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.7.5",

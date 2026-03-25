@@ -29,11 +29,9 @@ class BlocksService
     #[Hook('init', priority: 10)]
     public function register_blocks(): void
     {
-        $manifest = $this->viteService->get_manifest();
-
-        $path = $manifest->is_dev
+        $path = $this->viteService->is_development()
             ? $this->viteService->generate_development_asset_path('resources/integration/gutenberg/blocks/icon-block/block.json')
-            : $this->viteService->get_manifest()->dir . '/integration/gutenberg/blocks/icon-block/block.json';
+            : $this->viteService->get_manifest_dir() . '/integration/gutenberg/blocks/icon-block/block.json';
 
         register_block_type(
             $path,
@@ -74,7 +72,7 @@ class BlocksService
                 'dependencies' => [
                     // OMNI_ICON::TEXT_DOMAIN . ':web-component-module:error-handler-editor',
                 ],
-                'in-footer' => true,
+                'in_footer' => true,
             ]
         );
     }
@@ -109,7 +107,7 @@ class BlocksService
                 'react',
                 'react-dom',
             ],
-            'in-footer' => true,
+            'in_footer' => true,
         ]);
     }
 
