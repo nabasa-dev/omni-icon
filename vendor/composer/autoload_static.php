@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit101af72e7106884fa1ee3bc16c28bfa4
+class ComposerStaticInit40b9c4e070a1f88da34f2e5d8eec668d
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -12,7 +12,7 @@ class ComposerStaticInit101af72e7106884fa1ee3bc16c28bfa4
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
-        'b7e1c4cbafbabee94a69519a450ea263' => __DIR__ . '/..' . '/kucrut/vite-for-wp/vite-for-wp.php',
+        '3c9ebf3d7a29b377eb2a8001857b1f68' => __DIR__ . '/..' . '/nabasa/vp-wp/vp-wp.php',
         '6bc9a8ebc6cdcbf9bf200e06834cd174' => __DIR__ . '/../..' . '/constant.php',
     );
 
@@ -671,9 +671,9 @@ class ComposerStaticInit101af72e7106884fa1ee3bc16c28bfa4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit101af72e7106884fa1ee3bc16c28bfa4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit101af72e7106884fa1ee3bc16c28bfa4::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit101af72e7106884fa1ee3bc16c28bfa4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit40b9c4e070a1f88da34f2e5d8eec668d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit40b9c4e070a1f88da34f2e5d8eec668d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit40b9c4e070a1f88da34f2e5d8eec668d::$classMap;
 
         }, null, ClassLoader::class);
     }

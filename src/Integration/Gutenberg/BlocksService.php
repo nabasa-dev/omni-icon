@@ -24,8 +24,7 @@ class BlocksService
     #[Hook('init', priority: 10)]
     public function register_blocks(): void
     {
-        $manifest = $this->viteService->get_manifest();
-        $path = $manifest->is_dev ? $this->viteService->generate_development_asset_path('resources/integration/gutenberg/blocks/icon-block/block.json') : $this->viteService->get_manifest()->dir . '/integration/gutenberg/blocks/icon-block/block.json';
+        $path = $this->viteService->is_development() ? $this->viteService->generate_development_asset_path('resources/integration/gutenberg/blocks/icon-block/block.json') : $this->viteService->get_manifest_dir() . '/integration/gutenberg/blocks/icon-block/block.json';
         register_block_type($path, ['render_callback' => $this->render_icon_block(...)]);
     }
     /**
@@ -49,7 +48,7 @@ class BlocksService
     private function enqueue_webcomponent_for_editor(): void
     {
         // Enqueue omni-icon webcomponent
-        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'dependencies' => [], 'in-footer' => \true]);
+        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'dependencies' => [], 'in_footer' => \true]);
     }
     /**
      * Enqueue iframe asset for the block editor
@@ -63,7 +62,7 @@ class BlocksService
      */
     public function admin_head(): void
     {
-        $this->viteService->enqueue_asset('resources/integration/gutenberg/blocks/icon-block/index.jsx', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':gutenberg-icon-block', 'dependencies' => ['wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-block-editor', 'wp-hooks', 'wp-i18n', 'wp-plugins', 'wp-data', 'react', 'react-dom'], 'in-footer' => \true]);
+        $this->viteService->enqueue_asset('resources/integration/gutenberg/blocks/icon-block/index.jsx', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':gutenberg-icon-block', 'dependencies' => ['wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-block-editor', 'wp-hooks', 'wp-i18n', 'wp-plugins', 'wp-data', 'react', 'react-dom'], 'in_footer' => \true]);
     }
     /**
      * Render the icon block on the frontend

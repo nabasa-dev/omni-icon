@@ -40,7 +40,7 @@ class ElementorService
     public function editor_assets(): void
     {
         // Enqueue omni-icon web component for the editor
-        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'in-footer' => \true]);
+        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'in_footer' => \true]);
         // Enqueue Gutenberg icon block styles (reuse for Elementor)
         $this->viteService->enqueue_asset('resources/integration/gutenberg/blocks/icon-block/editor.css', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':gutenberg-icon-block-editor-styles']);
         // Enqueue Elementor editor integration script
@@ -53,7 +53,7 @@ class ElementorService
     public function frontend_assets(): void
     {
         // Enqueue omni-icon web component
-        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'in-footer' => \true]);
+        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'in_footer' => \true]);
     }
     /**
      * Register custom categories for Elementor

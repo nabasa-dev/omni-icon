@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/Q5Q75XSF7
 Tags: icons, iconify, gutenberg, svg, icon block
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.16
+Stable tag: 1.0.17
 Requires PHP: 8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -196,15 +196,21 @@ The complete source code, including uncompiled versions of all JavaScript and CS
 
 == Changelog ==
 
+= 1.0.17 - 2026-03-25 =
+
+**Changed**
+
+* Migrate the build system to [`@nabasa/vp-wp`](https://github.com/nabasa-dev/vp-wp) for improved performance and better WordPress integration
+
 = 1.0.16 - 2026-03-18 =
-
-**Fixed**
-
-* Release build Symfony DI ParameterBag scoping issue
 
 **Added**
 
 * [Divi 5](https://www.elegantthemes.com/affiliates/idevaffiliate.php?id=47622) integration
+
+**Fixed**
+
+* Release build Symfony DI ParameterBag scoping issue
 
 = 1.0.15 - 2026-01-30 =
 

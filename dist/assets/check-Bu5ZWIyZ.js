@@ -1,0 +1,1 @@
+var e=React.forwardRef(({title:e,titleId:t,...n},r)=>React.createElement(`svg`,{viewBox:`0 0 24 24`,width:`1em`,height:`1em`,ref:r,"aria-labelledby":t,...n},e?React.createElement(`title`,{id:t},e):null,React.createElement(`path`,{fill:`none`,stroke:`currentColor`,strokeLinecap:`round`,strokeLinejoin:`round`,strokeWidth:2,d:`m5 12l5 5L20 7`})));export{e as t};

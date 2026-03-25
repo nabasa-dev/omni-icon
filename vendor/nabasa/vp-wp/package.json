@@ -1,0 +1,56 @@
+{
+  "name": "@nabasa/vp-wp",
+  "version": "0.3.0",
+  "description": "WordPress integration for Vite+.",
+  "keywords": [
+    "vite",
+    "vite-plus",
+    "wordpress"
+  ],
+  "homepage": "https://github.com/nabasa-dev/vp-wp",
+  "bugs": {
+    "url": "https://github.com/nabasa-dev/vp-wp/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nabasa-dev/vp-wp.git"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "check": "vp check",
+    "check:fix": "vp check --fix",
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "rollup-plugin-external-globals": "^0.13.0",
+    "vite-plugin-external": "^6.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vite-plus": "^0.1.13"
+  },
+  "peerDependencies": {
+    "vite-plus": "^0.1.13"
+  },
+  "packageManager": "pnpm@10.30.3"
+}

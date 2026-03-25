@@ -22,6 +22,6 @@ class AssetsService
     #[Hook('admin_enqueue_scripts', priority: 10)]
     public function enqueue_frontend_scripts(): void
     {
-        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'dependencies' => [], 'in-footer' => \false]);
+        $this->viteService->enqueue_asset('resources/webcomponents/omni-icon.ts', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':web-component:omni-icon', 'dependencies' => [], 'in_footer' => \false]);
     }
 }
