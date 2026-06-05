@@ -153,6 +153,9 @@ class Exporter
             }
             if ($sleep) {
                 foreach ($sleep as $n => $v) {
+                    if (\is_string($n) && $reflector->hasProperty($n)) {
+                        continue;
+                    }
                     trigger_error(\sprintf('serialize(): "%s" returned as member variable from __sleep() but does not exist', $n), \E_USER_NOTICE);
                 }
             }
@@ -207,7 +210,7 @@ class Exporter
         $subIndent = $indent . '    ';
         if (\is_string($value)) {
             $code = \sprintf("'%s'", addcslashes($value, "'\\"));
-            $code = preg_replace_callback("/((?:[\\0\\r\\n]|‪|‫|‭|‮|⁦|⁧|⁨|‬|⁩)++)(.)/", function ($m) use ($subIndent) {
+            $code = preg_replace_callback("/((?:[\\0\\r\\n]|‪|‫|‭|‮|⁦|⁧|⁨|‬|⁩)++)(.)/", static function ($m) use ($subIndent) {
                 $m[1] = \sprintf('\'."%s".\'', str_replace(["\x00", "\r", "\n", "‪", "‫", "‭", "‮", "⁦", "⁧", "⁨", "‬", "⁩", '\n\\'], ['\0', '\r', '\n', '\u{202A}', '\u{202B}', '\u{202D}', '\u{202E}', '\u{2066}', '\u{2067}', '\u{2068}', '\u{202C}', '\u{2069}', '\n"' . "\n" . $subIndent . '."\\'], $m[1]));
                 if ("'" === $m[2]) {
                     return substr($m[1], 0, -2);

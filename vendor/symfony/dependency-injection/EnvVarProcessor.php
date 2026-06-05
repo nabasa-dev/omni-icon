@@ -102,9 +102,8 @@ class EnvVarProcessor implements EnvVarProcessorInterface
             }
             if ('file' === $prefix) {
                 return file_get_contents($file);
-            } else {
-                return require $file;
             }
+            return require $file;
         }
         $returnNull = \false;
         if ('' === $prefix) {

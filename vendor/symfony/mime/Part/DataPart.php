@@ -114,7 +114,7 @@ class DataPart extends TextPart
             $this->_parent[$name] = $r->getValue($this);
         }
         $this->_headers = $this->getHeaders();
-        return ['_headers', '_parent', 'filename', 'mediaType'];
+        return ['_headers', '_parent', 'filename', 'mediaType', 'cid'];
     }
     /**
      * @return void

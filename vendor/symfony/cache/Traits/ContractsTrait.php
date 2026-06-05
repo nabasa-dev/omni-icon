@@ -78,7 +78,7 @@ trait ContractsTrait
                 $this->setCallbackWrapper($this->setCallbackWrapper(null));
             }
             try {
-                $value = ($this->callbackWrapper)($callback, $item, $save, $pool, function (CacheItem $item) use ($setMetadata, $startTime, &$metadata) {
+                $value = ($this->callbackWrapper)($callback, $item, $save, $pool, static function (CacheItem $item) use ($setMetadata, $startTime, &$metadata) {
                     $setMetadata($item, $startTime, $metadata);
                 }, $this->logger ?? null, $beta);
                 $setMetadata($item, $startTime, $metadata);

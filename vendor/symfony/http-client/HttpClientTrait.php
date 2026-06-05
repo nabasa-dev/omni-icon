@@ -557,10 +557,10 @@ trait HttpClientTrait
             }
             if (str_contains($parts[$part], '%')) {
                 // https://tools.ietf.org/html/rfc3986#section-2.3
-                $parts[$part] = preg_replace_callback('/%(?:2[DE]|3[0-9]|[46][1-9A-F]|5F|[57][0-9A]|7E)++/i', fn($m) => rawurldecode($m[0]), $parts[$part]);
+                $parts[$part] = preg_replace_callback('/%(?:2[DE]|3[0-9]|[46][1-9A-F]|5F|[57][0-9A]|7E)++/i', static fn($m) => rawurldecode($m[0]), $parts[$part]);
             }
             // https://tools.ietf.org/html/rfc3986#section-3.3
-            $parts[$part] = preg_replace_callback("#[^-A-Za-z0-9._~!\$&/'()[\\]*+,;=:@{}%]++#", fn($m) => rawurlencode($m[0]), $parts[$part]);
+            $parts[$part] = preg_replace_callback("#[^-A-Za-z0-9._~!\$&/'()[\\]*+,;=:@{}%]++#", static fn($m) => rawurlencode($m[0]), $parts[$part]);
         }
         return ['scheme' => $scheme, 'authority' => null !== $host ? '//' . (isset($parts['user']) ? $parts['user'] . (isset($parts['pass']) ? ':' . $parts['pass'] : '') . '@' : '') . $host : null, 'path' => isset($parts['path'][0]) ? $parts['path'] : null, 'query' => isset($parts['query']) ? '?' . $parts['query'] : null, 'fragment' => isset($parts['fragment']) && !$tail ? '#' . $parts['fragment'] : null];
     }

@@ -37,7 +37,7 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
             throw new \BadMethodCallException(\sprintf('Cannot call "%s::get()": this class doesn\'t implement "%s".', get_debug_type($this->pool), CacheInterface::class));
         }
         $isHit = \true;
-        $callback = function (CacheItem $item, bool &$save) use ($callback, &$isHit) {
+        $callback = static function (CacheItem $item, bool &$save) use ($callback, &$isHit) {
             $isHit = $item->isHit();
             return $callback($item, $save);
         };
@@ -114,7 +114,7 @@ class TraceableAdapter implements AdapterInterface, CacheInterface, PruneableInt
         } finally {
             $event->end = microtime(\true);
         }
-        $f = function () use ($result, $event) {
+        $f = static function () use ($result, $event) {
             $event->result = [];
             foreach ($result as $key => $item) {
                 if ($event->result[$key] = $item->isHit()) {

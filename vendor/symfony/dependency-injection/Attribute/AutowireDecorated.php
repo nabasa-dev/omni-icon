@@ -10,7 +10,7 @@
  */
 namespace OmniIconDeps\Symfony\Component\DependencyInjection\Attribute;
 
-#[\Attribute(\Attribute::TARGET_PARAMETER)]
+#[\Attribute(\Attribute::TARGET_PARAMETER | \Attribute::TARGET_PROPERTY)]
 class AutowireDecorated
 {
 }

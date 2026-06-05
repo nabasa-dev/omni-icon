@@ -31,6 +31,8 @@ final class CurlClientState extends ClientState
     public array $pauseExpiries = [];
     public int $execCounter = \PHP_INT_MIN;
     public ?LoggerInterface $logger = null;
+    /** @var array<string, true> Indexed by self::originKey() */
+    public array $ntlmRequiresFreshConnection = [];
     public static array $curlVersion;
     public function __construct(private int $maxHostConnections, private int $maxPendingPushes)
     {
@@ -39,15 +41,23 @@ final class CurlClientState extends ClientState
         // handle and share are initialized lazily in __get()
         unset($this->handle, $this->share);
     }
+    public static function originKey(string $scheme, string $host, ?int $port = null): string
+    {
+        $scheme = strtolower(rtrim($scheme, ':'));
+        $port ??= 'https' === $scheme ? 443 : 80;
+        return $scheme . '://' . strtolower($host) . ':' . $port;
+    }
     public function reset(): void
     {
         foreach ($this->pushedResponses as $url => $response) {
             $this->logger?->debug(\sprintf('Unused pushed response: "%s"', $url));
             curl_multi_remove_handle($this->handle, $response->handle);
+            unset($this->handlesActivity[(int) $response->handle]);
         }
         $this->pushedResponses = [];
         $this->dnsCache->evictions = $this->dnsCache->evictions ?: $this->dnsCache->removals;
         $this->dnsCache->removals = $this->dnsCache->hostnames = [];
+        $this->ntlmRequiresFreshConnection = [];
         unset($this->share);
     }
     public function __get(string $name): mixed
@@ -56,9 +66,10 @@ final class CurlClientState extends ClientState
             $this->share = curl_share_init();
             curl_share_setopt($this->share, \CURLSHOPT_SHARE, \CURL_LOCK_DATA_DNS);
             curl_share_setopt($this->share, \CURLSHOPT_SHARE, \CURL_LOCK_DATA_SSL_SESSION);
-            if (\defined('CURL_LOCK_DATA_CONNECT')) {
-                curl_share_setopt($this->share, \CURLSHOPT_SHARE, \CURL_LOCK_DATA_CONNECT);
-            }
+            // Don't share CURL_LOCK_DATA_CONNECT: easy handles attached to the same multi handle
+            // already share the connection cache, and adding it here creates a second pool that
+            // bypasses CURLMOPT_MAX_HOST_CONNECTIONS.
+            // See https://curl.se/libcurl/c/CURLSHOPT_SHARE.html#CURLLOCKDATACONNECT
             return $this->share;
         }
         if ('handle' === $name) {

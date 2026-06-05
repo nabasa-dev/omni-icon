@@ -94,9 +94,7 @@ final class EventSourceHttpClient implements HttpClientInterface, ResetInterface
                 } else {
                     $context->passthru();
                 }
-                if (null === $lastError) {
-                    yield $chunk;
-                }
+                yield $chunk;
                 return;
             }
             if ($chunk->isLast()) {

@@ -68,9 +68,11 @@ class CachingHttpClient implements HttpClientInterface, ResetInterface
         $request->attributes->set('http_client_options', $options);
         foreach ($options['normalized_headers'] as $name => $values) {
             if ('cookie' !== $name) {
+                $headerValues = [];
                 foreach ($values as $value) {
-                    $request->headers->set($name, substr($value, 2 + \strlen($name)), \false);
+                    $headerValues[] = substr($value, 2 + \strlen($name));
                 }
+                $request->headers->set($name, $headerValues);
                 continue;
             }
             foreach ($values as $cookies) {

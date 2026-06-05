@@ -37,6 +37,7 @@ trait TransportResponseTrait
     private \InflateContext|bool|null $inflate = null;
     private ?array $finalInfo = null;
     private ?LoggerInterface $logger = null;
+    private bool $didTimeout = \false;
     public function getStatusCode(): int
     {
         if ($this->initializer) {
@@ -103,7 +104,7 @@ trait TransportResponseTrait
     private function doDestruct(): void
     {
         $this->shouldBuffer = \true;
-        if ($this->initializer && null === $this->info['error']) {
+        if ($this->initializer && null === $this->info['error'] && !$this->didTimeout) {
             self::initialize($this);
             $this->checkStatusCode();
         }
@@ -151,6 +152,7 @@ trait TransportResponseTrait
                         unset($responses[$j]);
                         continue;
                     } elseif ($elapsedTimeout >= $timeoutMax) {
+                        $response->didTimeout = \true;
                         $multi->handlesActivity[$j] = [new ErrorChunk($response->offset, \sprintf('Idle timeout reached for "%s".', $response->getInfo('url')))];
                         $multi->lastTimeout ??= $lastActivity;
                         $elapsedTimeout = $timeoutMax;

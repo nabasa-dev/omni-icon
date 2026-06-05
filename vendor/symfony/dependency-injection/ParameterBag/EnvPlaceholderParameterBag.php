@@ -58,7 +58,7 @@ class EnvPlaceholderParameterBag extends \OmniIconDeps\Symfony\Component\Depende
     {
         if (!isset($this->envPlaceholderUniquePrefix)) {
             $reproducibleEntropy = unserialize(serialize($this->parameters));
-            array_walk_recursive($reproducibleEntropy, function (&$v) {
+            array_walk_recursive($reproducibleEntropy, static function (&$v) {
                 $v = null;
             });
             $this->envPlaceholderUniquePrefix = 'env_' . substr(hash('xxh128', serialize($reproducibleEntropy)), -16);

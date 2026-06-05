@@ -37,7 +37,7 @@ final class DiviService
         if (!$this->has_divi_visual_builder_api()) {
             return;
         }
-        // Enqueue Gutenberg icon block styles (reuse for Breakdance)
+        // Enqueue Gutenberg icon block styles (reuse for Divi)
         $this->viteService->enqueue_asset('resources/integration/gutenberg/blocks/icon-block/editor.css', ['handle' => OMNI_ICON::TEXT_DOMAIN . ':gutenberg-icon-block-editor-styles']);
         // Enqueue Breakdance editor integration script
         $handle = OMNI_ICON::TEXT_DOMAIN . ':integration-divi-editor';

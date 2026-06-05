@@ -31,7 +31,10 @@ class ResolveReferencesToAliasesPass extends AbstractRecursivePass
             $aliasId = (string) $alias;
             $this->currentId = $id;
             if ($aliasId !== $defId = $this->getDefinitionId($aliasId, $container)) {
-                $container->setAlias($id, $defId)->setPublic($alias->isPublic());
+                $newAlias = $container->setAlias($id, $defId)->setPublic($alias->isPublic());
+                if ($alias->isDeprecated()) {
+                    $newAlias->setDeprecated(...array_values($alias->getDeprecation('%alias_id%')));
+                }
             }
         }
     }

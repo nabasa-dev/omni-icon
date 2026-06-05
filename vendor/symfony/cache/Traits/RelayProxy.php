@@ -25,6 +25,8 @@ use OmniIconDeps\Symfony\Component\Cache\Traits\Relay\Relay11Trait;
 use OmniIconDeps\Symfony\Component\Cache\Traits\Relay\Relay121Trait;
 use OmniIconDeps\Symfony\Component\Cache\Traits\Relay\Relay12Trait;
 use OmniIconDeps\Symfony\Component\Cache\Traits\Relay\Relay20Trait;
+use OmniIconDeps\Symfony\Component\Cache\Traits\Relay\Relay21Trait;
+use OmniIconDeps\Symfony\Component\Cache\Traits\Relay\Relay22Trait;
 use OmniIconDeps\Symfony\Component\Cache\Traits\Relay\SwapdbTrait;
 use OmniIconDeps\Symfony\Component\VarExporter\LazyObjectInterface;
 use OmniIconDeps\Symfony\Component\VarExporter\LazyProxyTrait;
@@ -57,6 +59,8 @@ class RelayProxy extends \Relay\Relay implements ResetInterface, LazyObjectInter
     use Relay12Trait;
     use Relay121Trait;
     use Relay20Trait;
+    use Relay21Trait;
+    use Relay22Trait;
     use SwapdbTrait;
     private const LAZY_OBJECT_PROPERTY_SCOPES = [];
     public function __construct($host = null, $port = 6379, $connect_timeout = 0.0, $command_timeout = 0.0, #[\SensitiveParameter] $context = [], $database = 0)

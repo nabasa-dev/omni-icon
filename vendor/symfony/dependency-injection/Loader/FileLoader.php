@@ -33,7 +33,7 @@ use OmniIconDeps\Symfony\Component\DependencyInjection\Exception\LogicException;
  */
 abstract class FileLoader extends BaseFileLoader
 {
-    public const ANONYMOUS_ID_REGEXP = '/^\.\d+_[^~]*+~[._a-zA-Z\d]{7}$/';
+    public const ANONYMOUS_ID_REGEXP = ContainerBuilder::ANONYMOUS_ID_REGEXP;
     protected $container;
     protected $isLoadingInstanceof = \false;
     protected $instanceof = [];

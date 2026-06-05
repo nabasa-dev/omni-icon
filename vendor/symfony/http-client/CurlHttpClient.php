@@ -118,6 +118,7 @@ final class CurlHttpClient implements HttpClientInterface, LoggerAwareInterface,
         } elseif (\defined('CURL_VERSION_HTTP2') && \CURL_VERSION_HTTP2 & CurlClientState::$curlVersion['features'] && ('https:' === $scheme || 2.0 === (float) $options['http_version'])) {
             $curlopts[\CURLOPT_HTTP_VERSION] = \CURL_HTTP_VERSION_2_0;
         }
+        $ntlmOriginKey = null;
         if (isset($options['auth_ntlm'])) {
             $curlopts[\CURLOPT_HTTPAUTH] = \CURLAUTH_NTLM;
             $curlopts[\CURLOPT_HTTP_VERSION] = \CURL_HTTP_VERSION_1_1;
@@ -132,6 +133,11 @@ final class CurlHttpClient implements HttpClientInterface, LoggerAwareInterface,
                 throw new InvalidArgumentException(\sprintf('Option "auth_ntlm" must be a string or an array, "%s" given.', get_debug_type($options['auth_ntlm'])));
             }
             $curlopts[\CURLOPT_USERPWD] = $options['auth_ntlm'];
+            $ntlmOriginKey = CurlClientState::originKey($scheme, $host, $port);
+            if (isset($this->multi->ntlmRequiresFreshConnection[$ntlmOriginKey])) {
+                $curlopts[\CURLOPT_FRESH_CONNECT] = \true;
+                $curlopts[\CURLOPT_FORBID_REUSE] = \true;
+            }
         }
         if (!\ZEND_THREAD_SAFE) {
             $curlopts[\CURLOPT_DNS_USE_GLOBAL_CACHE] = \false;
@@ -267,7 +273,7 @@ final class CurlHttpClient implements HttpClientInterface, LoggerAwareInterface,
                 throw new TransportException(\sprintf('Curl option "%s" is not supported.', $constantName ?? $opt));
             }
         }
-        return $pushedResponse ?? new CurlResponse($this->multi, $ch, $options, $this->logger, $method, self::createRedirectResolver($options, $authority), CurlClientState::$curlVersion['version_number'], $url);
+        return $pushedResponse ?? new CurlResponse($this->multi, $ch, $options, $this->logger, $method, self::createRedirectResolver($options, $authority), CurlClientState::$curlVersion['version_number'], $url, $ntlmOriginKey);
     }
     public function stream(ResponseInterface|iterable $responses, ?float $timeout = null): ResponseStreamInterface
     {

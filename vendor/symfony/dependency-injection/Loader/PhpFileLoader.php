@@ -158,7 +158,7 @@ class PhpFileLoader extends FileLoader
             throw new InvalidArgumentException('You can only use "root" ConfigBuilders from "Symfony\Config\" namespace. Nested classes like "Symfony\Config\Framework\CacheConfig" cannot be used.');
         }
         if (!$this->container->hasExtension($alias)) {
-            $extensions = array_filter(array_map(fn(ExtensionInterface $ext) => $ext->getAlias(), $this->container->getExtensions()));
+            $extensions = array_filter(array_map(static fn(ExtensionInterface $ext) => $ext->getAlias(), $this->container->getExtensions()));
             throw new InvalidArgumentException(\sprintf('There is no extension able to load the configuration for "%s". Looked for namespace "%s", found "%s".', $namespace, $alias, $extensions ? implode('", "', $extensions) : 'none'));
         }
         $extension = $this->container->getExtension($alias);
