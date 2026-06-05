@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.18] - 2026-06-05
+
 ### Fixed
 - CSS stylesheets loaded as JS in builder integrations [#9](https://github.com/nabasa-dev/omni-icon/issues/9)
 
@@ -94,7 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🐣 Initial release.
 
-[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.17...HEAD
+[unreleased]: https://github.com/nabasa-dev/omni-icon/compare/1.0.18...HEAD
+[1.0.18]: https://github.com/nabasa-dev/omni-icon/compare/1.0.17...1.0.18
 [1.0.17]: https://github.com/nabasa-dev/omni-icon/compare/1.0.16...1.0.17
 [1.0.16]: https://github.com/nabasa-dev/omni-icon/compare/1.0.15...1.0.16
 [1.0.15]: https://github.com/nabasa-dev/omni-icon/compare/1.0.14...1.0.15
